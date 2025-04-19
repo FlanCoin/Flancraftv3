@@ -1,0 +1,12 @@
+@use './variables' as *;
+
+.icon {
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  color: $color-acento;
+}
+
+.icon-inline {
+  margin-left: 0.4rem;
+  vertical-align: middle;
+}

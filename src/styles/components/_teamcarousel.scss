@@ -1,0 +1,158 @@
+.team-carousel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; // <- Este faltaba
+
+  background-color: #f5eee7;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  width: 100%;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto; // <- Aseguramos centrado total
+
+  box-shadow: 0 0 0 6px #ffe4b8;
+  border: 2px solid #ffe4b8;
+  min-height: 450px;
+  box-sizing: border-box;
+
+  .team-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    width: 100%;
+    max-width: 1000px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+
+  .team-text {
+    flex: 1;
+    max-width: 520px;
+    min-height: 280px; // Bloqueamos la altura para que no salte
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .title {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #2e2e2e;
+      position: relative;
+      padding-bottom: 1.2rem;
+      letter-spacing: 0.5px;
+
+      &::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 80px;
+        height: 4px;
+        background-color: #f4cc62;
+        border-radius: 2px;
+      }
+    }
+
+    .name {
+      font-size: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #333;
+      margin-top: 1rem;
+
+      .badge {
+        color: #fff;
+        padding: 0.35rem 0.75rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35); // Añade sombra sutil
+        border: 1px solid rgba(0, 0, 0, 0.15); // Borde fino para separar del fondo
+      }
+    }
+
+    .description {
+      font-size: 1.15rem;
+      color: #444;
+      line-height: 1.8;
+      margin-top: 1rem;
+      border-top: 2px dashed #ccc;
+      padding-top: 1rem;
+      flex-grow: 1;
+    }
+  }
+
+  .team-avatar {
+    flex-shrink: 0;
+    width: 260px;
+    height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .skin-pose {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      image-rendering: pixelated;
+      background: transparent;
+      transition: transform 0.5s ease, opacity 0.5s ease;
+      opacity: 1;
+      max-height: 440px;
+
+      &.animate-in {
+        transform: translateX(30px);
+        opacity: 0;
+        animation: slide-in 0.5s ease forwards;
+      }
+    }
+
+    @keyframes slide-in {
+      from {
+        transform: translateX(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  }
+
+  .carousel-heads {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    .head-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, margin 0.3s ease;
+      border: 2px solid transparent;
+      object-fit: contain;
+      background-color: transparent;
+
+      &.active {
+        transform: translateY(-20px) scale(1.15);
+        border-color: #ffa958;
+        box-shadow: 0 6px 12px rgba(255, 169, 88, 0.4);
+        z-index: 2;
+      }
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+}

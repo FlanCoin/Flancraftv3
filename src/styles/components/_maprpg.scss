@@ -1,0 +1,289 @@
+@use '../base/variables' as *;
+
+.map-rpg-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+
+  .map-rpg-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/assets/backpaper.png') center/cover no-repeat;
+    z-index: 0;
+    opacity: 0.7;
+    filter: blur(1px) brightness(0.65) saturate(1.2);
+    pointer-events: none;
+    mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
+  }
+
+  .map-rpg {
+    position: relative;
+    padding: 8rem 0;
+    z-index: 2;
+
+    .map-title {
+      text-align: center;
+  font-size: 4rem;
+  margin-bottom: 2.5rem;
+  color: #fff8e1;
+  font-family: $font-minecraft;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  text-shadow: 0 0 10px rgba(255, 230, 130, 0.4);
+
+  .icon {
+    margin-right: 0.8rem;
+    color: $color-acento;
+    filter: drop-shadow(0 0 4px rgba(255, 240, 180, 0.6));
+  }
+  .firefly-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -1rem;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+
+    .firefly {
+      width: 6px;
+      height: 6px;
+      background: #ffeaa7;
+      border-radius: 50%;
+      margin: 0 6px;
+      opacity: 0.7;
+      animation: floatFirefly 3s infinite ease-in-out alternate;
+    }
+
+    @keyframes floatFirefly {
+      0%   { transform: translateY(0) scale(1); opacity: 0.8; }
+      100% { transform: translateY(-15px) scale(1.2); opacity: 0.3; }
+    }
+  }
+}
+
+    .zones-grid {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 2rem;
+      overflow-x: auto;
+      padding: 1rem 2rem;
+      scroll-snap-type: x mandatory;
+
+      &::-webkit-scrollbar {
+        height: 8px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: #7c4a0c;
+        border-radius: 4px;
+      }
+    }
+
+    .zone-card {
+      flex: 0 0 auto;
+      width: 280px;
+      height: 500px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      font-family: $font-minecraft;
+      padding: 0;
+      border: 8px solid transparent;
+      border-radius: 20px;
+      background: #1a1008;
+      border-image: url('/assets/ui/border-frame-gold.png') 30 stretch;
+      border-image-slice: 30;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      transition: transform 0.3s ease;
+      animation: fadeInZoom 0.6s ease-out both;
+
+      &:hover {
+        transform: scale(1.04);
+        box-shadow: 0 0 18px rgba(255, 215, 100, 0.4), 0 10px 30px rgba(0, 0, 0, 0.8);
+
+        .zone-bg {
+          transform: scale(1.05);
+        }
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: -10%;
+        left: -10%;
+        width: 120%;
+        height: 120%;
+        border-radius: 24px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      .zone-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(1.1) saturate(1.2);
+        z-index: 0;
+        transition: transform 0.4s ease;
+      }
+
+      .zone-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+        z-index: 1;
+      }
+
+      .zone-content {
+        position: relative;
+        z-index: 2;
+        background: rgba(15, 15, 15, 0.65);
+        backdrop-filter: blur(6px);
+        padding: 1rem 1rem 1.2rem;
+        text-align: center;
+
+        .zone-icon {
+          margin-bottom: 0.8rem;
+
+          svg {
+            width: 42px;
+            height: 42px;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.2));
+          }
+        }
+
+        h3 {
+          font-size: 1.3rem;
+          font-weight: bold;
+          color: #fffaf0;
+          margin-bottom: 0.5rem;
+        }
+
+        p {
+          font-size: 0.95rem;
+          color: #dddddd;
+          line-height: 1.3;
+        }
+      }
+
+      // 🎨 Colores por categoría
+      &.news .zone-icon svg     { color: #f9d342; }
+      &.sanctions .zone-icon svg { color: #B12705; }
+      &.stats .zone-icon svg     { color: #839532; }
+      &.rewards .zone-icon svg   { color: #00D5D4; }
+      &.player .zone-icon svg    { color: #cfa8ff; }
+      &.shop .zone-icon svg      { color: #ffbb6a; }
+
+      // ✨ Auras mágicas por zona
+      &.news:hover::before {
+        background: radial-gradient(circle, rgba(249, 211, 66, 0.15), transparent 70%);
+        animation: auraPulseGold 2.5s infinite ease-in-out;
+        opacity: 1;
+      }
+      &.sanctions:hover::before {
+        background: radial-gradient(circle, rgba(183, 50, 50, 0.2), transparent 70%);
+        animation: auraPulseRed 2.5s infinite ease-in-out;
+        opacity: 1;
+      }
+      &.stats:hover::before {
+        background: radial-gradient(circle, rgba(86, 197, 249, 0.2), transparent 70%);
+        animation: auraPulseBlue 2.5s infinite ease-in-out;
+        opacity: 1;
+      }
+      &.rewards:hover::before {
+        background: radial-gradient(circle, rgba(92, 247, 178, 0.2), transparent 70%);
+        animation: auraPulseGreen 2.5s infinite ease-in-out;
+        opacity: 1;
+      }
+      &.player:hover::before {
+        background: radial-gradient(circle, rgba(207, 168, 255, 0.2), transparent 70%);
+        animation: auraPulsePurple 2.5s infinite ease-in-out;
+        opacity: 1;
+      }
+      &.shop:hover::before {
+        background: radial-gradient(circle, rgba(255, 187, 106, 0.2), transparent 70%);
+        animation: auraPulseOrange 2.5s infinite ease-in-out;
+        opacity: 1;
+      }
+    }
+  }
+
+  // Bordes superior e inferior
+  .map-border-top,
+  .map-border-bottom {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 16px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .map-border-top {
+    top: 0;
+    background: linear-gradient(to bottom, #7D5935 0%, #382219 50%, #020200 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 -2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .map-border-bottom {
+    bottom: 0;
+    background: linear-gradient(to top, #7D5935 0%, #382219 50%, #020200 100%);
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.08), inset 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+}
+
+// 🔮 Animaciones mágicas
+@keyframes fadeInZoom {
+  0%   { opacity: 0; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes vibrate {
+  0%   { transform: translate(0); }
+  25%  { transform: translate(-2px, 2px); }
+  50%  { transform: translate(2px, -2px); }
+  75%  { transform: translate(-1px, 1px); }
+  100% { transform: translate(0); }
+}
+
+// Auras por color
+@keyframes auraPulseGold {
+  0%, 100% { box-shadow: 0 0 10px rgba(249, 211, 66, 0.1); }
+  50% { box-shadow: 0 0 30px rgba(249, 211, 66, 0.35); }
+}
+@keyframes auraPulseRed {
+  0%, 100% { box-shadow: 0 0 10px rgba(183, 50, 50, 0.1); }
+  50% { box-shadow: 0 0 30px rgba(183, 50, 50, 0.35); }
+}
+@keyframes auraPulseBlue {
+  0%, 100% { box-shadow: 0 0 10px rgba(86, 197, 249, 0.1); }
+  50% { box-shadow: 0 0 30px rgba(86, 197, 249, 0.4); }
+}
+@keyframes auraPulseGreen {
+  0%, 100% { box-shadow: 0 0 10px rgba(92, 247, 178, 0.1); }
+  50% { box-shadow: 0 0 30px rgba(92, 247, 178, 0.4); }
+}
+@keyframes auraPulsePurple {
+  0%, 100% { box-shadow: 0 0 10px rgba(207, 168, 255, 0.1); }
+  50% { box-shadow: 0 0 30px rgba(207, 168, 255, 0.4); }
+}
+@keyframes auraPulseOrange {
+  0%, 100% { box-shadow: 0 0 10px rgba(255, 187, 106, 0.1); }
+  50% { box-shadow: 0 0 30px rgba(255, 187, 106, 0.4); }
+}

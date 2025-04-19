@@ -1,0 +1,13 @@
+@use '../base/variables' as *;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-minecraft, sans-serif;
+  background-color: $color-bg;
+  color: $color-texto;
+}
