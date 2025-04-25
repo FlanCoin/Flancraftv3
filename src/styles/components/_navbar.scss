@@ -471,12 +471,12 @@ $color-borde-oro: #f7c14d;
     }
   
     .blockhorn-logo {
-      max-width: 150px;
+      max-width: 6rem;
       margin-top: 1rem !important;
     }
   
     .flancraft-logo {
-      max-width: 200px;
+      max-width: 15rem;
       margin-top: 1rem;
     }
 
@@ -553,7 +553,7 @@ $color-borde-oro: #f7c14d;
 .logo-divider {
   width: 80%;
   height: 2px;
-  margin: 0.6rem 0 2.5rem; // Más separación abajo del logo Flancraft
+  margin: 0.6rem 0 2rem; // Más separación abajo del logo Flancraft
   background: linear-gradient(
     to right,
     transparent 0%,
@@ -581,3 +581,20 @@ $color-borde-oro: #f7c14d;
   }
 }
 
+.close-menu-button {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  font-size: 1.8rem;
+  color: #ddb878;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    color: #fff6d5;
+    text-shadow: 0 0 10px rgba(255, 220, 120, 0.7);
+    transform: rotate(90deg) scale(1.2);
+  }
+}

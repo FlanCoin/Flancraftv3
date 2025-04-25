@@ -161,6 +161,7 @@ const Navbar = () => {
       <div className="mobile-menu-overlay" onClick={() => setMenuOpen(false)}></div>
       <div className="mobile-menu">
   <div className="mobile-logo-header">
+  <i className="fas fa-times close-menu-button" onClick={() => setMenuOpen(false)} />
     <img src="/assets/blockhorn.png" alt="Blockhorn" className="blockhorn-logo" />
     <div class="logo-divider"></div>
     <div class="logo-glow-wrapper">
