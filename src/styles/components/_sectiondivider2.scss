@@ -4,9 +4,32 @@
   background: url('/assets/dividerbattle.png') center bottom no-repeat;
   background-size: cover;
   position: absolute;
-  bottom: -50px; // se mete debajo de Features y arriba del siguiente bloque
+  bottom: -50px;
   left: 0;
   filter: drop-shadow(0 -2px 4px rgba(0, 0, 0, 0.4));
   z-index: 1000;
   pointer-events: none;
+
+  // 📱 MÓVILES
+  @media (max-width: 600px) {
+    height: 50px;
+    bottom: -30px;
+    background-size: contain;
+  }
+
+  // 📲 TABLETS
+  @media (min-width: 601px) and (max-width: 1024px) {
+    height: 65px;
+    bottom: -40px;
+    background-size: contain;
+  }
+
+  // 🖥️ ULTRAWIDE
+// 🖥️ ULTRAWIDE (ajustado a evitar 1920x1080)
+@media (min-width: 2000px) {
+  height: 109px;
+  bottom: -60px;
+  background-size: cover;
+}
+
 }
