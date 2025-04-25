@@ -12,17 +12,27 @@ $color-borde-oro: #f7c14d;
 }
 
 .navbar-flancraft {
-  background: url('/textures/navbar-bg.webp') center/cover no-repeat, #1b1815;
-  position: sticky;
-  top: 0;
-  z-index: 999;
-  padding: 0.6rem 1.6rem;
+  background-color: #1b1815;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='16' viewBox='0 0 12 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 .99C4 .445 4.444 0 5 0c.552 0 1 .45 1 .99v4.02C6 5.555 5.556 6 5 6c-.552 0-1-.45-1-.99V.99zm6 8c0-.546.444-.99 1-.99.552 0 1 .45 1 .99v4.02c0 .546-.444.99-1 .99-.552 0-1-.45-1-.99V8.99z' fill='%231e1e1d' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E");  padding: 0.6rem 1.6rem;
   font-family: $font-minecraft;
   border-bottom: 5px solid #55360E;
   display: flex;
   justify-content: center;
   box-shadow: 0 4px 15px rgba(255, 204, 0, 0.08);
   overflow: visible;
+}
+
+  .navbar-flancraft::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: radial-gradient(ellipse at center, rgba(255, 215, 85, 0.06), transparent 70%);
+    z-index: -1;
+  }
+  
 
   .navbar-content {
     display: flex;
@@ -54,6 +64,8 @@ $color-borde-oro: #f7c14d;
         background: linear-gradient(to bottom, #4a3522, #261d16);
         display: flex;
         align-items: center;
+        justify-content: center;
+        line-height: 1;
         gap: 0.4rem;
         padding: 0.45rem 0.8rem;
         font-size: 1rem;
@@ -65,11 +77,13 @@ $color-borde-oro: #f7c14d;
         position: relative;
         border: 2px solid #55360E;
         box-shadow: 0 0 4px $color-shadow;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
         cursor: pointer;
 
         i {
           font-size: 1.2rem;
           transition: color 0.3s ease, text-shadow 0.3s ease;
+          vertical-align: middle;
         }
 
         filter: brightness(1);
@@ -96,8 +110,9 @@ $color-borde-oro: #f7c14d;
 
         .arrow-icon {
           transition: transform 0.3s ease;
+          margin-top: 1px;
           font-size: 0.7rem;
-          margin-left: 4px;
+          margin-left: 0.3rem;
         }
       }
 
@@ -127,19 +142,20 @@ $color-borde-oro: #f7c14d;
             animation: dropdownFade 0.25s ease-out;
              align-items: center;
             a {
-
+              
               font-size: 0.85rem;
               color: #eee3c0;
               border-radius: 4px;
               transition: background 0.2s ease, transform 0.2s ease;
               text-align: center;
               display: block;
+              transition: transform 0.2s ease, background 0.2s ease;
 
         
               &:hover {
-                background: rgba(255, 204, 0, 0.08);
-                color: $color-oro-brillo;
-                transform: translateX(4px);
+                background: rgba(255, 230, 100, 0.1);
+                box-shadow: 0 0 8px rgba(255, 225, 120, 0.4), inset 0 0 2px rgba(255, 255, 255, 0.1);
+                transform: scale(1.02);
               }
             }
           }
@@ -153,7 +169,7 @@ $color-borde-oro: #f7c14d;
         }
       }
     }
-  }
+  
 
   .logo-img {
     height: 48px;
@@ -228,18 +244,20 @@ $color-borde-oro: #f7c14d;
         }
 
         .user-avatar {
-          width: 28px;
-          height: 28px;
-          border-radius: 4px;
-          box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+          width: 32px;
+  height: 32px;
+  border: 2px solid #ffd700;
+  box-shadow: 0 0 6px rgba(255, 215, 0, 0.3);
+  transition: transform 0.3s, box-shadow 0.3s;
         }
         &:hover {
-          background: linear-gradient(to right, #3a2f23, #2b221a);
-          box-shadow: 0 0 12px rgba(255, 215, 0, 0.2); 
+          transform: scale(1.1);
+          box-shadow: 0 0 12px rgba(255, 225, 120, 0.6); 
         }
         .username {
           color: #fdf6dd;
           font-weight: bold;
+          text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
         }
       }
 
@@ -388,6 +406,41 @@ $color-borde-oro: #f7c14d;
       display: flex;
     }
   }
+  .btn-navbar {
+    padding: 0.45rem 0.8rem;
+    border-radius: 6px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 2px solid #55360E;
+    background: linear-gradient(to bottom, #4a3522, #261d16);
+    color: #fffbe5;
+    box-shadow: 0 0 4px rgba(0,0,0,0.4);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+    height: 42px; // Fuerza coherencia visual
+  min-width: 140px;
+  justify-content: center; // centra íconos/texto
+  padding: 0 1rem;
+  font-size: 0.95rem;
+  }
+  @keyframes magic-glow {
+    0%, 100% {
+      box-shadow: 0 0 6px rgba(255, 215, 0, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 12px rgba(255, 255, 180, 0.6);
+    }
+  }
+  
+  .btn-navbar:hover {
+    animation: magic-glow 1.6s infinite ease-in-out;
+  }
+  .dropdown-toggle,
+.rewards-button,
+.login-button {
+  @extend .btn-navbar;
+}
 
   @media (max-width: 768px) {
     .navbar-content {
@@ -412,7 +465,7 @@ $color-borde-oro: #f7c14d;
         background: #1a1612;
         border-left: 2px solid $color-pixel-border;
         border-bottom: 2px solid $color-pixel-border;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        box-shadow: 0 0 8px rgba(255, 215, 85, 0.3), inset 0 0 2px rgba(255, 255, 255, 0.04);
       }
     }
 

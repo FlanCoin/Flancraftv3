@@ -272,3 +272,20 @@
     }
   }
 }
+.divider-overlay {
+  position: relative;
+  height: 0; // Important: we don’t want it to push anything down
+  z-index: 100;
+
+  .section-divider2 {
+    position: absolute;
+
+    left: 0;
+    width: 100%;
+
+    background: url('/assets/dividerbattle.png') center bottom no-repeat;
+    background-size: cover;
+    z-index: 10000; // Higher than anything else
+    pointer-events: none;
+  }
+}

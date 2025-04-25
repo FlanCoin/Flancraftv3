@@ -5,7 +5,7 @@ echo Esperando a que Vite arranque...
 timeout /t 5 > nul
 
 echo Iniciando ngrok...
-start /b ngrok http 5173 > nul
+start /b ngrok http 5173 --log=stdout --log-format=json --web-addr=:4040 > nul
 
 :: Esperamos a que ngrok exponga la URL pública
 timeout /t 3 > nul

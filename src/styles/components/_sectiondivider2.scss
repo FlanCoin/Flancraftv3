@@ -1,0 +1,12 @@
+.section-divider2 {
+  width: 100%;
+  height: 80px;
+  background: url('/assets/dividerbattle.png') center bottom no-repeat;
+  background-size: cover;
+  position: absolute;
+  bottom: -50px; // se mete debajo de Features y arriba del siguiente bloque
+  left: 0;
+  filter: drop-shadow(0 -2px 4px rgba(0, 0, 0, 0.4));
+  z-index: 1000;
+  pointer-events: none;
+}

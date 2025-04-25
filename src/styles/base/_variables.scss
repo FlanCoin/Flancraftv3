@@ -1,10 +1,19 @@
-// Colores estilo pergamino medieval
+// _variables.scss ✅ limpio
 $color-bg: #fdf6dd;
 $color-acento: #bda871;
 $color-texto: #3a2d18;
 $color-pixel-border: #5e471b;
-
 $font-minecraft: 'VT323', monospace;
 
-
+// Flancraft navbar vars
+$color-oro: #ffd44d;
+$color-oro-brillo: #ffec94;
+$color-hover-glow: rgba(255, 215, 85, 0.5);
+$color-shadow: rgba(0, 0, 0, 0.4);
+$color-borde-oro: #f7c14d;
+$color-bg-marron: #2b241d;
+$color-bg-marron-claro: #403025;
+$blur-bg: rgba(27, 24, 21, 0.92);
+$glow-gold: 0 0 12px rgba(255, 215, 85, 0.4);
+$hover-gold: linear-gradient(to bottom, #6b4a2e, #3e2a1a);
 $radius: 6px;

@@ -1,21 +1,21 @@
 @use '../base/variables' as *;
+@use 'sass:color';
 
 .btn-pixel {
-    background-color: $color-acento;
-    border: 2px solid $color-pixel-border;
-    padding: 0.5rem 1rem;
-    font-size: 1.1rem;
-    box-shadow: 2px 2px 0 $color-pixel-border;
-    border-radius: $radius;
-  
-    &:hover {
-      background-color: lighten($color-acento, 5%);
-      transform: translateY(-2px);
-    }
-  
-    &:active {
-      transform: translateY(1px);
-      box-shadow: 1px 1px 0 $color-pixel-border;
-    }
+  background-color: color.adjust($color-acento, $lightness: 10%);
+  border: 2px solid $color-pixel-border;
+  padding: 0.5rem 1rem;
+  font-size: 1.1rem;
+  box-shadow: 2px 2px 0 $color-pixel-border;
+  border-radius: $radius;
+
+  &:hover {
+    background-color: lighten($color-acento, 5%);
+    transform: translateY(-2px);
   }
-  
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 1px 1px 0 $color-pixel-border;
+  }
+}
