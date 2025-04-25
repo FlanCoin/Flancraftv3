@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { FaBalanceScale } from 'react-icons/fa';
 import '../styles/components/_navbar.scss';
@@ -38,6 +38,29 @@ const Navbar = () => {
   const userXP = 150;
   const userXPMax = 200;
   const userLevel = 7;
+
+  const toggleDropdown = (key) => {
+    setActiveDropdown((prev) => (prev === key ? null : key));
+  };
+
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    }
+  
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    };
+  }, [menuOpen]);
+  
 
   return (
     <nav className={`navbar-flancraft ${menuOpen ? 'menu-open' : ''}`}>
@@ -160,22 +183,63 @@ const Navbar = () => {
       {/* --- Mobile Slide Menu --- */}
       <div className="mobile-menu-overlay" onClick={() => setMenuOpen(false)}></div>
       <div className="mobile-menu">
-  <div className="mobile-logo-header">
-  <i className="fas fa-times close-menu-button" onClick={() => setMenuOpen(false)} />
-    <img src="/assets/blockhorn.png" alt="Blockhorn" className="blockhorn-logo" />
-    <div class="logo-divider"></div>
-    <div class="logo-glow-wrapper">
-  <img src="/assets/flancraftlogo.png" alt="Flancraft" class="flancraft-logo" />
+        <div className="mobile-logo-header">
+          <i className="fas fa-times close-menu-button" onClick={() => setMenuOpen(false)} />
+          <img src="/assets/blockhorn.png" alt="Blockhorn" className="blockhorn-logo" />
+          <div className="logo-divider"></div>
+          <div className="logo-glow-wrapper">
+            <img src="/assets/flancraftlogo.png" alt="Flancraft" className="flancraft-logo" />
+          </div>
+        </div>
+
+        <div className="mobile-links">
+        <NavLink to="/noticias"><i className="fas fa-scroll" /> Noticias</NavLink>
+          <div className={`mobile-dropdown ${activeDropdown === 'mundos' ? 'open' : ''}`}>
+          <div className="mobile-dropdown-toggle" onClick={() => toggleDropdown('mundos')}>
+  <i className="fas fa-map-marked-alt" /> Mundos
+  <i className={`fas fa-chevron-down arrow-icon ${activeDropdown === 'mundos' ? 'open' : ''}`} />
 </div>
+
+    <div className="mobile-dropdown-content">
+      <NavLink to="/mundos/survival"><i className="fas fa-tree" /> Survival</NavLink>
+      <NavLink to="/mundos/oneblock"><i className="fas fa-cube" /> OneBlock</NavLink>
+      <NavLink to="/mundos/pokebox"><i className="fas fa-dragon" /> Pokebox</NavLink>
+      <NavLink to="/mundos/anarquico"><i className="fas fa-fire-alt" /> Anárquico</NavLink>
+      <NavLink to="/mundos/creativo"><i className="fas fa-paint-brush" /> Creativo</NavLink>
+      <NavLink to="/mundos/parkour"><i className="fas fa-shoe-prints" /> Parkour</NavLink>
+    </div>
   </div>
 
-  <NavLink to="/noticias">Noticias</NavLink>
-  <NavLink to="/mundos">Mundos</NavLink>
-  <NavLink to="/slimefun">Slimefun</NavLink>
-  <NavLink to="/estadisticas">Stats</NavLink>
-  <NavLink to="/tienda-tebex">Tienda</NavLink>
-  <NavLink to="/justicia">Tribunal</NavLink>
+  <NavLink to="/slimefun"><i className="fas fa-flask" /> Slimefun</NavLink>
+  <NavLink to="/estadisticas"><i className="fas fa-chart-line" /> Stats</NavLink>
+
+  <div className={`mobile-dropdown ${activeDropdown === 'mercado' ? 'open' : ''}`}>
+    <div className="mobile-dropdown-toggle" onClick={() => toggleDropdown('mercado')}>
+      <i className="fas fa-store" /> Tienda
+      <i className={`fas fa-chevron-down arrow-icon ${activeDropdown === 'mercado' ? 'open' : ''}`} />
+    </div>
+    <div className="mobile-dropdown-content">
+      <NavLink to="/tienda-tebex"><i className="fas fa-gem" /> Store Servidor</NavLink>
+      <NavLink to="/tienda-merch"><i className="fas fa-shopping-bag" /> Merchandising</NavLink>
+    </div>
+  </div>
+
+  <NavLink to="/justicia"><i className="fas fa-gavel" /> Tribunal</NavLink>
+  <div className="logo-divider"></div>
+
+<div className="mobile-social-links">
+  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-instagram" /></a>
+  <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-tiktok" /></a>
+  <a href="https://youtube.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-youtube" /></a>
+  <a href="https://discord.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-discord" /></a>
+  <a href="https://telegram.org" target="_blank" rel="noopener noreferrer"><i className="fab fa-telegram" /></a>
+  <a href="https://x.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-x-twitter" /></a>
 </div>
+
+<div className="logo-divider"></div>
+
+        </div>
+      </div>
     </nav>
   );
 };

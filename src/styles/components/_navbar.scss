@@ -54,7 +54,7 @@ $color-borde-oro: #f7c14d;
         span {
           width: 25px;
           height: 3px;
-          background: linear-gradient(to bottom, #ffe65a, #ffcc00);
+          background: #ddb879;
           box-shadow: 0 0 4px rgba(255, 204, 0, 0.5);
           display: block;
           border-radius: 2px;
@@ -447,8 +447,10 @@ $color-borde-oro: #f7c14d;
   position: fixed;
   top: 0;
   left: 0;
-  height: 100%;
+  height: 100vh; // ocupa todo el alto de la pantalla
   width: 260px;
+  overflow-y: auto; // Habilita scroll interno
+  overscroll-behavior: contain; // evita que el scroll se propague al body
   background-color: #1b1815;
   border-right: 3px solid #55360e;
   display: flex;
@@ -457,6 +459,7 @@ $color-borde-oro: #f7c14d;
   z-index: 100;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
+  -webkit-overflow-scrolling: touch;
 
   .mobile-logo-header {
     display: flex;
@@ -533,6 +536,7 @@ $color-borde-oro: #f7c14d;
       0 0 1px rgba(0, 180, 255, 0.5),
       inset 0 0 4px rgba(0, 225, 255, 0.4);
   }
+  
 
   .flancraft-logo {
     position: relative;
@@ -553,23 +557,17 @@ $color-borde-oro: #f7c14d;
 .logo-divider {
   width: 80%;
   height: 2px;
-  margin: 0.6rem 0 2rem; // Más separación abajo del logo Flancraft
-  background: linear-gradient(
-    to right,
-    transparent 0%,
-    #7c4a1a 25%,
-    #c97c3c 50%,
-    #7c4a1a 75%,
-    transparent 100%
-  );
+  margin: 0.6rem auto 2rem auto; // <-- Esto lo centra automáticamente
+  background: #ddb879;
   box-shadow:
     0 0 8px rgba(193, 110, 44, 0.25),
     0 0 4px rgba(101, 54, 16, 0.2) inset;
-  border-radius: 10px; // Redondear ligeramente toda la barra
+  border-radius: 10px;
   background-size: 200% auto;
   animation: shimmer 6s infinite linear;
   opacity: 0.9;
 }
+
 
 
 @keyframes shimmer {
@@ -596,5 +594,111 @@ $color-borde-oro: #f7c14d;
     color: #fff6d5;
     text-shadow: 0 0 10px rgba(255, 220, 120, 0.7);
     transform: rotate(90deg) scale(1.2);
+  }
+}
+.mobile-dropdown {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .mobile-dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fdf6dd;
+    background: linear-gradient(to bottom, #4a3522, #261d16);
+    border: 2px solid #55360e;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+    width: 100%;
+    position: relative;
+  
+    i:first-child {
+      font-size: 1rem;
+      min-width: 18px;
+    }
+  
+    .arrow-icon {
+      margin-left: auto;
+      font-size: 0.8rem;
+      transition: transform 0.3s ease;
+    }
+  
+    &.open .arrow-icon {
+      transform: rotate(180deg);
+    }
+  
+    &:hover {
+      background: linear-gradient(to bottom, #6b4a2e, #3e2a1a);
+      color: $color-oro-brillo;
+      box-shadow: 0 0 8px rgba(255, 215, 85, 0.3);
+    }
+  }
+  
+
+  .mobile-dropdown-content {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    padding: 0 0.5rem;
+
+    a {
+      font-size: 0.9rem;
+      margin: 0.2rem 0;
+      padding: 0.6rem 1rem;
+      background: rgba(42, 34, 26, 0.85);
+      border: 1px solid #4d3a26;
+      border-radius: 4px;
+
+      &:hover {
+        background: rgba(255, 224, 120, 0.1);
+        color: $color-oro-brillo;
+        transform: translateX(2px);
+      }
+    }
+  }
+
+  &.open .mobile-dropdown-content {
+    max-height: 500px; // lo suficiente para mostrar todos los items
+    opacity: 1;
+    margin-top: 0.4rem;
+  }
+}
+.mobile-social-links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px 16px;
+  justify-items: center;
+
+  margin-bottom: 2rem; // equilibrar espacio inferior
+
+  a {
+    font-size: 20px;
+    color: #fdf6dd;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #816433;
+    border-radius: 10px;
+    border: 1px solid #6b4e2e;
+    box-shadow: 0 0 6px rgba(255, 204, 0, 0.08);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: linear-gradient(to bottom, #6b4a2e, #3e2a1a);
+      color: $color-oro-brillo;
+      transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(255, 215, 85, 0.3);
+    }
   }
 }
