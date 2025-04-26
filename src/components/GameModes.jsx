@@ -50,14 +50,14 @@ const modes = [
     image: "/assets/modes/parkour.png",
     icon: "/assets/icons/parkour-icon.png",
   },
-  {
+ /* {
     id: "kingdoms",
     name: "Kingdoms",
     description:
       "¡Próximamente! Construye tu reino, conquista territorios y lidera tu imperio.",
     image: "/assets/modes/kingdoms.png",
     icon: "/assets/icons/kingdoms-icon.png",
-  },
+  },*/
 ];
 
 const GameModes = () => {

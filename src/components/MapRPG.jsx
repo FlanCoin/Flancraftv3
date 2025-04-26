@@ -54,7 +54,7 @@ const zones = [
     description: 'Accede a tu perfil, logros y evolución.',
     route: '/perfil/tuNombre',
     className: 'player',
-    image: '', // agregar imagen luego
+    image: '/assets/torre.png',
   },
   {
     icon: <ShoppingBag />,
@@ -62,7 +62,7 @@ const zones = [
     description: 'Explora objetos épicos del universo Minecraft.',
     route: '/afiliados',
     className: 'shop',
-    image: '', // agregar imagen luego
+    image: '/assets/mercado.png',
   },
 ]
 
@@ -105,30 +105,34 @@ const MapRPG = () => {
         <div className="zones-grid">
           {zones.map((zone, index) => (
             <MotionDiv.div
-              key={index}
-              className={`zone-card ${zone.className}`}
-              onClick={() => handleClick(zone.route, index)}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
-            >
-              {zone.image && (
-                <>
-                  <img src={zone.image} alt={zone.title} className="zone-bg" />
-                  <div className="zone-overlay" />
-                </>
-              )}
-              <div className="zone-content">
-                <div className="zone-icon">
-                  <div className="conjure-orb">
-                    {zone.icon}
-                  </div>
-                </div>
-                <h3>{zone.title}</h3>
-                <p>{zone.description}</p>
+            key={index}
+            className={`zone-card ${zone.className}`}
+            onClick={() => handleClick(zone.route, index)}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            viewport={{ once: true }}
+          >
+            {zone.image && (
+              <>
+                <img src={zone.image} alt={zone.title} className="zone-bg" />
+                <div className="zone-overlay" />
+              </>
+            )}
+          
+            {/* 🌟 Mover el POPUP fuera del contenido */}
+            <div className="description-popup">
+              {zone.description}
+            </div>
+          
+            <div className="zone-content">
+              <div className="zone-icon">
+                <div className="conjure-orb">{zone.icon}</div>
               </div>
-            </MotionDiv.div>
+              <h3>{zone.title}</h3>
+            </div>
+          </MotionDiv.div>
+          
           ))}
         </div>
       </section>

@@ -225,8 +225,8 @@ const Navbar = () => {
   </div>
 
   <NavLink to="/justicia"><i className="fas fa-gavel" /> Tribunal</NavLink>
-  <div className="logo-divider"></div>
-
+  
+<div className="logo-divider"></div>
 <div className="mobile-social-links">
   <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-instagram" /></a>
   <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-tiktok" /></a>

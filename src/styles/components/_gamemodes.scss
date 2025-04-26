@@ -170,10 +170,10 @@
         min-width: 0;
 
         .gm-selector {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          gap: 1.8rem;
+          display: grid; /* ✨ CAMBIO: flex ➔ grid */
+          grid-template-columns: repeat(3, 1fr); /* 🧩 3 columnas */
+          gap: 2.4rem; /* 🎨 Deja el gap cómodo */
+          justify-items: center; /* 🔥 Centra los botones */
           margin-bottom: 3rem;
 
           .gm-circle-btn {
@@ -463,4 +463,116 @@
   margin: 0 auto;
   line-height: 1.8;
   font-family: serif;
+}
+@media (max-width: 768px) {
+  .gamemodes-wrapper {
+    padding: 3rem 1rem;
+
+    .gm-inner {
+      .gm-main {
+        flex-direction: column;
+        gap: 3rem;
+
+        .gm-left {
+          width: 100%;
+
+          .gm-video-frame {
+            max-width: 100%;
+            height: auto;
+            border-width: 8px;
+            border-radius: 16px;
+
+            &::before,
+            &::after {
+              inset: 12px;
+              border-radius: 10px;
+            }
+
+            img,
+            video {
+              border-radius: 8px;
+              height: auto;
+              aspect-ratio: 16/9;
+            }
+          }
+        }
+
+        .gm-right {
+          width: 100%;
+
+          .gm-subheader {
+            .gm-subtitle {
+              font-size: 1.2rem;
+            }
+
+            .gm-mundos {
+              font-size: 2.6rem;
+              margin-top: 0.5rem;
+            }
+          }
+
+          .gm-selector {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2.4rem; /* 🎯 Aumentamos un poco el gap */
+            margin-bottom: 3rem;
+
+            .gm-circle-btn {
+              width: 80px;
+              height: 80px;
+              border-width: 4px;
+
+              img {
+                border-width: 1.5px;
+              }
+
+              .gm-btn-label {
+                position: absolute;
+                bottom: -2.2rem; /* 🔥 Lo bajamos más */
+                font-size: 1.1rem; /* 📏 Ajuste controlado */
+                color: #e3dbc1;
+                text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+                font-family: $font-minecraft;
+                font-weight: bold;
+                pointer-events: none;
+                letter-spacing: 0.5px;
+              }
+              
+            }
+          }
+
+          .gm-details-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 3rem;
+            background: rgba(255, 248, 220, 0.06);
+            border-radius: 12px;
+            margin-top: 2rem;
+            min-height: 240px; /* 📏 Altura fija */
+            overflow: hidden; /* 🧹 Evitar que texto mueva el bloque */
+            text-align: center;
+          
+            h3 {
+              margin-bottom: 1rem;
+              font-size: 2.4rem;
+              word-break: break-word;
+            }
+          
+            p {
+              font-size: 1.2rem;
+              line-height: 1.6;
+              max-width: 100%;
+              margin: 0;
+              overflow-wrap: break-word;
+            }
+          }
+          
+        }
+      }
+    }
+  }
 }
