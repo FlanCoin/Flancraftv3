@@ -28,7 +28,7 @@ const zones = [
     icon: <ShieldCheck />,
     title: 'Fortaleza de Sanciones',
     description: 'Consulta las sanciones y los registros de justicia.',
-    route: '/sanciones',
+    route: '/tribunal',
     className: 'sanctions',
     image: '/assets/fortaleza.png',
   },

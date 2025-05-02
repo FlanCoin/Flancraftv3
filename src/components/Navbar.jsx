@@ -126,7 +126,7 @@ const Navbar = () => {
               </div>
             </div>
 
-            <NavLink to="/justicia"><FaBalanceScale /> Tribunal</NavLink>
+            <NavLink to="/tribunal"><FaBalanceScale /> Tribunal</NavLink>
           </div>
         </div>
 

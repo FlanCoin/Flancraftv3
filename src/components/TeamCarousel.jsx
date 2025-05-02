@@ -37,73 +37,136 @@ const teamMembers = [
   export default function TeamCarousel() {
     const [index, setIndex] = useState(0);
     const [animate, setAnimate] = useState(false);
-    const [isHovered, setIsHovered] = useState(false);
-    const intervalRef = useRef(null);
+    const [progress, setProgress] = useState(0);
+  
+    const lastInteractionRef = useRef(Date.now());
+    const progressRef = useRef(0);
+    const timerRef = useRef(null);
+  
+    const DELAY_BEFORE_START = 2000;
+    const TRANSITION_DURATION = 8000;
+  
     const current = teamMembers[index];
-
+  
+    const next = () => {
+      setAnimate(true);
+      setTimeout(() => setAnimate(false), 500);
+      setIndex((prev) => (prev + 1) % teamMembers.length);
+      lastInteractionRef.current = Date.now();
+      progressRef.current = 0;
+      setProgress(0);
+    };
+  
+    const resetTimer = () => {
+      lastInteractionRef.current = Date.now();
+      progressRef.current = 0;
+      setProgress(0);
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        lastInteractionRef.current = Date.now();
+      }, DELAY_BEFORE_START);
+    };
+  
+    const manualSelect = (i) => {
+      setAnimate(true);
+      setTimeout(() => setAnimate(false), 500);
+      setIndex(i);
+      resetTimer();
+    };
+  
+    const handleHover = () => {
+      resetTimer();
+    };
+  
     useEffect(() => {
-        if (!isHovered) {
-          intervalRef.current = setInterval(() => {
-            setAnimate(true);
-            setTimeout(() => setAnimate(false), 500);
-            setIndex((prev) => (prev + 1) % teamMembers.length);
-          }, 8000);
+      let frame;
+    
+      const animate = () => {
+        const now = Date.now();
+        const elapsed = now - lastInteractionRef.current;
+    
+        if (elapsed < DELAY_BEFORE_START) {
+          progressRef.current = 0;
+          setProgress(0);
+        } else {
+          const prog = ((elapsed - DELAY_BEFORE_START) / TRANSITION_DURATION) * 100;
+          progressRef.current = prog;
+          setProgress(Math.min(prog, 100));
+          if (prog >= 100) {
+            next();
+          }
         }
     
-        return () => clearInterval(intervalRef.current);
-      }, [isHovered]);
-    
-      const manualSelect = (i) => {
-        setAnimate(true);
-        setTimeout(() => setAnimate(false), 500);
-        setIndex(i);
+        frame = requestAnimationFrame(animate);
       };
-
-  return (
-    <section className="team-carousel">
-      <div
-        className="team-content"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <div className="team-text">
-          <h2 className="title">Conoce a los Maestros de Flancraft</h2>
-          <h3 className="name">
-            {current.icon}
-            {current.name}
-            <span
-              className="badge"
-              style={{
-                backgroundColor: current.badgeColor,
-                color: ['#f4cc62'].includes(current.badgeColor) ? '#222' : '#fff'
-              }}
-            >
-              {current.role}
-            </span>
-          </h3>
-          <p className="description">{current.description}</p>
+    
+      frame = requestAnimationFrame(animate);
+    
+      return () => cancelAnimationFrame(frame);
+    }, []);
+    
+    useEffect(() => {
+      if (progress >= 100) {
+        const bar = document.querySelector('.progress-bar-wrapper');
+        bar.classList.add('flare');
+        setTimeout(() => bar.classList.remove('flare'), 600); // duración del destello
+      }
+    }, [progress]);
+  
+    return (
+      <section className="team-carousel">
+        <div
+          className="team-content"
+          onMouseEnter={handleHover}
+          onMouseLeave={handleHover}
+        >
+          <div className="team-text">
+            <h2 className="title">Conoce a los Maestros de Flancraft</h2>
+            <h3 className="name">
+              {current.icon}
+              {current.name}
+              <span
+                className="badge"
+                style={{
+                  backgroundColor: current.badgeColor,
+                  color: current.badgeColor === '#f4cc62' ? '#222' : '#fff'
+                }}
+              >
+                {current.role}
+              </span>
+            </h3>
+            <p className="description">{current.description}</p>
+          </div>
+  
+          <div className="team-avatar">
+            <img
+              src={current.skinImage}
+              alt={`${current.name} skin`}
+              className={`skin-pose ${animate ? 'animate-in' : ''}`}
+            />
+          </div>
         </div>
+  
+        <div className="progress-bar-wrapper">
+  <div
+    key={index}
+    className="progress-inner"
+    style={{ transform: `scaleX(${1 - progress / 100})` }}
+  />
+</div>
 
-        <div className="team-avatar">
-          <img
-            src={current.skinImage}
-            alt={`${current.name} skin`}
-            className={`skin-pose ${animate ? 'animate-in' : ''}`}
-          />
+        <div className="carousel-heads">
+          {teamMembers.map((member, i) => (
+            <img
+              key={i}
+              src={member.headImage}
+              alt={member.name}
+              className={`head-icon ${i === index ? 'active' : ''}`}
+              onClick={() => manualSelect(i)}
+              onMouseEnter={handleHover}
+            />
+          ))}
         </div>
-      </div>
-
-      <div className="carousel-heads">
-        {teamMembers.map((member, i) => (
-          <img
-            key={i}
-            src={member.headImage}
-            alt={member.name}
-            className={`head-icon ${i === index ? 'active' : ''}`}
-            onClick={() => manualSelect(i)}
-          />
-        ))}
-      </div>
-    </section>
-  );
-}
+      </section>
+    );
+  }

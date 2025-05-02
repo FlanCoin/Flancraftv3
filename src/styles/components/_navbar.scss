@@ -165,7 +165,8 @@ $color-borde-oro: #f7c14d;
         gap: 0.4rem;
         padding: 0.45rem 0.8rem;
         font-size: 1rem;
-        color: #fffbe5;
+        color: #ffffff;
+text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
         border-radius: 6px;
         font-weight: bold;
         border: 2px solid #55360E;
@@ -176,20 +177,21 @@ $color-borde-oro: #f7c14d;
 
         &:hover {
           background: linear-gradient(to bottom, #6b4a2e, #3e2a1a);
-          box-shadow: 0 0 12px $color-hover-glow, inset 0 0 4px rgba(255, 255, 255, 0.08);
-          color: $color-oro-brillo;
+          box-shadow: 0 0 12px #ffffff, inset 0 0 4px rgba(255, 255, 255, 0.08);
           transform: scale(1.05);
 
           i {
-            text-shadow: 0 0 6px rgba(255, 204, 0, 0.6);
+            color: #ffffff;
+text-shadow: 0 0 8px rgba(255, 255, 255, 0.85);
+
             filter: drop-shadow(0 0 8px rgba(255, 224, 150, 0.6));
           }
         }
 
         &.active {
           background: linear-gradient(to bottom, #8c673e, #3e2d1e);
-          color: #55360E;
-          box-shadow: 0 0 10px $color-hover-glow;
+          color: #ffffff;
+text-shadow: 0 0 8px rgba(255, 255, 255, 0.85);
         }
 
         .arrow-icon {
