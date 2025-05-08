@@ -1,6 +1,6 @@
 import React from 'react';
 import NewsHighlight from './NewsHighlight';
-import '../styles/components/_playerdashboard.scss';
+import '../styles/components/_playerdashboardd.scss';
 
 const PlayerDashboard = () => {
   return (
