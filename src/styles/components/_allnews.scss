@@ -2,18 +2,17 @@
 
 .all-news-section {
   width: 100%;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'IM Fell English SC', serif;
   color: #2c1a05;
 
   .news-header-bg {
-    background: url('/assets/bg-news-header.png') center center no-repeat;
+    background: url('/assets/bgnews.png') center center no-repeat;
     background-size: cover;
     padding: 5rem 2rem 3rem;
     text-align: center;
     z-index: 1;
 
     .main-title {
-      font-family: 'Almendra SC', serif;
       font-size: 3rem;
       color: #fffbe8;
       margin-bottom: 3rem;
@@ -32,17 +31,28 @@
         overflow: hidden;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         text-align: left;
-        transition: transform 0.2s ease;
         text-decoration: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        cursor: pointer;
 
         &:hover {
-          transform: translateY(-5px);
+          box-shadow: 0 0 15px 3px rgba(255, 235, 185, 0.4),
+                      0 0 4px 2px rgba(255, 220, 150, 0.3);
         }
 
-        img {
-          width: 100%;
-          height: 160px;
-          object-fit: cover;
+        .img-wrapper {
+          overflow: hidden;
+          img {
+            width: 450px;
+            height: 160px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+          }
+        }
+
+        &:hover .img-wrapper img {
+          transform: scale(1.08);
         }
 
         .info {
@@ -50,7 +60,6 @@
 
           h3 {
             font-size: 1rem;
-            font-family: 'Almendra SC', serif;
             margin-bottom: 0.5rem;
             color: #2e1b05;
           }
@@ -65,53 +74,92 @@
   }
 
   .news-scroll-bg {
-    background: url('/assets/bg-news-scroll.png') center top no-repeat;
+    background: url('/assets/bg-news-scroll.jpeg') center top repeat-y;
     background-size: 100% auto;
     padding: 4rem 2rem;
-
+  
     .scroll-title {
-      font-family: 'Almendra SC', serif;
       font-size: 2rem;
       color: #3a1f04;
       margin-bottom: 2rem;
       text-align: center;
     }
-
+  
     .news-list {
       display: flex;
       flex-direction: column;
-      gap: 2rem;
-
+      gap: 2.5rem;
+      max-width: 980px;
+      margin: 0 auto;
+  
       .news-list-item {
         display: flex;
         align-items: flex-start;
         text-decoration: none;
         color: inherit;
-        border-bottom: 1px solid #d3b98d;
-        padding-bottom: 1rem;
-
+        border-bottom: 2px solid #d3b98d;
+        padding-bottom: 1.5rem;
+        transition: transform 0.2s ease;
+        background: rgba(255, 255, 255, 0.03);
+  
+        &:hover {
+          transform: translateX(4px);
+        }
+  
         img {
-          width: 120px;
-          height: 80px;
+          width: 250px;
+          height: 90px;
           object-fit: cover;
           border-radius: 6px;
-          margin-right: 1.5rem;
+          margin-right: 1.8rem;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
         }
-
+  
         .text {
+          flex: 1;
+  
           h4 {
-            font-size: 1.1rem;
-            font-family: 'Almendra SC', serif;
+            font-size: 1.25rem;
             margin-bottom: 0.3rem;
             color: #3a1f04;
           }
-
+  
           p {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: #6a4c2d;
+            max-width: 100%;
+            line-height: 1.5;
+          }
+  
+          .date {
+            font-size: 0.8rem;
+            color: #a18b68;
+            margin-top: 0.4rem;
           }
         }
       }
     }
+  
+    .load-more {
+      margin-top: 3rem;
+      text-align: center;
+  
+      button {
+        font-family: 'IM Fell English SC', serif;
+        background: #e0c597;
+        color: #4a320e;
+        border: 2px solid #c5a86d;
+        padding: 0.6rem 1.6rem;
+        font-size: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        transition: background 0.2s ease;
+  
+        &:hover {
+          background: #d2b47f;
+        }
+      }
+    }
   }
-}
+ }

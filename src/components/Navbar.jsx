@@ -93,7 +93,7 @@ const Navbar = () => {
           </div>
 
           <div className="nav-center links">
-            <NavLink to="/noticias"><i className="fas fa-scroll" /> Noticias</NavLink>
+            <NavLink to="/news"><i className="fas fa-scroll" /> Noticias</NavLink>
 
             <div className={`dropdown ${activeDropdown === 'mundos' ? 'show-dropdown' : ''}`}
               onMouseEnter={() => handleDropdownHover('mundos')}

@@ -5,6 +5,7 @@ import '../styles/components/_allnews.scss';
 
 const AllNews = () => {
   const [newsData, setNewsData] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(6);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -24,18 +25,19 @@ const AllNews = () => {
     fetchNews();
   }, []);
 
-  const formatDate = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
+  const formatDaysAgo = (dateStr) => {
+    const today = new Date();
+    const newsDate = new Date(dateStr);
+    const diff = Math.floor((today - newsDate) / (1000 * 60 * 60 * 24));
+    return `hace ${diff} día${diff !== 1 ? 's' : ''}`;
   };
 
   const featured = newsData.slice(0, 4);
-  const rest = newsData.slice(4);
+  const rest = newsData.slice(4, 4 + visibleCount);
+
+  const showMore = () => {
+    setVisibleCount((prev) => prev + 6);
+  };
 
   return (
     <section className="all-news-section">
@@ -44,10 +46,12 @@ const AllNews = () => {
         <div className="featured-news-grid">
           {featured.map((item) => (
             <Link key={item._id} to={`/news/${item._id}`} className="featured-news-card">
-              <img src={item.imageUrl} alt={item.title} />
+              <div className="img-wrapper">
+                <img src={item.imageUrl} alt={item.title} />
+              </div>
               <div className="info">
                 <h3>{item.title}</h3>
-                <span>{formatDate(item.date)}</span>
+                <span>{formatDaysAgo(item.date)}</span>
               </div>
             </Link>
           ))}
@@ -62,11 +66,18 @@ const AllNews = () => {
               <img src={item.imageUrl} alt={item.title} />
               <div className="text">
                 <h4>{item.title}</h4>
-                <p>{formatDate(item.date)}</p>
+                <p>{item.content?.[0]?.children?.[0]?.text || ''}</p>
+                <div className="date">{formatDaysAgo(item.date)}</div>
               </div>
             </Link>
           ))}
         </div>
+
+        {newsData.length > visibleCount + 4 && (
+          <div className="load-more">
+            <button onClick={showMore}>Mostrar más</button>
+          </div>
+        )}
       </div>
     </section>
   );

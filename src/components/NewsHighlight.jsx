@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import client from '../sanityClient';
 import { ArrowRight } from 'lucide-react';
-import '../styles/components/_newshighlightt.scss';
+import '../styles/components/_newshighlight.scss';
 
 const NewsHighlight = () => {
   const [newsData, setNewsData] = useState([]);
@@ -87,19 +87,19 @@ const NewsHighlight = () => {
           </div>
         )}
 
-        <div className="highlight-previous">
-          {previous.map((news) => (
-            <div key={news._id} className="highlight-card">
-              <img src={news.imageUrl} alt={news.title} />
-              <div className="card-content">
-                <h4>
-                  <Link to={`/news/${news._id}`}>{news.title}</Link>
-                </h4>
-                <span className="date">{formatDateStyled(news.date)}</span>
-              </div>
-            </div>
-          ))}
+<div className="highlight-previous">
+  {previous.map((news) => (
+    <Link to={`/news/${news._id}`} key={news._id} className="highlight-card-link">
+      <div className="highlight-card">
+        <img src={news.imageUrl} alt={news.title} />
+        <div className="card-content">
+          <h4>{news.title}</h4>
+          <span className="date">{formatDateStyled(news.date)}</span>
         </div>
+      </div>
+    </Link>
+  ))}
+</div>
 
         <div className="news-cta">
           <Link to="/news" className="cta-button">
