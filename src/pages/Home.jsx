@@ -7,9 +7,9 @@ import ServerStatus from '../components/ServerStatus';
 import GameModes from '../components/GameModes';
 import TeamCarousel from '../components/TeamCarousel';
 import SectionDivider from '../components/SectionDivider';
-import FeaturesSection from '../components/FeaturesSection';
+import ThemedFeatures from '../components/ThemedFeatures';
 import SectionDivider2 from '../components/SectionDivider2';
-
+import PlayerDashboard from '../components/PlayerDashboard';
 
 const Home = () => {
   const [copied, setCopied] = useState(false);
@@ -40,7 +40,8 @@ const Home = () => {
           </button>
         </div>
       </header>
-
+      <SectionDivider />
+      <PlayerDashboard />
       {/* Mapa RPG a pantalla completa */}
       <MapRPG />
 
@@ -58,7 +59,7 @@ const Home = () => {
 
       {/* Divider inferior que estaba mal posicionado antes */}
       <SectionDivider />
-      <FeaturesSection />
+      <ThemedFeatures/>
 <div className="divider-overlay">
   <SectionDivider2 />
 </div>

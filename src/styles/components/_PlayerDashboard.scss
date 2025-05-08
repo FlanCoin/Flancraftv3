@@ -1,0 +1,180 @@
+@use "../base/variables" as *;
+
+.player-dashboard {
+  position: relative;
+  z-index: 0;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("/assets/papernew.avif") center center no-repeat;
+    background-size: contain;
+    z-index: -1;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% auto;
+    
+    
+    }
+
+  .pd-bg {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 12, 5, 0.192);
+    z-index: 1;
+    backdrop-filter: brightness(1.1) blur(1px);
+  }
+
+  .pd-wrapper {
+    position: relative;
+    z-index: 2;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  .dashboard-top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 4rem;
+
+    .card {
+      background: #fff8dc;
+      border: 3px solid #a06b27;
+      border-radius: 12px;
+      padding: 2rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+
+      h4, h5 {
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+        color: #402200;
+      }
+    }
+
+    .perfil {
+      .avatar-block {
+        text-align: center;
+        margin-bottom: 1rem;
+
+        img {
+          width: 72px;
+          height: 72px;
+          border-radius: 8px;
+          border: 2px solid #6e471b;
+        }
+
+        h4 {
+          margin-top: 0.5rem;
+        }
+      }
+
+      .xp-bar {
+        height: 10px;
+        background: #d9c48c;
+        border-radius: 4px;
+        margin: 0.75rem 0;
+        overflow: hidden;
+
+        div {
+          width: 70%;
+          height: 100%;
+          background: linear-gradient(to right, #ffa500, #ffd700);
+        }
+      }
+
+      .stats {
+        font-size: 0.75rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+          margin-bottom: 0.5rem;
+        }
+      }
+    }
+
+    .misiones {
+      ul {
+        list-style: none;
+        padding: 0;
+        font-size: 0.75rem;
+
+        li {
+          background: #f0e6b8;
+          border: 1px solid #b7a251;
+          border-radius: 6px;
+          margin-bottom: 0.75rem;
+          padding: 0.75rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          &.completada {
+            background: #b2e3a7;
+            text-decoration: line-through;
+          }
+        }
+      }
+
+      .contador {
+        font-size: 0.7rem;
+        color: #865d12;
+        text-align: center;
+        margin-top: auto;
+      }
+    }
+
+    .eventos {
+      .evento-card {
+        background: #ffe9c1;
+        border: 1px solid #b57d2d;
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+
+        img {
+          width: 100%;
+          border-radius: 4px;
+          margin-bottom: 0.5rem;
+        }
+
+        h5 {
+          font-size: 0.8rem;
+        }
+
+        p {
+          font-size: 0.7rem;
+        }
+
+        .cta {
+          background: #d35400;
+          color: white;
+          font-size: 0.7rem;
+          padding: 0.4rem 0.6rem;
+          border: none;
+          border-radius: 4px;
+          margin-top: 0.5rem;
+          cursor: pointer;
+
+          &:hover {
+            background: #b84300;
+          }
+        }
+      }
+    }
+  }
+} 

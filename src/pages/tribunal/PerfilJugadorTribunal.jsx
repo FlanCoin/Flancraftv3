@@ -181,7 +181,7 @@ export default function PerfilJugador() {
       </table>
 
       <div className="volver-btn">
-        <Link to="/sanciones" className="btn">← Volver a sanciones</Link>
+        <Link to="/tribunal" className="btn">← Volver al tribunal</Link>
       </div>
     </div>
   );
