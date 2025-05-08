@@ -26,24 +26,23 @@ const NewsHighlight = () => {
     fetchNews();
   }, []);
 
-  const formatDateStyled = (dateString) => {
-    if (!dateString) return 'Unknown';
-    const date = new Date(dateString);
-    return isNaN(date.getTime())
-      ? 'Unknown'
-      : date.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-        });
+  const formatDaysAgo = (dateStr) => {
+    const today = new Date();
+    const newsDate = new Date(dateStr);
+    const diff = Math.floor((today - newsDate) / (1000 * 60 * 60 * 24));
+    return `hace ${diff} día${diff !== 1 ? 's' : ''}`;
   };
 
   const getExcerpt = (content, length = 180) => {
     try {
       if (!Array.isArray(content)) return '...';
-      const blocks = content.filter(block => block._type === 'block' && Array.isArray(block.children));
+      const blocks = content.filter(
+        (block) => block._type === 'block' && Array.isArray(block.children)
+      );
       const fullText = blocks
-        .map(block => block.children.map(c => typeof c.text === 'string' ? c.text : '').join(''))
+        .map((block) =>
+          block.children.map((c) => (typeof c.text === 'string' ? c.text : '')).join('')
+        )
         .join(' ');
       return fullText.slice(0, length) + '...';
     } catch {
@@ -78,7 +77,7 @@ const NewsHighlight = () => {
               <h3>
                 <Link to={`/news/${latest._id}`}>{latest.title}</Link>
               </h3>
-              <span className="date">{formatDateStyled(latest.date)}</span>
+              <span className="date">{formatDaysAgo(latest.date)}</span>
               <p>{getExcerpt(latest.content)}</p>
               <Link to={`/news/${latest._id}`} className="readmore-link">
                 Leer más <ArrowRight size={16} className="icon-inline" />
@@ -87,19 +86,19 @@ const NewsHighlight = () => {
           </div>
         )}
 
-<div className="highlight-previous">
-  {previous.map((news) => (
-    <Link to={`/news/${news._id}`} key={news._id} className="highlight-card-link">
-      <div className="highlight-card">
-        <img src={news.imageUrl} alt={news.title} />
-        <div className="card-content">
-          <h4>{news.title}</h4>
-          <span className="date">{formatDateStyled(news.date)}</span>
+        <div className="highlight-previous">
+          {previous.map((news) => (
+            <Link to={`/news/${news._id}`} key={news._id} className="highlight-card-link">
+              <div className="highlight-card">
+                <img src={news.imageUrl} alt={news.title} />
+                <div className="card-content">
+                  <h4>{news.title}</h4>
+                  <span className="date">{formatDaysAgo(news.date)}</span>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
-      </div>
-    </Link>
-  ))}
-</div>
 
         <div className="news-cta">
           <Link to="/news" className="cta-button">

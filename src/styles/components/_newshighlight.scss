@@ -6,7 +6,8 @@
   margin: 0 auto;
   padding: 0 0 2rem;
   text-align: center;
-  font-family: 'Bitter', serif;
+  font-family: 'IM Fell English SC', serif;
+
   .news-header {
     margin-bottom: 2.5rem;
 
@@ -20,7 +21,6 @@
     .news-desc {
       font-size: 1.2rem;
       color: #4a3722;
-      font-family: 'Bitter', serif;
       max-width: 750px;
       margin: 0 auto;
       line-height: 1.5;
@@ -38,108 +38,70 @@
   }
 
   .highlight-featured {
-    position: relative;
+    background: #f4e2bd;
+    border: 2px solid #c5a86d;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    padding: 1.5rem 2rem;
     display: flex;
     gap: 2rem;
-    background: #f4e3bc;
-    border: 3px solid #b68a53;
-    border-radius: 16px;
-    padding: 1.5rem 2rem 2rem;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.3);
-    font-family: 'Georgia', serif;
-    overflow: hidden;
-
-    .highlight-badge {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: linear-gradient(145deg, #5a4020, #7d5c30);
-      color: #fff7d6;
-      font-family: $font-minecraft;
-      font-size: 0.75rem;
-      padding: 0.4rem 1.1rem;
-      border-radius: 8px;
-      border: 1px solid #3e2815;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 5px rgba(0, 0, 0, 0.35);
-      animation: glowPop 2.8s ease-in-out infinite;
-      z-index: 4;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 15px 3px rgba(255, 235, 185, 0.4),
+                  0 0 4px 2px rgba(255, 220, 150, 0.3);
     }
-
-    @keyframes glowPop {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 0 4px rgba(255, 230, 180, 0.35);
-      }
-      50% {
-        transform: scale(1.05);
-        box-shadow: 0 0 8px rgba(255, 230, 180, 0.55);
-      }
-      100% {
-        transform: scale(1);
-        box-shadow: 0 0 4px rgba(255, 230, 180, 0.35);
-      }
-    }
-
+  
     .highlight-image {
       flex: 1.2;
       display: flex;
       align-items: center;
-
+  
       img {
         width: 100%;
-        max-height: 300px;
+        height: 130px;
         object-fit: cover;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
       }
     }
-
+  
     .highlight-content {
       flex: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       text-align: left;
-      position: relative;
-
+  
       h3 {
-        font-family: 'Segoe UI', sans-serif;
-        font-size: 2.1rem;
-        color: #2a1b08;
+        font-size: 1.3rem;
+        color: #2e1b05;
         margin-bottom: 0.5rem;
       }
-
-      .date {
-        position: absolute;
-        bottom:-1rem;
-        left: 0;
-        font-size: 0.9rem;
-        color: #a07b4a;
-        font-family: 'Georgia', serif;
-        opacity: 0.85;
-        
-      }
-
+  
       p {
-        font-size: 1.05rem;
-        line-height: 1.75;
-        color: #3d2c1b;
-        margin-bottom: 0.75rem;
-        font-family: 'Georgia', serif;
+        font-size: 0.95rem;
+        color: #6a4c2d;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
-
+  
+      .date {
+        font-size: 0.8rem;
+        color: #a18b68;
+      }
+  
       .readmore-link {
-        position: absolute;
-        bottom: 0.5rem;
-        right: 0;
-        display: inline-flex;
-        align-items: center;
         font-size: 0.9rem;
         font-weight: bold;
         color: #b04500;
-        font-family: 'Segoe UI', sans-serif;
-        text-align: right;
         transition: color 0.2s;
-    
+  
         &:hover {
           color: #ff7e00;
           text-decoration: underline;
@@ -147,105 +109,83 @@
       }
     }
   }
+  
 
   .highlight-previous {
     display: flex;
     flex-wrap: wrap;
-    gap: 4rem;
-    margin-top: 2.5rem;
-    margin-bottom: 0;
+    gap: 5rem;
+    margin-top: 3rem;
     justify-content: center;
-
+  
     .highlight-card {
-      cursor: pointer;
-      width: 100%;
-      max-width: 280px;
-      background: #2d1a06;
-      border: 2px solid #c7a255;
-      border-radius: 12px;
+      background: #f4e2bd;
+      border: 2px solid #c5a86d;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
       overflow: hidden;
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
-      transition: transform 0.2s ease, box-shadow 0.3s ease;
-      position: relative;
+      width: 280px;
+      height: 260px;
+      padding-bottom: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       text-decoration: none;
-    
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
       &:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 0 12px rgba(255, 215, 160, 0.4), 0 8px 20px rgba(0, 0, 0, 0.5);
-        border-color: #e4ba72;
+        box-shadow: 0 0 15px 3px rgba(255, 235, 185, 0.4),
+                    0 0 4px 2px rgba(255, 220, 150, 0.3);
+        transform: translateY(-4px);
       }
-    
+  
       img {
         width: 100%;
-        height: auto;
+        height: 110px;
         object-fit: cover;
-        border-bottom: 2px solid #c7a255;
       }
-    
+  
       .card-content {
         padding: 1rem;
-        text-align: left;
-    
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+  
         h4 {
-          font-size: 1rem;
-          font-family: 'Segoe UI', sans-serif;
-          color: #f8ecd3;
-          margin-bottom: 0.5rem;
+          font-size: 1.1rem;
+          color: #3a1f04;
           font-weight: 600;
+          margin-bottom: 0.5rem;
+          flex-grow: 1;
         }
-    
+  
         .date {
-          position: absolute;
-          bottom: 0.5rem;
-          left: 1rem;
           font-size: 0.8rem;
-          font-family: 'Georgia', serif;
-          color: #d3c5ad;
-          opacity: 0.9;
+          color: #a18b68;
         }
-        .highlight-card-link {
-          text-decoration: none;
-          color: inherit;
-          display: block;
-        
-          .highlight-card {
-            cursor: pointer;
-            transition: box-shadow 0.3s ease, transform 0.2s;
-            
-            &:hover {
-              box-shadow: 0 0 10px 2px rgba(255, 235, 185, 0.4),
-                          0 0 4px 1px rgba(255, 220, 150, 0.3);
-              transform: translateY(-4px);
-            }
-          }
-        }
-        
       }
     }
-    
   }
+  
 
   .news-cta {
     text-align: center;
     margin-top: 2.5rem;
 
     .cta-button {
-      background: #f3b24d;
-      color: #fff6e6;
-      border: 2px solid #b37e38;
-      font-family: $font-minecraft;
-      font-size: 0.95rem;
-      padding: 0.7rem 1.6rem;
-      border-radius: 12px;
-      transition: background 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      background: #e0c597;
+      color: #4a320e;
+      border: 2px solid #c5a86d;
+      padding: 0.6rem 1.6rem;
+      font-size: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      transition: background 0.2s ease;
 
       &:hover {
-        background: #d68c24;
-        color: white;
+        background: #d2b47f;
       }
     }
   }

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import '../styles/pages/_home.scss';
 
 import MapRPG from '../components/MapRPG';
-import NewsSection from '../components/news/NewsSection';
 import ServerStatus from '../components/ServerStatus';
 import GameModes from '../components/GameModes';
 import TeamCarousel from '../components/TeamCarousel';
@@ -64,9 +63,6 @@ const Home = () => {
   <SectionDivider2 />
 </div>
 
-
-      {/* Noticias */}
-      <NewsSection />
 
       {/* Footer */}
       <footer className="footer-flancraft">
