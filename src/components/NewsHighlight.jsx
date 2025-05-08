@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import client from '../sanityClient';
 import { ArrowRight } from 'lucide-react';
-import '../styles/components/_newshighlight.scss';
+import '../styles/components/_newshighlightt.scss';
 
 const NewsHighlight = () => {
   const [newsData, setNewsData] = useState([]);
