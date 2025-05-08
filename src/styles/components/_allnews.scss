@@ -1,0 +1,117 @@
+@use "../base/variables" as *;
+
+.all-news-section {
+  width: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  color: #2c1a05;
+
+  .news-header-bg {
+    background: url('/assets/bg-news-header.png') center center no-repeat;
+    background-size: cover;
+    padding: 5rem 2rem 3rem;
+    text-align: center;
+    z-index: 1;
+
+    .main-title {
+      font-family: 'Almendra SC', serif;
+      font-size: 3rem;
+      color: #fffbe8;
+      margin-bottom: 3rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .featured-news-grid {
+      display: grid;
+      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      justify-content: center;
+
+      .featured-news-card {
+        background: #f4e2bd;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        text-align: left;
+        transition: transform 0.2s ease;
+        text-decoration: none;
+
+        &:hover {
+          transform: translateY(-5px);
+        }
+
+        img {
+          width: 100%;
+          height: 160px;
+          object-fit: cover;
+        }
+
+        .info {
+          padding: 1rem;
+
+          h3 {
+            font-size: 1rem;
+            font-family: 'Almendra SC', serif;
+            margin-bottom: 0.5rem;
+            color: #2e1b05;
+          }
+
+          span {
+            font-size: 0.75rem;
+            color: #777;
+          }
+        }
+      }
+    }
+  }
+
+  .news-scroll-bg {
+    background: url('/assets/bg-news-scroll.png') center top no-repeat;
+    background-size: 100% auto;
+    padding: 4rem 2rem;
+
+    .scroll-title {
+      font-family: 'Almendra SC', serif;
+      font-size: 2rem;
+      color: #3a1f04;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .news-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+
+      .news-list-item {
+        display: flex;
+        align-items: flex-start;
+        text-decoration: none;
+        color: inherit;
+        border-bottom: 1px solid #d3b98d;
+        padding-bottom: 1rem;
+
+        img {
+          width: 120px;
+          height: 80px;
+          object-fit: cover;
+          border-radius: 6px;
+          margin-right: 1.5rem;
+        }
+
+        .text {
+          h4 {
+            font-size: 1.1rem;
+            font-family: 'Almendra SC', serif;
+            margin-bottom: 0.3rem;
+            color: #3a1f04;
+          }
+
+          p {
+            font-size: 0.9rem;
+            color: #6a4c2d;
+          }
+        }
+      }
+    }
+  }
+}

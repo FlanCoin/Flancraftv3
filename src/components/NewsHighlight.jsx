@@ -26,10 +26,16 @@ const NewsHighlight = () => {
     fetchNews();
   }, []);
 
-  const formatDate = (dateString) => {
-    if (!dateString) return 'Sin fecha';
+  const formatDateStyled = (dateString) => {
+    if (!dateString) return 'Unknown';
     const date = new Date(dateString);
-    return isNaN(date.getTime()) ? 'Sin fecha' : date.toLocaleDateString();
+    return isNaN(date.getTime())
+      ? 'Unknown'
+      : date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        });
   };
 
   const getExcerpt = (content, length = 180) => {
@@ -54,7 +60,7 @@ const NewsHighlight = () => {
       <div className="news-inner">
         <div className="news-header">
           <div className="news-title-wrapper">
-          <div className="news-title-line" />
+            <div className="news-title-line" />
             <h2 className="news-title">Novedades</h2>
             <p className="news-desc">
               Mantente al día con las últimas noticias y actualizaciones de Flancraft.
@@ -65,7 +71,6 @@ const NewsHighlight = () => {
 
         {latest && (
           <div className="highlight-featured">
-            <span className="highlight-badge">DESTACADA</span>
             <div className="highlight-image">
               <img src={latest.imageUrl} alt={latest.title} />
             </div>
@@ -73,7 +78,7 @@ const NewsHighlight = () => {
               <h3>
                 <Link to={`/news/${latest._id}`}>{latest.title}</Link>
               </h3>
-              <span className="date">{formatDate(latest.date)}</span>
+              <span className="date">{formatDateStyled(latest.date)}</span>
               <p>{getExcerpt(latest.content)}</p>
               <Link to={`/news/${latest._id}`} className="readmore-link">
                 Leer más <ArrowRight size={16} className="icon-inline" />
@@ -86,11 +91,11 @@ const NewsHighlight = () => {
           {previous.map((news) => (
             <div key={news._id} className="highlight-card">
               <img src={news.imageUrl} alt={news.title} />
-              <div>
+              <div className="card-content">
                 <h4>
                   <Link to={`/news/${news._id}`}>{news.title}</Link>
                 </h4>
-                <span className="date">{formatDate(news.date)}</span>
+                <span className="date">{formatDateStyled(news.date)}</span>
               </div>
             </div>
           ))}
