@@ -9,6 +9,7 @@ import TribunalStaff from './pages/tribunal/TribunalStaff';
 import PerfilJugadorTribunal from './pages/tribunal/PerfilJugadorTribunal';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import AllNews from './components/AllNews';
+import NewsDetail from './components/NewsDetail';
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
 
         {/* Tribunal System */}
         <Route path="/news" element={<AllNews />} /> 
+        <Route path="/news/:slug" element={<NewsDetail />} />
         <Route path="/tribunal" element={<TribunalMain />} />
         <Route path="/login" element={<TribunalLogin />} />
         <Route path="/admin" element={<TribunalAdmin />} />
