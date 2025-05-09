@@ -1,36 +1,37 @@
+
 .sanciones-wrapper {
-  padding: 2rem;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'IM Fell English SC', serif;
   background: url('/assets/paper_texture.jpg') repeat;
   color: #2d1c10;
+  padding: 4rem 2rem;
 
-  // Responsive padding
   @media (max-width: 768px) {
-    padding: 1rem;
+    padding: 2rem 1rem;
   }
 
   .top-panel {
-    background: #fef8e2;
-    border: 3px solid #d2aa6c;
-    border-radius: 12px;
+    background: #fffbe8;
+    border: 4px solid #cba76a;
+    border-radius: 16px;
     padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
     text-align: center;
     position: relative;
+    margin-bottom: 3rem;
 
     @media (max-width: 768px) {
       padding: 1rem;
     }
 
     .sanciones-title {
-      font-size: 2rem;
-      background: #f8eacc;
-      border: 4px solid #d2aa6c;
-      padding: 1rem;
-      border-radius: 10px;
-      margin-bottom: 1rem;
-      box-shadow: 0 0 10px #00000066;
+      font-size: 2.2rem;
+      color: #3a1f04;
+      padding: 1rem 2rem;
+      background: #f9ecd6;
+      border: 4px double #cfae74;
+      border-radius: 12px;
+      box-shadow: inset 0 0 8px #dac293, 0 0 4px rgba(0, 0, 0, 0.2);
+      margin-bottom: 1.5rem;
 
       @media (max-width: 768px) {
         font-size: 1.5rem;
@@ -42,13 +43,20 @@
       margin-bottom: 1rem;
 
       .filtro-input {
+        max-width: 300px;
         width: 100%;
-        max-width: 260px;
-        padding: 0.6rem;
+        padding: 0.7rem 1rem;
+        border: 2px solid #d3b47c;
+        border-radius: 10px;
         font-size: 1rem;
-        background: #fffef5;
-        border: 2px solid #d8b473;
-        border-radius: 8px;
+        background: #fffdf3;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: border-color 0.2s;
+
+        &:focus {
+          border-color: #b89557;
+          outline: none;
+        }
 
         @media (max-width: 768px) {
           font-size: 0.95rem;
@@ -57,7 +65,7 @@
     }
 
     .leyenda-container {
-      margin-top: 0.5rem;
+      margin-top: 1.2rem;
 
       .leyenda-btn {
         cursor: pointer;
@@ -145,226 +153,238 @@
     }
   }
 
-  // 🔥 Responsive scroll para tabla
-  .sanciones-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    border: 2px solid #d2ab6c;
-    border-radius: 12px;
-    background-color: #fffaf0;
-    overflow: visible;
-    position: relative;
-    z-index: 1;
+.sanciones-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 2px solid #d2ab6c;
+  border-radius: 12px;
+  background-color: #fffaf0;
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+  table-layout: fixed;
 
-    @media (max-width: 768px) {
-      display: block;
-      overflow-x: auto;
-      white-space: nowrap;
-    }
+  @media (max-width: 768px) {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
 
-    th {
-      background: #5a3b1a;
-      color: #fffbe6;
-      font-size: 0.875rem;
-      padding: 1rem;
+  th {
+    background: #54381c;
+    color: #fff9e1;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    padding: 1rem;
+    letter-spacing: 0.5px;
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  td {
+    padding: 1rem;
+    background: #fffef9;
+    border-bottom: 1px solid #eee0c4;
+    font-size: 0.95rem;
+    word-break: break-word;
+    vertical-align: middle;
+    text-align: center;
+
+    &:first-child {
       text-align: left;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      white-space: nowrap;
+    }
+  }
+
+  tbody tr {
+    transition: box-shadow 0.2s ease, transform 0.2s;
+
+    &:hover {
+      background-color: #fff7df;
+      transform: scale(1.015);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border-radius: 6px;
+      z-index: 5;
+      position: relative;
+    }
+  }
+
+  .player-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.25rem 0;
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: 2px solid #cdb78d;
+      background: #fff8dc;
+      flex-shrink: 0;
     }
 
-    td {
-      padding: 1rem;
-      border-bottom: 1px solid #e8d4ac;
-      vertical-align: middle;
-      background: #fffef9;
-      font-size: 0.95rem;
-    }
+    .player-name {
+      font-weight: bold;
+      line-height: 1.2;
 
-    tbody tr {
-      transition: transform 0.15s ease, box-shadow 0.2s ease;
+      .player-link {
+        cursor: pointer;
+        color: #2c1c0a;
 
-      &:hover {
-        background-color: #fff7df;
-        transform: scale(1.015);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        border-radius: 6px;
-        z-index: 5;
-        position: relative;
-      }
-    }
-
-    .player-cell {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-
-      .avatar {
-        width: 36px;
-        height: 36px;
-        border-radius: 6px;
-        border: 2px solid #cdb78d;
-        background-color: #fefae0;
-      }
-
-      .player-name {
-        font-weight: bold;
-
-        .player-link {
-          cursor: pointer;
-          color: #2f1f10;
-
-          &:hover {
-            text-decoration: underline;
-          }
+        &:hover {
+          text-decoration: underline;
         }
       }
-
-      .baneado-badge,
-      .permaban-badge {
-        margin-left: 6px;
-        padding: 2px 8px;
-        font-size: 0.75rem;
-        border-radius: 999px;
-        font-weight: bold;
-        color: #fff;
-      }
-
-      .baneado-badge {
-        background: #d35400;
-      }
-
-      .permaban-badge {
-        background: #c0392b;
-      }
     }
 
-    .tipo {
-      font-weight: bold;
-      text-transform: capitalize;
-      margin-bottom: 0.25rem;
-      display: block;
-    }
-
-    .strikes {
-      display: flex;
-      align-items: center;
-      font-size: 0.875rem;
-      color: #8b5e3c;
-
-      svg {
-        margin-right: 4px;
-      }
-
-      &.permaban {
-        color: #b71c1c;
-        font-weight: bold;
-      }
-    }
-
-    .server-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      border: 1px solid transparent;
-
-      &.survival {
-        background-color: #e1f4e1;
-        color: #2e7d32;
-        border-color: #a5d6a7;
-      }
-
-      &.anarquico {
-        background-color: #fdecea;
-        color: #c0392b;
-        border-color: #f5b7b1;
-      }
-
-      &.creativo {
-        background-color: #f3e5f5;
-        color: #7b1fa2;
-        border-color: #ce93d8;
-      }
-
-      &.oneblock {
-        background-color: #e3f2fd;
-        color: #1565c0;
-        border-color: #90caf9;
-      }
-
-      &.kingdoms {
-        background-color: #fff9e1;
-        color: #f9a825;
-        border-color: #ffe082;
-      }
-
-      &.boxpvp {
-        background-color: #fff3e0;
-        color: #ef6c00;
-        border-color: #ffb74d;
-      }
-
-      &.parkour {
-        background-color: #e0f7fa;
-        color: #00838f;
-        border-color: #80deea;
-      }
-
-      &.lobby {
-        background-color: #ede7f6;
-        color: #5e35b1;
-        border-color: #b39ddb;
-      }
-
-      &.desconocido {
-        background-color: #eeeeee;
-        color: #757575;
-        border-color: #bdbdbd;
-      }
-
-      svg {
-        color: inherit;
-      }
-    }
-
-    .estado {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 4px 10px;
-      font-weight: 600;
+    .baneado-badge,
+    .permaban-badge {
+      margin-left: 6px;
+      padding: 2px 6px;
+      font-size: 0.7rem;
       border-radius: 999px;
-      font-size: 0.85rem;
+      font-weight: bold;
+      color: #fff;
+      white-space: nowrap;
+    }
 
-      &.baneado {
-        background-color: #fdecea;
-        color: #c0392b;
-        border: 1px solid #e0a1a1;
-      }
+    .baneado-badge {
+      background: #d35400;
+    }
 
-      &.revisado {
-        background-color: #e8f9e5;
-        color: #27ae60;
-        border: 1px solid #a6d8b6;
-      }
+    .permaban-badge {
+      background: #c0392b;
+    }
+  }
 
-      &.pendiente {
-        background-color: #fff4d5;
-        color: #e67e22;
-        border: 1px solid #f3c892;
-      }
+  .tipo {
+    font-weight: bold;
+    text-transform: capitalize;
+    margin-bottom: 0.25rem;
+    display: block;
+  }
 
-      svg {
-        margin-right: 4px;
-      }
+  .strikes {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    color: #8b5e3c;
+    justify-content: center;
+
+    svg {
+      margin-right: 4px;
+    }
+
+    &.permaban {
+      color: #b71c1c;
+      font-weight: bold;
+    }
+  }
+
+  .server-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    border: 1px solid transparent;
+
+    &.survival {
+      background-color: #e1f4e1;
+      color: #2e7d32;
+      border-color: #a5d6a7;
+    }
+
+    &.anarquico {
+      background-color: #fdecea;
+      color: #c0392b;
+      border-color: #f5b7b1;
+    }
+
+    &.creativo {
+      background-color: #f3e5f5;
+      color: #7b1fa2;
+      border-color: #ce93d8;
+    }
+
+    &.oneblock {
+      background-color: #e3f2fd;
+      color: #1565c0;
+      border-color: #90caf9;
+    }
+
+    &.kingdoms {
+      background-color: #fff9e1;
+      color: #f9a825;
+      border-color: #ffe082;
+    }
+
+    &.boxpvp {
+      background-color: #fff3e0;
+      color: #ef6c00;
+      border-color: #ffb74d;
+    }
+
+    &.parkour {
+      background-color: #e0f7fa;
+      color: #00838f;
+      border-color: #80deea;
+    }
+
+    &.lobby {
+      background-color: #ede7f6;
+      color: #5e35b1;
+      border-color: #b39ddb;
+    }
+
+    &.desconocido {
+      background-color: #eeeeee;
+      color: #757575;
+      border-color: #bdbdbd;
+    }
+
+    svg {
+      color: inherit;
+    }
+  }
+
+  .estado {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 4px 10px;
+    font-weight: 600;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    justify-content: center;
+
+    &.baneado {
+      background-color: #fdecea;
+      color: #c0392b;
+      border: 1px solid #e0a1a1;
+    }
+
+    &.revisado {
+      background-color: #e8f9e5;
+      color: #27ae60;
+      border: 1px solid #a6d8b6;
+    }
+
+    &.pendiente {
+      background-color: #fff4d5;
+      color: #e67e22;
+      border: 1px solid #f3c892;
+    }
+
+    svg {
+      margin-right: 4px;
     }
   }
 }
+
 .sanciones-cards {
   display: none;
 
@@ -542,4 +562,5 @@
   .tabla-scroll-wrapper {
     display: none;
   }
+}
 }
