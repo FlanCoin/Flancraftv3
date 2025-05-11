@@ -8,7 +8,8 @@ import TeamCarousel from '../components/TeamCarousel';
 import SectionDivider from '../components/SectionDivider';
 import SectionDivider2 from '../components/SectionDivider2';
 import PlayerDashboard from '../components/PlayerDashboard';
-import ComicFlow from '../components/ComicFlow';
+import RitualEko from '../components/RitualEko';
+
 
 const Home = () => {
   const [copied, setCopied] = useState(false);
@@ -58,7 +59,7 @@ const Home = () => {
 
       {/* Divider inferior que estaba mal posicionado antes */}
       <SectionDivider />
-      <ComicFlow />
+      <RitualEko />
 <div className="divider-overlay">
   <SectionDivider2 />
 </div>
