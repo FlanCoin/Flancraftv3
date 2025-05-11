@@ -39,25 +39,25 @@ const codexData = [
     description:
       "En un templo más allá del Nether, donde las leyes físicas lloran y las texturas respiran, Flan halló el Eco. Era una energía pura, viva, impaciente. No podía contenerse. No podía romperse. Solo resonar. Y él… resonó con ella.",
   },
+    {
+    title: "El EKO Desatado",
+    subtitle: "Forma Suprema del Eco",
+    badge: "Energía Absoluta",
+    badgeColor: "#00ffff",
+    bg: "/assets/comic/panel5.webp",
+    thumb: "/assets/comic/panel5.webp",
+    description:
+      "El Eco no se deja dominar. Pero si se estabiliza, si se purifica... cristaliza. Y de esa cristalización nace el EKO. Un núcleo de realidad, una fuente inagotable de creación. Con él, Flan reconstruyó el orden, y otros... comenzaron a desearlo.",
+  },
   {
     title: "El Mercado Interdimensional",
     subtitle: "Donde Todo Se Intercambia",
     badge: "Nexo Prohibido",
     badgeColor: "#e17055",
-    bg: "/assets/comic/panel5.webp",
-    thumb: "/assets/comic/panel5.webp",
-    description:
-      "En los registros ocultos del End, Flan descubrió el Mercado Interdimensional: un lugar fuera del tiempo donde todo tiene precio. Armaduras imposibles, portales extintos, poderes de dioses caídos. ¿La única moneda aceptada? Eco puro. Lo invisible hecho materia.",
-  },
-  {
-    title: "El EKO Desatado",
-    subtitle: "Forma Suprema del Eco",
-    badge: "Energía Absoluta",
-    badgeColor: "#00ffff",
     bg: "/assets/comic/panel6.webp",
     thumb: "/assets/comic/panel6.webp",
     description:
-      "El Eco no se deja dominar. Pero si se estabiliza, si se purifica... cristaliza. Y de esa cristalización nace el EKO. Un núcleo de realidad, una fuente inagotable de creación. Con él, Flan reconstruyó el orden, y otros... comenzaron a desearlo.",
+      "En los registros ocultos del End, Flan descubrió el Mercado Interdimensional: un lugar fuera del tiempo donde todo tiene precio. Armaduras imposibles, portales extintos, poderes de dioses caídos. ¿La única moneda aceptada? Eco puro. Lo invisible hecho materia.",
   },
   {
     title: "La Era del EKO",
