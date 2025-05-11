@@ -6,9 +6,9 @@ import ServerStatus from '../components/ServerStatus';
 import GameModes from '../components/GameModes';
 import TeamCarousel from '../components/TeamCarousel';
 import SectionDivider from '../components/SectionDivider';
-import ThemedFeatures from '../components/ThemedFeatures';
 import SectionDivider2 from '../components/SectionDivider2';
 import PlayerDashboard from '../components/PlayerDashboard';
+import ComicFlow from '../components/ComicFlow';
 
 const Home = () => {
   const [copied, setCopied] = useState(false);
@@ -58,7 +58,7 @@ const Home = () => {
 
       {/* Divider inferior que estaba mal posicionado antes */}
       <SectionDivider />
-      <ThemedFeatures/>
+      <ComicFlow />
 <div className="divider-overlay">
   <SectionDivider2 />
 </div>
