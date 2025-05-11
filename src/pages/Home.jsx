@@ -63,15 +63,6 @@ const Home = () => {
 <div className="divider-overlay">
   <SectionDivider2 />
 </div>
-
-
-      {/* Footer */}
-      <footer className="footer-flancraft">
-        <div className="footer-inner">
-          <p className="footer-title">© 2025 Flancraft Network</p>
-          <p className="footer-sub">Servidor Minecraft 1.20+ — Vive tu aventura</p>
-        </div>
-      </footer>
     </div>
   );
 };

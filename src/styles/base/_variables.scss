@@ -39,3 +39,18 @@ $border-radius-default: 4px;
 // ✨ Sombras
 $shadow-golden: 0 0 20px rgba(255, 215, 0, 0.2);
 $shadow-hover-eko: 0 0 20px rgba(255, 230, 130, 0.8);
+// 🎨 COLORES COMPLEMENTARIOS QUE SE USAN PERO NO ESTÁN DECLARADOS
+$color-disabled-bg: #444;       // Para botones inactivos
+$color-disabled-text: #bbb;     // Texto de botones desactivados
+$color-ritual-progress: #d8c288; // Color del contador de viñeta
+$color-description: #fefae0;    // Texto principal del lore
+$color-subtitle: #eee;          // Subtítulos debajo del título principal
+$color-badge-text: #111;        // Texto interior de la badge
+
+// 🔮 ANIMACIONES / LUCES (ya implícitos, pero no declarados)
+$glow-eko-light: #00f0ff;       // Color de energía EKO
+$glow-eko-soft: #66f0ff;        // Alternativa para degradado suave
+
+// 🎨 BORDES / DECORACIONES
+$thumbnail-border: rgba(255, 230, 120, 0.3); // Para ítem centrado en el carrusel
+$thumbnail-shadow: rgba(255, 255, 200, 0.4); // Glow badge

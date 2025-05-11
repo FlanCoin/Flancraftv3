@@ -17,6 +17,7 @@
     "@supabase/supabase-js": "^2.49.4",
     "clipboardy": "^4.0.0",
     "clsx": "^2.1.1",
+    "color-thief-browser": "^2.0.2",
     "flancraft-web": "file:",
     "framer-motion": "^12.10.4",
     "howler": "^2.2.4",
