@@ -15,13 +15,17 @@ export default function RitualEko() {
   const current = codexData[index];
   const isVideo = current.bg?.endsWith(".mp4");
   const allViewed = viewed.every(Boolean);
+  
 
   // Marcar viñeta como vista
-  useEffect(() => {
-    const updated = [...viewed];
+useEffect(() => {
+  setViewed((prevViewed) => {
+    if (prevViewed[index]) return prevViewed;
+    const updated = [...prevViewed];
     updated[index] = true;
-    setViewed(updated);
-  }, [index, viewed]);
+    return updated;
+  });
+}, [index]);
 
   // Extraer color dominante
   useEffect(() => {

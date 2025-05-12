@@ -9,6 +9,7 @@ import SectionDivider from '../components/SectionDivider';
 import SectionDivider2 from '../components/SectionDivider2';
 import PlayerDashboard from '../components/PlayerDashboard';
 import RitualEko from '../components/RitualEko';
+import Footer from '../components/Footer';
 
 
 const Home = () => {
@@ -62,7 +63,9 @@ const Home = () => {
       <RitualEko />
 <div className="divider-overlay">
   <SectionDivider2 />
+  
 </div>
+<Footer />
     </div>
   );
 };
