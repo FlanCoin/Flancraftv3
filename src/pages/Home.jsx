@@ -42,6 +42,8 @@ const Home = () => {
         </div>
       </header>
       <SectionDivider />
+      <RitualEko />
+      <SectionDivider />
       <PlayerDashboard />
       {/* Mapa RPG a pantalla completa */}
       <MapRPG />
@@ -60,7 +62,7 @@ const Home = () => {
 
       {/* Divider inferior que estaba mal posicionado antes */}
       <SectionDivider />
-      <RitualEko />
+      
 <div className="divider-overlay">
   <SectionDivider2 />
   
