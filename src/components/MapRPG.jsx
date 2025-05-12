@@ -89,7 +89,7 @@ const MapRPG = () => {
   return (
     <section className="map-rpg-wrapper">
       <div className="map-rpg-background" />
-      <div className="map-border-top" />
+
 
       <section className="map-rpg">
       <h2 className="map-title">
@@ -136,8 +136,6 @@ const MapRPG = () => {
           ))}
         </div>
       </section>
-
-      <div className="map-border-bottom" />
     </section>
   )
 }
