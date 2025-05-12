@@ -31,6 +31,21 @@
     backdrop-filter: blur(2px);
     box-shadow: 0 0 40px rgba(255, 230, 160, 0.055);
     overflow: hidden;
+
+    &.right-glow-border::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 80px;
+      height: 100%;
+      background: linear-gradient(to left, #37b7f7, transparent);
+      animation: rightGlowPulse 2s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
+      border-top-right-radius: inherit;
+      border-bottom-right-radius: inherit;
+    }
   }
 
   .arrow-panel {
@@ -122,6 +137,7 @@
     object-fit: cover;
     pointer-events: none;
   }
+
   .carousel-inner {
     display: flex;
     justify-content: center;
@@ -167,59 +183,183 @@
     letter-spacing: 1px;
   }
 
-  .eko-btn {
+  .eko-liquid-wrapper {
+    position: relative;
     margin-top: 2rem;
-    font-family: $font-main;
-    font-size: 1.2rem;
-    padding: 1rem 2rem;
-    border-radius: 10px;
-    border: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    display: inline-block;
+    border-radius: 12px;
+    overflow: hidden;
+    min-width: 260px;
+    transition: all 0.4s ease;
+    overflow: visible;
 
-    .bolt-icon {
-      font-size: 1.4rem;
+    &.unlocked-shake .eko-liquid-btn {
+      animation: shakePulse 1.5s ease-in-out;
     }
 
-    &.active {
-      background: linear-gradient(90deg, #00ffff, #66f0ff);
-      color: #0a0a0a;
-      box-shadow: 0 0 20px #00f0ff, 0 0 40px #00f0ff inset;
-      text-shadow: 0 0 6px #fff;
-      animation: pulseBtn 3s infinite ease-in-out;
+    .eko-liquid-btn {
+      position: relative;
+      width: 100%;
+      padding: 1rem 2rem;
+      font-family: $font-main;
+      font-size: 1.2rem;
+      color: #bbb;
+      background: transparent;
+      border: 2px solid var(--dominant, #00f0ff);
+      border-radius: 12px;
+      cursor: pointer;
+      overflow: hidden;
+      z-index: 1;
 
-      &:hover {
-        transform: scale(1.05);
-        animation: pulseBtnFast 1s infinite ease-in-out;
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .eko-liquid-text {
+        position: relative;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-weight: bold;
+        text-shadow: 0 0 6px rgba(0, 255, 255, 0.3);
+      }
+
+      .liquid-bg {
+        position: absolute;
+        inset: 0;
+        background: #000;
+        opacity: 0.15;
+        z-index: 1;
+      }
+
+      .liquid-fill {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: var(--progress, 0%);
+        background: linear-gradient(to top, #00f0ff, #a066ff);
+        transition: height 1s cubic-bezier(0.22, 1, 0.5, 1);
+        z-index: 2;
+        overflow: hidden;
+        border-radius: 0 0 12px 12px;
+
+        .eko-liquid-wrapper.unlocked & {
+          background: none;
+        }
+
+        .liquid-wave {
+          position: absolute;
+          top: -20px;
+          left: 0;
+          width: 200%;
+          height: 40px;
+          background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%2300f0ff' d='M0 20 Q50 0 100 20 T200 20 V40 H0 Z'/%3E%3C/svg%3E");
+          background-size: 200px 40px;
+          background-repeat: repeat-x;
+          animation: waveScroll 4s linear infinite;
+          opacity: 0.6;
+          filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.4));
+          z-index: 3;
+          
+
+          .eko-liquid-wrapper.unlocked & {
+            display: none;
+          }
+        }
+
+        &::before,
+        &::after {
+          display: block;
+
+          .eko-liquid-wrapper.unlocked & {
+            display: none;
+          }
+        }
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: -15px;
+          left: 0;
+          width: 200%;
+          height: 30px;
+          background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%2366f0ff' d='M0 20 Q50 0 100 20 T200 20 V30 H0 Z'/%3E%3C/svg%3E");
+          background-size: 200px 30px;
+          background-repeat: repeat-x;
+          animation: waveScrollReverse 6s linear infinite;
+          opacity: 0.4;
+          filter: drop-shadow(0 0 4px rgba(102, 240, 255, 0.3));
+          z-index: 2;
+        }
+
+        &::after {
+          content: "";
+          position: absolute;
+          top: -10px;
+          left: 0;
+          width: 200%;
+          height: 25px;
+          background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 25' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23a066ff' d='M0 20 Q50 5 100 20 T200 20 V25 H0 Z'/%3E%3C/svg%3E");
+          background-size: 200px 25px;
+          background-repeat: repeat-x;
+          animation: waveScroll 5s linear infinite;
+          opacity: 0.2;
+          z-index: 1;
+        }
       }
     }
 
-    &.disabled {
-      background: #444;
-      color: #bbb;
-      box-shadow: none;
-      cursor: not-allowed;
-    }
-  }
+&.unlocked {
+  position: relative;
+  isolation: isolate;
 
-  // Efecto mágico en borde derecho interno
-  .codex-box.right-glow-border::after {
+  &::after {
     content: "";
     position: absolute;
-    top: 0;
-    right: 0;
-    width: 80px;
-    height: 100%;
-    background: linear-gradient(to left, #37b7f7, transparent);
-    animation: rightGlowPulse 2s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 1;
-    border-top-right-radius: inherit;
-    border-bottom-right-radius: inherit;
+    inset: 10px;
 
+    background: radial-gradient(circle, rgba(0, 255, 255, 0.25) 0%, transparent 70%);
+    box-shadow:
+      0 0 40px rgba(0, 255, 255, 0.685),
+      0 0 80px rgba(102, 240, 255, 0.733),
+      0 0 120px rgba(0, 255, 255, 0.678);
+    pointer-events: none;
+    z-index: 0;
+    animation: auraPulse 2s ease-in-out infinite;
+    opacity: 1;
+  }
+
+  .eko-liquid-btn {
+    position: relative;
+    z-index: 1;
+    color: #ffffff;
+    background: linear-gradient(to right, #00d4ff, #4dd0ff);
+    border: 2px solid #4dd0ff;
+    box-shadow:
+      inset 0 0 20px rgba(0, 255, 255, 0.3);
+    text-shadow: 0 0 6px #00f0ff;
+    overflow: visible;
+    transition: all 0.2s ease-in-out;
+
+    &.btn-reveal {
+      animation: btnReveal 0.6s ease-out;
+    }
+
+    .eko-liquid-text {
+      color: #ffffff;
+      font-weight: bold;
+      text-shadow: 0 0 8px #00eaff;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
   }
 }
 
@@ -242,21 +382,50 @@
   }
 }
 
-@keyframes pulseBtn {
-  0%, 100% {
-    box-shadow: 0 0 20px #00f0ff, 0 0 40px #00f0ff inset;
+@keyframes waveScroll {
+  0% {
+    transform: translateX(0%);
   }
-  50% {
-    box-shadow: 0 0 40px #66f0ff, 0 0 80px #00ffff inset;
+  100% {
+    transform: translateX(-50%);
   }
 }
 
-@keyframes pulseBtnFast {
+@keyframes waveScrollReverse {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(50%);
+  }
+}
+
+@keyframes shakePulse {
   0%, 100% {
-    box-shadow: 0 0 30px #00f0ff, 0 0 60px #00f0ff inset;
+    transform: translate(0, 0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translate(-1px, 1px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translate(1px, -1px);
+  }
+}
+
+@keyframes glowExplode {
+  0%, 100% {
+    box-shadow:
+      0 0 20px #00f0ff,
+      0 0 60px #66f0ff,
+      0 0 80px #00ffff,
+      inset 0 0 30px #00f0ff;
   }
   50% {
-    box-shadow: 0 0 50px #66f0ff, 0 0 100px #00ffff inset;
+    box-shadow:
+      0 0 40px #00f0ff,
+      0 0 90px #66f0ff,
+      0 0 120px #00ffff,
+      inset 0 0 50px #00f0ff;
   }
 }
 
@@ -266,5 +435,49 @@
   }
   50% {
     opacity: 1;
+  }
+}
+@keyframes passiveGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 25px rgba(0, 255, 255, 0.4),
+      0 0 60px rgba(102, 240, 255, 0.5),
+      inset 0 0 25px rgba(0, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 40px rgba(0, 255, 255, 0.6),
+      0 0 90px rgba(102, 240, 255, 0.7),
+      inset 0 0 40px rgba(0, 255, 255, 0.5);
+  }
+}
+@keyframes btnReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes auraPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+    filter: blur(6px);
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+    filter: blur(10px);
+  }
+}
+@keyframes waveMaskScroll {
+  0% {
+    mask-position: 0% 0%;
+  }
+  100% {
+    mask-position: 200% 0%;
   }
 }
