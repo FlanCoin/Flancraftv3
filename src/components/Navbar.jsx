@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { FaBalanceScale } from 'react-icons/fa';
 import { supabase } from '@lib/supabaseClient';
-import LogoutButton from './Auth/LogoutButton'; 
 import '../styles/components/_navbar.scss';
 
 const Navbar = () => {
