@@ -1,48 +1,60 @@
-import React, { useState } from 'react';
-import clsx from 'clsx';
-import { motion } from 'framer-motion';
-
-const mockMissions = [
-  {
-    id: 1,
-    title: "Recolecta 500 bloques de piedra",
-    description: "¡Demuestra tu poder minero!",
-    progress: 320,
-    goal: 500,
-    claimed: false,
-    rewardXP: 150,
-  },
-  {
-    id: 2,
-    title: "Elimina 20 Creepers",
-    description: "¡Los verdes no pasarán!",
-    progress: 20,
-    goal: 20,
-    claimed: true,
-    rewardXP: 300,
-  },
-  {
-    id: 3,
-    title: "Visita el mercado",
-    description: "Solo mirar... o comprar 👀",
-    progress: 1,
-    goal: 1,
-    claimed: false,
-    rewardXP: 50,
-  },
-];
+import React, { useState, useEffect } from "react";
+import clsx from "clsx";
+import { motion } from "framer-motion";
+import { supabase } from "@lib/supabaseClient";
 
 export default function MissionsList({ uid }) {
-  const [missions, setMissions] = useState(mockMissions);
+  const [missions, setMissions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleClaim = (id) => {
-    setMissions((prev) =>
-      prev.map((m) =>
-        m.id === id ? { ...m, claimed: true } : m
-      )
+  // 🧠 Cargar misiones desde Supabase
+  useEffect(() => {
+    const fetchMissions = async () => {
+      if (!uid) return;
+
+      const { data, error } = await supabase
+        .from("player_missions")
+        .select("*, missions (title, description, goal, reward_xp)")
+        .eq("uid", uid);
+
+      if (!error && data) {
+        const formatted = data.map((entry) => ({
+          id: entry.mission_id,
+          progress: entry.progress,
+          claimed: entry.claimed,
+          title: entry.missions.title,
+          description: entry.missions.description,
+          goal: entry.missions.goal,
+          rewardXP: entry.missions.reward_xp,
+        }));
+        setMissions(formatted);
+      }
+
+      setLoading(false);
+    };
+
+    fetchMissions();
+  }, [uid]);
+
+  // 🔐 Reclamar misión
+  const handleClaim = async (id) => {
+    const updated = missions.map((m) =>
+      m.id === id ? { ...m, claimed: true } : m
     );
-    // Aquí puedes hacer el POST a Supabase más adelante
+    setMissions(updated);
+
+    const { error } = await supabase
+      .from("player_missions")
+      .update({ claimed: true })
+      .eq("uid", uid)
+      .eq("mission_id", id);
+
+    if (error) {
+      console.error("❌ Error reclamando misión:", error.message);
+    }
   };
+
+  if (loading) return <p className="text-white">⏳ Cargando misiones...</p>;
 
   return (
     <div className="bg-flan-dark text-white p-6 rounded-lg shadow-lg border border-flan-gold">

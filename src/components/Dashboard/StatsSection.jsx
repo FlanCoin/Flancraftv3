@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -8,51 +8,59 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import { supabase } from '@lib/supabaseClient';
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-const mockStats = {
-  playtimeHours: 134,
-  deaths: 12,
-  mobsKilled: {
-    Zombie: 58,
-    Creeper: 22,
-    Enderman: 9,
-    Skeleton: 41,
-  },
-  blocksMined: {
-    Stone: 4021,
-    Dirt: 1233,
-    DiamondOre: 31,
-    IronOre: 87,
-    CoalOre: 213,
-  },
-  favoriteTool: "Pico de Netherite",
-  dimensionTime: {
-    Overworld: 120,
-    Nether: 10,
-    End: 4,
-  }
-};
+export default function StatsSection({ uid }) {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-export default function StatsSection({ uid, mock = false }) {
-  const stats = mock ? mockStats : mockStats; // reemplazar por Supabase más adelante
+  useEffect(() => {
+    const fetchStats = async () => {
+      const { data, error } = await supabase
+        .from('player_stats')
+        .select('*')
+        .eq('uid', uid)
+        .single();
+
+      if (error) {
+        console.error('❌ Error cargando estadísticas:', error);
+      } else {
+        setStats(data);
+      }
+
+      setLoading(false);
+    };
+
+    if (uid) fetchStats();
+  }, [uid]);
+
+  if (loading || !stats) {
+    return <div className="text-white text-center p-4">⛏ Cargando estadísticas...</div>;
+  }
+
+  const blocksMined = stats.blocks_mined || {};
+  const mobsKilled = stats.mobs_killed || {};
+  const advancements = stats.advancements || [];
+
+  const playtimeHours = Math.floor((stats.playtime_ticks || 0) / 72000); // 20 ticks/seg x 60 seg x 60 min = 72,000
 
   const blocksData = {
-    labels: Object.keys(stats.blocksMined),
+    labels: Object.keys(blocksMined),
     datasets: [{
       label: 'Bloques minados',
-      data: Object.values(stats.blocksMined),
+      data: Object.values(blocksMined),
       backgroundColor: '#FACC15',
       borderRadius: 6
     }]
   };
 
   const mobsData = {
-    labels: Object.keys(stats.mobsKilled),
+    labels: Object.keys(mobsKilled),
     datasets: [{
       label: 'Mobs eliminados',
-      data: Object.values(stats.mobsKilled),
+      data: Object.values(mobsKilled),
       backgroundColor: '#4ADE80',
       borderRadius: 6
     }]
@@ -77,28 +85,27 @@ export default function StatsSection({ uid, mock = false }) {
       <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
         <div className="bg-flan-gray p-4 rounded border border-yellow-600">
           <p className="text-yellow-300 font-bold">🕓 Tiempo Jugado</p>
-          <p className="mt-1">{stats.playtimeHours} horas</p>
+          <p className="mt-1">{playtimeHours} horas</p>
         </div>
 
         <div className="bg-flan-gray p-4 rounded border border-yellow-600">
           <p className="text-red-400 font-bold">💀 Muertes Totales</p>
-          <p className="mt-1">{stats.deaths}</p>
+          <p className="mt-1">{stats.deaths || 0}</p>
         </div>
 
         <div className="bg-flan-gray p-4 rounded border border-yellow-600">
-          <p className="text-blue-300 font-bold">🛠 Herramienta Favorita</p>
-          <p className="mt-1">{stats.favoriteTool}</p>
+          <p className="text-blue-300 font-bold">🏆 Logros Desbloqueados</p>
+          <p className="mt-1">{advancements.length} logros</p>
         </div>
       </div>
 
       <div className="mt-6">
-        <h3 className="text-lg font-bold text-purple-300 mb-2">🌌 Tiempo por Dimensión</h3>
-        <ul className="space-y-1">
-          {Object.entries(stats.dimensionTime).map(([dim, hours]) => (
-            <li key={dim} className="text-sm">
-              <span className="font-bold text-yellow-200">{dim}</span>: {hours}h
-            </li>
+        <h3 className="text-lg font-bold text-purple-300 mb-2">📜 Últimos Logros</h3>
+        <ul className="space-y-1 text-sm">
+          {advancements.slice(0, 5).map((adv, i) => (
+            <li key={i} className="text-yellow-200">✔ {adv.replace("minecraft:", "")}</li>
           ))}
+          {advancements.length === 0 && <li className="text-gray-400">No hay logros aún.</li>}
         </ul>
       </div>
     </div>

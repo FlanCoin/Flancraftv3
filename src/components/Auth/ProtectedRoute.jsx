@@ -1,8 +1,11 @@
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function ProtectedRoute({ children }) {
-  const uid = localStorage.getItem("flan_uid");
+  const { isLoggedIn, loading } = useAuth();
 
-  if (!uid) return <Navigate to="/login" />;
+  if (loading) return <div className="text-center p-8">Cargando sesión...</div>;
+  if (!isLoggedIn) return <Navigate to="/login" replace />;
+
   return children;
 }

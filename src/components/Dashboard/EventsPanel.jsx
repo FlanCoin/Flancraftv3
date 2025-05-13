@@ -1,21 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-const mockEvents = [
-  {
-    id: 1,
-    title: "Festival de la Cosecha",
-    description: "¡Evento especial de recolección con recompensas únicas!",
-    endsAt: new Date(Date.now() + 1000 * 60 * 60 * 2), // 2 horas
-    banner: "/assets/events/harvest.png"
-  },
-  {
-    id: 2,
-    title: "Día del Ender",
-    description: "Misiones especiales en The End + logros legendarios",
-    endsAt: new Date(Date.now() + 1000 * 60 * 30), // 30 minutos
-    banner: "/assets/events/enderday.png"
-  }
-];
+import { supabase } from '@lib/supabaseClient';
 
 const formatCountdown = (ms) => {
   const totalSeconds = Math.floor(ms / 1000);
@@ -25,10 +9,11 @@ const formatCountdown = (ms) => {
   return `${h}h ${m}m ${s}s`;
 };
 
-export default function EventsPanel({ mock = false }) {
-  const [events, setEvents] = useState(mock ? mockEvents : mockEvents); // usar Supabase luego
+export default function EventsPanel() {
+  const [events, setEvents] = useState([]);
   const [now, setNow] = useState(new Date());
 
+  // Actualización en vivo del tiempo
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(new Date());
@@ -36,8 +21,26 @@ export default function EventsPanel({ mock = false }) {
     return () => clearInterval(interval);
   }, []);
 
+  // Cargar eventos desde Supabase
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const { data, error } = await supabase
+        .from('events')
+        .select('*')
+        .order('ends_at', { ascending: true });
+
+      if (data) {
+        setEvents(data);
+      } else {
+        console.error('❌ Error al cargar eventos:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
   const getTimeLeft = (event) => {
-    const diff = new Date(event.endsAt) - now;
+    const diff = new Date(event.ends_at) - now;
     return diff > 0 ? formatCountdown(diff) : "⛔ Finalizado";
   };
 
@@ -47,9 +50,9 @@ export default function EventsPanel({ mock = false }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {events.map((event) => (
           <div key={event.id} className="bg-flan-dark rounded overflow-hidden shadow border border-yellow-700">
-            {event.banner && (
+            {event.banner_url && (
               <img
-                src={event.banner}
+                src={event.banner_url}
                 alt={event.title}
                 className="w-full h-32 object-cover object-center"
               />

@@ -2,40 +2,44 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '@lib/supabaseClient';
 import clsx from 'clsx';
 
-const ProfileCard = ({ uid, mock = false }) => {
-  const [user, setUser] = useState({
-    username: 'StevePro',
-    level: 7,
-    xp: 150,
-    xpMax: 200,
-    uuid: '123456-abcd',
-    avatar: 'StevePro',
-  });
+const ProfileCard = ({ uid }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!mock && uid) {
-      const fetchUser = async () => {
-        const { data, error } = await supabase
-          .from('usuarios')
-          .select('*')
-          .eq('uid', uid)
-          .single();
+    const fetchUser = async () => {
+      if (!uid) return;
 
-        if (data) {
-          setUser({
-            username: data.uid,
-            level: data.nivel,
-            xp: data.xp_actual,
-            xpMax: 100, // puedes calcular XP máxima según nivel si haces sistema escalable
-            uuid: data.uuid || 'desconocido',
-            avatar: data.uid,
-          });
-        }
-      };
+      const { data, error } = await supabase
+        .from('player_stats')
+        .select('*')
+        .eq('uid', uid)
+        .single();
 
-      fetchUser();
-    }
-  }, [mock, uid]);
+      if (error) {
+        console.error('❌ Error obteniendo perfil:', error);
+      }
+
+      if (data) {
+        setUser({
+          username: data.uid,
+          level: data.nivel || 1,
+          xp: data.xp_actual || 0,
+          xpMax: 100 + ((data.nivel || 1) * 20),
+          uuid: data.uuid || 'desconocido',
+          avatar: data.uid,
+        });
+      }
+
+      setLoading(false);
+    };
+
+    fetchUser();
+  }, [uid]);
+
+  if (loading || !user) {
+    return <div className="text-white">Cargando perfil...</div>;
+  }
 
   const xpPercent = Math.min(100, (user.xp / user.xpMax) * 100);
 
@@ -62,7 +66,7 @@ const ProfileCard = ({ uid, mock = false }) => {
           />
         </div>
         <p className="text-xs text-center mt-1">
-          XP: {user.xp}/{user.xpMax}
+          XP: {user.xp} / {user.xpMax}
         </p>
       </div>
 

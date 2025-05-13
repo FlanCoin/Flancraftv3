@@ -1,32 +1,69 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '@lib/supabaseClient';
 
-const mockPlayers = {
-  StevePro: {
-    level: 12,
-    xp: 480,
-    xpMax: 600,
-    deaths: 14,
-    mobsKilled: 130,
-    blocksMined: 6234,
-    favoriteTool: 'Pico de Diamante',
-  },
-  AlexMine: {
-    level: 10,
-    xp: 350,
-    xpMax: 500,
-    deaths: 9,
-    mobsKilled: 160,
-    blocksMined: 5400,
-    favoriteTool: 'Espada de Hierro',
-  }
-};
+export default function ComparePlayers() {
+  const [players, setPlayers] = useState([]);
+  const [playerA, setPlayerA] = useState('');
+  const [playerB, setPlayerB] = useState('');
+  const [dataA, setDataA] = useState(null);
+  const [dataB, setDataB] = useState(null);
 
-export default function ComparePlayers({ mock = true }) {
-  const [playerA, setPlayerA] = useState('StevePro');
-  const [playerB, setPlayerB] = useState('AlexMine');
+  // Cargar lista de jugadores al montar
+  useEffect(() => {
+    const loadPlayers = async () => {
+      const { data, error } = await supabase
+        .from('player_stats')
+        .select('uid');
 
-  const dataA = mockPlayers[playerA];
-  const dataB = mockPlayers[playerB];
+      if (error) {
+        console.error('❌ Error cargando jugadores:', error);
+        return;
+      }
+
+      const names = data.map(p => p.uid);
+      setPlayers(names);
+
+      if (names.length >= 2) {
+        setPlayerA(names[0]);
+        setPlayerB(names[1]);
+      }
+    };
+
+    loadPlayers();
+  }, []);
+
+  // Cargar datos de los jugadores seleccionados
+  useEffect(() => {
+    const loadStats = async (uid, setter) => {
+      if (!uid) return;
+      const { data } = await supabase
+        .from('player_stats')
+        .select('*')
+        .eq('uid', uid)
+        .single();
+
+      if (data) setter(data);
+    };
+
+    loadStats(playerA, setDataA);
+    loadStats(playerB, setDataB);
+  }, [playerA, playerB]);
+
+  const renderPlayer = (data, name) => {
+    if (!data) return <p className="text-gray-400">Cargando datos de {name}...</p>;
+
+    return (
+      <div className="bg-flan-gray p-4 rounded border border-yellow-700">
+        <img src={`https://mc-heads.net/avatar/${data.uid}/64`} alt={data.uid} className="mb-2" />
+        <p className="font-bold text-yellow-300 text-lg">{data.uid}</p>
+        <p>Nivel: {data.nivel}</p>
+        <p>XP: {data.xp_actual}</p>
+        <p>Muertes: {data.deaths || 0}</p>
+        <p>Mobs eliminados: {Object.values(data.mobs_killed || {}).reduce((a, b) => a + b, 0)}</p>
+        <p>Bloques minados: {Object.values(data.blocks_mined || {}).reduce((a, b) => a + b, 0)}</p>
+      </div>
+    );
+  };
 
   return (
     <div className="bg-flan-dark text-white p-6 rounded-lg shadow-lg border border-yellow-400">
@@ -38,7 +75,7 @@ export default function ComparePlayers({ mock = true }) {
           onChange={(e) => setPlayerA(e.target.value)}
           className="bg-flan-gray text-white p-2 rounded border border-yellow-600"
         >
-          {Object.keys(mockPlayers).map((name) => (
+          {players.map(name => (
             <option key={name} value={name}>{name}</option>
           ))}
         </select>
@@ -48,42 +85,15 @@ export default function ComparePlayers({ mock = true }) {
           onChange={(e) => setPlayerB(e.target.value)}
           className="bg-flan-gray text-white p-2 rounded border border-yellow-600"
         >
-          {Object.keys(mockPlayers).map((name) => (
+          {players.map(name => (
             <option key={name} value={name}>{name}</option>
           ))}
         </select>
       </div>
 
       <div className="grid grid-cols-2 gap-4 text-sm">
-        <div className="bg-flan-gray p-4 rounded border border-yellow-700">
-          <img
-            src={`https://mc-heads.net/avatar/${playerA}/64`}
-            alt={playerA}
-            className="mb-2"
-          />
-          <p className="font-bold text-yellow-300 text-lg">{playerA}</p>
-          <p>Nivel: {dataA.level}</p>
-          <p>XP: {dataA.xp}/{dataA.xpMax}</p>
-          <p>Muertes: {dataA.deaths}</p>
-          <p>Mobs eliminados: {dataA.mobsKilled}</p>
-          <p>Bloques minados: {dataA.blocksMined}</p>
-          <p>Herramienta favorita: {dataA.favoriteTool}</p>
-        </div>
-
-        <div className="bg-flan-gray p-4 rounded border border-yellow-700">
-          <img
-            src={`https://mc-heads.net/avatar/${playerB}/64`}
-            alt={playerB}
-            className="mb-2"
-          />
-          <p className="font-bold text-yellow-300 text-lg">{playerB}</p>
-          <p>Nivel: {dataB.level}</p>
-          <p>XP: {dataB.xp}/{dataB.xpMax}</p>
-          <p>Muertes: {dataB.deaths}</p>
-          <p>Mobs eliminados: {dataB.mobsKilled}</p>
-          <p>Bloques minados: {dataB.blocksMined}</p>
-          <p>Herramienta favorita: {dataB.favoriteTool}</p>
-        </div>
+        {renderPlayer(dataA, playerA)}
+        {renderPlayer(dataB, playerB)}
       </div>
     </div>
   );

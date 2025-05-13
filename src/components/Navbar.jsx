@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { FaBalanceScale } from 'react-icons/fa';
 import { supabase } from '@lib/supabaseClient';
+import LogoutButton from './Auth/LogoutButton'; 
 import '../styles/components/_navbar.scss';
 
 const Navbar = () => {
@@ -11,21 +12,17 @@ const Navbar = () => {
   const dropdownTimeout = useRef(null);
   const profileTimeout = useRef(null);
 
-  const uid = localStorage.getItem("flan_uid");
-  const isLoggedIn = Boolean(uid);
+  const stored = localStorage.getItem("flan_user");
+  const parsed = stored ? JSON.parse(stored) : null;
+  const isLoggedIn = Boolean(parsed && parsed.loggedIn);
 
   const [userData, setUserData] = useState({
-    username: uid || '',
+    username: parsed?.name || '',
     uuid: '',
     userXP: 0,
     userXPMax: 100,
     userLevel: 1,
   });
-
-  const handleLogout = () => {
-    localStorage.removeItem("flan_uid");
-    window.location.href = "/";
-  };
 
   useEffect(() => {
     if (menuOpen) {
@@ -47,12 +44,12 @@ const Navbar = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (!uid) return;
+      if (!parsed?.uuid) return;
 
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("usuarios")
         .select("*")
-        .eq("uid", uid)
+        .eq("uuid", parsed.uuid)
         .single();
 
       if (data) {
@@ -60,14 +57,14 @@ const Navbar = () => {
           username: data.uid,
           uuid: data.uuid || 'desconocido',
           userXP: data.xp_actual,
-          userXPMax: 100, // puedes hacer que esto escale dinámicamente
+          userXPMax: 100,
           userLevel: data.nivel,
         });
       }
     };
 
     fetchUser();
-  }, [uid]);
+  }, [parsed]);
 
   const handleDropdownHover = (key) => {
     clearTimeout(dropdownTimeout.current);
@@ -198,9 +195,7 @@ const Navbar = () => {
                       <i className="fas fa-chart-bar" /> Ver estadísticas
                     </NavLink>
 
-                    <button className="dropdown-link logout-button" onClick={handleLogout}>
-                      <i className="fas fa-sign-out-alt" /> Cerrar sesión
-                    </button>
+                    <LogoutButton /> {/* 🔐 Aquí metemos el logout */}
                   </div>
                 </div>
               </div>
