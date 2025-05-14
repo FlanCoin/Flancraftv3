@@ -17,7 +17,7 @@ export default function StaffPanel() {
     async function verificar() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        window.location.href = '/login';
+        window.location.href = '/loginstaff';
         return;
       }
 
@@ -33,7 +33,7 @@ export default function StaffPanel() {
       if (!rolData || rolData.nivel !== 'owner') {
         alert('Solo los owners pueden acceder a este panel.');
         await supabase.auth.signOut();
-        window.location.href = '/login';
+        window.location.href = '/loginstaff';
         return;
       }
 
@@ -94,7 +94,7 @@ export default function StaffPanel() {
 
   const cerrarSesion = async () => {
     await supabase.auth.signOut();
-    window.location.href = '/login';
+    window.location.href = '/loginstaff';
   };
 
   return (

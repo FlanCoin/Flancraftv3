@@ -2,9 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { FaBalanceScale } from 'react-icons/fa';
 import { supabase } from '@lib/supabaseClient';
+import LogoutButton from './Auth/LogoutButton'; // Asegúrate de tener este componente
 import '../styles/components/_navbar.scss';
 
-const Navbar = () => {
+const Navbar = ({ onLoginClick }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -90,6 +91,7 @@ const Navbar = () => {
   const toggleDropdown = (key) => {
     setActiveDropdown((prev) => (prev === key ? null : key));
   };
+  
 
   return (
     <nav className={`navbar-flancraft ${menuOpen ? 'menu-open' : ''}`}>
@@ -161,9 +163,9 @@ const Navbar = () => {
 
         <div className="nav-right">
           {!isLoggedIn ? (
-            <NavLink to="/login" className="login-button">
+            <button className="login-button" onClick={onLoginClick}>
               <i className="fas fa-sign-in-alt" /> Iniciar sesión
-            </NavLink>
+            </button>
           ) : (
             <>
               <div className="user-box"
@@ -194,7 +196,7 @@ const Navbar = () => {
                       <i className="fas fa-chart-bar" /> Ver estadísticas
                     </NavLink>
 
-                    <LogoutButton /> {/* 🔐 Aquí metemos el logout */}
+                    <LogoutButton />
                   </div>
                 </div>
               </div>

@@ -1,31 +1,43 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
+// src/App.jsx
+import React, { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import LoginModal from "./components/Auth/LoginModal";
 
-import Home from './pages/Home';
-import TribunalMain from './pages/tribunal/TribunalMain';
-import TribunalLogin from './pages/tribunal/TribunalLogin';
-import TribunalAdmin from './pages/tribunal/TribunalAdmin';
-import TribunalStaff from './pages/tribunal/TribunalStaff';
-import PerfilJugadorTribunal from './pages/tribunal/PerfilJugadorTribunal';
+// Páginas públicas
+import Home from "./pages/Home";
+import AllNews from "./components/AllNews";
+import NewsDetail from "./components/NewsDetail";
+import DashboardPage from "./components/DashboardPage";
 
-import AllNews from './components/AllNews';
-import NewsDetail from './components/NewsDetail';
-import '@fortawesome/fontawesome-free/css/all.min.css';
+// Tribunal System
+import TribunalMain from "./pages/tribunal/TribunalMain";
+import TribunalLogin from "./pages/tribunal/TribunalLogin";
+import TribunalAdmin from "./pages/tribunal/TribunalAdmin";
+import TribunalStaff from "./pages/tribunal/TribunalStaff";
+import PerfilJugadorTribunal from "./pages/tribunal/PerfilJugadorTribunal";
+
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const App = () => {
+  const [showLogin, setShowLogin] = useState(false);
+
   return (
     <>
-      <Navbar />
+      <Navbar onLoginClick={() => setShowLogin(true)} />
+      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+
       <Routes>
         {/* 🌐 Público */}
         <Route path="/" element={<Home />} />
         <Route path="/news" element={<AllNews />} />
         <Route path="/news/:slug" element={<NewsDetail />} />
 
+        <Route path="/dashboard" element={<DashboardPage />} />
+
 
         {/* ⚖️ Tribunal System (Staff) */}
-        <Route path="/login" element={<TribunalLogin />} />
+        <Route path="/loginstaff" element={<TribunalLogin />} />
         <Route path="/tribunal" element={<TribunalMain />} />
         <Route path="/admin" element={<TribunalAdmin />} />
         <Route path="/staff" element={<TribunalStaff />} />

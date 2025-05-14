@@ -1,0 +1,112 @@
+// src/styles/components/Auth/_loginmodal.scss
+.login-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 10, 5, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+
+  .login-box {
+    background: url("/assets/papertexture.jpeg") no-repeat center;
+    background-size: cover;
+    border: 3px solid #3f2c1c;
+    border-radius: 15px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+    font-family: 'Minecraftia', sans-serif;
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+      color: #33220f;
+    }
+
+    p {
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      color: #3a2a18;
+    }
+
+    code {
+      background: #e3d5b8;
+      padding: 0.1rem 0.4rem;
+      border-radius: 3px;
+      font-weight: bold;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.6rem;
+      border: 2px solid #b8a580;
+      border-radius: 6px;
+      background: #fff8e1;
+      font-family: inherit;
+      font-size: 1rem;
+      color: #33220f;
+
+      &:focus {
+        outline: none;
+        border-color: #a77b3f;
+      }
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      background: #c59e68;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      padding: 0.75rem;
+      margin-top: 0.8rem;
+      cursor: pointer;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #b58850;
+      }
+
+      &:disabled {
+        background: #999;
+        cursor: not-allowed;
+      }
+    }
+
+    .no-account {
+      margin-top: 1rem;
+      text-align: center;
+
+      button {
+        background: none;
+        color: #7a541a;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 0;
+        margin-left: 0.3rem;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .error {
+      margin-top: 1rem;
+      color: #b30000;
+      text-align: center;
+      font-weight: bold;
+    }
+  }
+}
