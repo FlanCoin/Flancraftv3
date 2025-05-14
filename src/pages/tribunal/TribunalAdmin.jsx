@@ -47,7 +47,7 @@ export default function AdminPanel() {
       const { data: { session } } = await supabase.auth.getSession();
 
       if (!session) {
-        window.location.href = '/login';
+        window.location.href = '/loginstaff';
         return;
       }
 
@@ -63,7 +63,7 @@ export default function AdminPanel() {
       if (!rolData) {
         alert('No tienes permisos para acceder aquí');
         await supabase.auth.signOut();
-        window.location.href = '/login';
+        window.location.href = '/loginstaff';
         return;
       }
 
@@ -115,7 +115,7 @@ export default function AdminPanel() {
 
   const cerrarSesion = async () => {
     await supabase.auth.signOut();
-    window.location.href = '/login';
+    window.location.href = '/loginstaff';
   };
 
   const obtenerNombreServidor = (raw) => {
