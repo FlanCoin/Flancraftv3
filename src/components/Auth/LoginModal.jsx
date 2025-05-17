@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import '../../styles/components/Auth/_loginmodal.scss';
+import ResetPasswordModal from "./ResetPasswordModal";
 
 export default function LoginModal({ onClose }) {
   const [step, setStep] = useState("login");
@@ -11,6 +12,7 @@ export default function LoginModal({ onClose }) {
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -160,10 +162,17 @@ export default function LoginModal({ onClose }) {
     <button onClick={handleLogin}>
       Iniciar sesión
     </button>
-    <p className="no-account">
-      ¿No tienes cuenta?{" "}
-      <button onClick={() => setStep("token")}>Regístrate aquí</button>
-    </p>
+    <div className="auth-options">
+  <p className="no-account">
+    ¿No tienes cuenta?{" "}
+    <button onClick={() => setStep("token")}>Regístrate aquí</button>
+  </p>
+  <p className="reset-option">
+    ¿Olvidaste tu contraseña?{" "}
+    <button onClick={() => setShowResetModal(true)}>Restablecer</button>
+  </p>
+</div>
+
   </>
 )}
 
@@ -210,6 +219,10 @@ export default function LoginModal({ onClose }) {
         )}
 
         {error && <p className="error">{error}</p>}
+        {showResetModal && (
+  <ResetPasswordModal onClose={() => setShowResetModal(false)} />
+)}
+
       </div>
     </div>
   );
