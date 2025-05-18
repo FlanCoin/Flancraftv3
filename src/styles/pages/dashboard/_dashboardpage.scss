@@ -1,0 +1,69 @@
+.dashboard-container {
+  padding: 2rem;
+  font-family: 'Rubik', sans-serif;
+  color: #f0f0f0;
+
+  h1 {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #facc15; // amarillo cálido
+    text-shadow: 1px 1px 2px #000;
+  }
+
+  .dashboard-loading,
+  .dashboard-error {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-top: 2rem;
+    color: #f87171;
+    background: #2e2e2e;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+
+    .dashboard-card {
+      background: #1c1c26;
+      border: 1px solid #3f3f5a;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s ease;
+      position: relative;
+
+      &:hover {
+        transform: translateY(-6px);
+      }
+
+      h3 {
+        font-size: 1.2rem;
+        color: #81e6d9;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 0 2px #000;
+      }
+
+      p {
+        font-size: 1rem;
+        color: #cbd5e1;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        right: -1px;
+        bottom: -1px;
+        border: 2px dashed rgba(255, 255, 255, 0.05);
+        pointer-events: none;
+        border-radius: 12px;
+      }
+    }
+  }
+}
