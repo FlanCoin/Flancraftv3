@@ -1,7 +1,7 @@
-// src/components/DashboardPage.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RewardList from "./RewardList";
+import LogroList from "./LogroList"; // ✅ IMPORTACIÓN CORRECTA
 import "../styles/pages/dashboard/_dashboardpage.scss";
 
 export default function DashboardPage() {
@@ -59,6 +59,9 @@ export default function DashboardPage() {
               <p>{user.xp_actual} / {user.xp_total || 100}</p>
             </div>
           </div>
+
+          {/* Logros */}
+          <LogroList user={user} />
 
           {/* Recompensas escalables */}
           <RewardList user={user} />
