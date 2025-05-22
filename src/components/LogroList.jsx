@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { CheckCircle, Clock, Gift } from "lucide-react";
-import "../styles/pages/dashboard/_dashboardpage.scss";
+import "../styles/pages/dashboard/_logrolist.scss";
 
 function LogroList({ user, onXpClaimed }) {
   const [logros, setLogros] = useState([]);
