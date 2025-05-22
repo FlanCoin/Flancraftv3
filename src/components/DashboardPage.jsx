@@ -131,8 +131,9 @@ export default function DashboardPage() {
 
           {/* CONTENIDO: LOGROS + RECOMPENSAS */}
           <div className="dashboard-sections">
-            <LogroList user={user} onXpClaimed={handleXpClaimed} />
             <RewardList user={user} />
+            <LogroList user={user} onXpClaimed={handleXpClaimed} />
+            
           </div>
         </div>
       )}
