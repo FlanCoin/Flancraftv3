@@ -1,5 +1,6 @@
-// 📁 src/components/RewardList.jsx
 import { useEffect, useState } from "react";
+import { Lock, CheckCircle, Gift } from "lucide-react";
+import "../styles/pages/dashboard/_dashboardpage.scss";
 
 export default function RewardList({ user }) {
   const [reclamadas, setReclamadas] = useState([]);
@@ -10,7 +11,7 @@ export default function RewardList({ user }) {
     { nivel: 1, descripcion: "100 ECOS" },
     { nivel: 5, descripcion: "200 ECOS" },
     { nivel: 10, descripcion: "300 ECOS" },
-    // Puedes añadir más niveles aquí
+    // Agrega más si deseas
   ];
 
   useEffect(() => {
@@ -45,7 +46,10 @@ export default function RewardList({ user }) {
 
   return (
     <div className="reward-list">
-      <h2>🎁 Recompensas de Nivel</h2>
+      <h2>
+        <Gift size={20} style={{ marginRight: "6px" }} />
+        Recompensas de Nivel
+      </h2>
       <ul>
         {recompensas.map((r) => {
           const yaReclamada = reclamadas.includes(r.nivel);
@@ -53,13 +57,19 @@ export default function RewardList({ user }) {
 
           return (
             <li key={r.nivel} className="reward-item">
-              <span>Nivel {r.nivel}: {r.descripcion}</span>
+              <span>
+                Nivel {r.nivel}: {r.descripcion}
+              </span>
               {yaReclamada ? (
-                <span className="claimed">✅ Reclamada</span>
+                <span className="claimed">
+                  <CheckCircle size={16} /> Reclamada
+                </span>
               ) : alcanzado ? (
                 <button onClick={() => handleReclamar(r.nivel)}>Reclamar</button>
               ) : (
-                <span className="locked">🔒 Bloqueada</span>
+                <span className="locked">
+                  <Lock size={16} /> Bloqueada
+                </span>
               )}
             </li>
           );
