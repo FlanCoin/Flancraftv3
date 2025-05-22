@@ -44,7 +44,7 @@ function LogroList({ user, onXpClaimed }) {
       );
 
       // Sonido de éxito
-      const xpSound = new Audio("/sounds/success.mp3");
+      const xpSound = new Audio("/assets/sounds/success.mp3");
       xpSound.volume = 0.5;
       xpSound.play();
 
