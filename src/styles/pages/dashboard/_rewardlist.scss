@@ -1,98 +1,116 @@
 .reward-list {
-  background: #efe1be;
-  border: 2px solid #7c5b2b;
-  padding: 1rem;
-  border-radius: 8px;
+  background-color: #26211d;
+  padding: 1.5rem;
+  border: 2px solid #5a4330;
+  border-radius: 12px;
+  box-shadow: 0 0 12px #000;
+  color: #f4e7d4;
 
   h2 {
-    font-size: 1rem;
-    margin-bottom: 1rem;
-    color: #543c2e;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    color: #facc15;
+    margin-bottom: 1rem;
   }
 
   .reward-track-container {
     position: relative;
     overflow: hidden;
 
-    .reward-fade-left,
-    .reward-fade-right {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: #e4c994;
-      padding: 0.5rem;
-      cursor: pointer;
-      z-index: 2;
-      border: 1px solid #543c2e;
-      border-radius: 4px;
-    }
-
-    .reward-fade-left {
-      left: 0;
-    }
-
-    .reward-fade-right {
-      right: 0;
-    }
-
     .reward-track {
       display: flex;
       gap: 1rem;
       overflow-x: auto;
-      padding: 0.5rem 2rem;
       scroll-behavior: smooth;
+      padding-bottom: 1rem;
 
-      .reward-card {
-        min-width: 150px;
-        background: #f9e8c1;
-        border: 2px solid #a48040;
-        border-radius: 6px;
-        padding: 0.5rem;
-        text-align: center;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
 
-        &.claimed {
-          background: #c2e7a1;
-        }
+    .reward-fade-left,
+    .reward-fade-right {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2rem;
+      background: linear-gradient(to right, #1c1a18, transparent);
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #facc15;
+      font-size: 1.5rem;
+      transition: opacity 0.3s;
 
-        &.locked {
-          background: #e8d9b9;
-        }
+      svg {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
 
-        &.claimable {
-          background: #fef3b0;
-        }
+    .reward-fade-right {
+      right: 0;
+      background: linear-gradient(to left, #1c1a18, transparent);
+    }
+  }
 
-        .nivel {
-          font-weight: bold;
-        }
+  .reward-card {
+    background: #3a312a;
+    padding: 1rem;
+    border: 2px solid #6d4c33;
+    border-radius: 10px;
+    min-width: 150px;
+    text-align: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 10px #000;
 
-        .reward-icon {
-          margin: 0.5rem 0;
-        }
+    &.locked {
+      opacity: 0.4;
+    }
 
-        .descripcion {
-          font-size: 0.8rem;
-        }
+    &.claimable {
+      border-color: #84cc16;
+    }
 
-        .estado {
-          font-size: 0.75rem;
-          margin-top: 0.5rem;
+    &.claimed {
+      border-color: #facc15;
+    }
 
-          button {
-            background: #ffe182;
-            border: 2px solid #a68a0e;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
+    .nivel {
+      font-weight: bold;
+      color: #fcd34d;
+    }
 
-            &:hover {
-              background: #fff4b2;
-            }
-          }
+    .descripcion {
+      font-size: 0.8rem;
+      color: #ddd;
+    }
+
+    .estado {
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+
+      button {
+        background-color: #22c55e;
+        border: none;
+        padding: 0.3rem 0.6rem;
+        border-radius: 5px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        cursor: pointer;
+        color: #1c1a18;
+        transition: background 0.3s;
+
+        &:hover {
+          background-color: #16a34a;
         }
       }
     }
