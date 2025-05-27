@@ -2,24 +2,33 @@ import { useEffect, useState, useRef } from "react";
 import { CheckCircle, Clock, Gift } from "lucide-react";
 import "../styles/pages/dashboard/_logrolist.scss";
 
+const SERVIDORES = [
+  { nombre: "Todos", valor: null },
+  { nombre: "Survival", valor: "survival" },
+  { nombre: "OneBlock", valor: "oneblock" },
+  { nombre: "BoxPVP", valor: "boxpvp" },
+  { nombre: "Creativo", valor: "creativo" },
+  { nombre: "Anárquico", valor: "anarquico" },
+];
+
 function LogroList({ user, onXpClaimed }) {
   const [logros, setLogros] = useState([]);
   const [error, setError] = useState(null);
   const [reclamadoId, setReclamadoId] = useState(null);
   const [cargandoId, setCargandoId] = useState(null);
-
-  // Refs por cada botón de logro
+  const [servidorActivo, setServidorActivo] = useState(null);
   const buttonRefs = useRef({});
 
   useEffect(() => {
-    fetch(`https://flancraftweb-backend.onrender.com/api/logros/${user.uuid}`)
+    const param = servidorActivo ? `?servidor=${servidorActivo}` : "";
+    fetch(`https://flancraftweb-backend.onrender.com/api/logros/${user.uuid}${param}`)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
       .then(setLogros)
       .catch((err) => setError(err.message));
-  }, [user.uuid]);
+  }, [user.uuid, servidorActivo]);
 
   const reclamarLogro = async (id_logro, xp_otorgada) => {
     try {
@@ -32,7 +41,6 @@ function LogroList({ user, onXpClaimed }) {
           body: JSON.stringify({ uuid: user.uuid }),
         }
       );
-
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Error al reclamar logro");
 
@@ -43,12 +51,10 @@ function LogroList({ user, onXpClaimed }) {
         )
       );
 
-      // Sonido de éxito
       const xpSound = new Audio("/assets/sounds/success.mp3");
       xpSound.volume = 0.5;
       xpSound.play();
 
-      // Ejecutar animación desde LogroList hacia XP bar en Dashboard
       const sourceButton = buttonRefs.current[id_logro];
       if (onXpClaimed) {
         onXpClaimed(xp_otorgada, sourceButton);
@@ -62,7 +68,19 @@ function LogroList({ user, onXpClaimed }) {
 
   return (
     <div className="logros-container">
-      <h2>Logros del Jugador</h2>
+      <h2>Logros de Flancraft</h2>
+
+      <div className="filtros-servidor">
+        {SERVIDORES.map(({ nombre, valor }) => (
+          <button
+            key={nombre}
+            className={valor === servidorActivo ? "activo" : ""}
+            onClick={() => setServidorActivo(valor)}
+          >
+            {nombre}
+          </button>
+        ))}
+      </div>
 
       {error ? (
         <p className="error">Error al cargar logros: {error}</p>
@@ -89,8 +107,7 @@ function LogroList({ user, onXpClaimed }) {
                     ></div>
                   </div>
                   <p className="progreso-texto">
-                    {logro.progreso_actual} / {logro.objetivo} —{" "}
-                    <Gift size={16} /> {logro.xp_otorgada} XP
+                    {logro.progreso_actual} / {logro.objetivo} — <Gift size={16} /> {logro.xp_otorgada} XP
                   </p>
                 </div>
 
@@ -98,14 +115,10 @@ function LogroList({ user, onXpClaimed }) {
                   {logro.completado && !logro.reclamado ? (
                     <button
                       ref={(el) => (buttonRefs.current[logro.id] = el)}
-                      onClick={() =>
-                        reclamarLogro(logro.id, logro.xp_otorgada)
-                      }
+                      onClick={() => reclamarLogro(logro.id, logro.xp_otorgada)}
                       disabled={cargandoId === logro.id}
                     >
-                      {cargandoId === logro.id
-                        ? "Reclamando..."
-                        : "Reclamar XP"}
+                      {cargandoId === logro.id ? "Reclamando..." : "Reclamar XP"}
                     </button>
                   ) : logro.reclamado || logro.id === reclamadoId ? (
                     <span className="reclamado">

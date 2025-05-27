@@ -1,8 +1,9 @@
+// _dashboardpage.scss
 .dashboard-wrapper {
   display: flex;
   justify-content: center;
   padding: 2rem;
-  padding-top: 6rem; // ⬅️ esto asegura que la skin no se meta debajo del navbar
+  padding-top: 6rem;
   background: transparent;
   font-family: 'Poppins', sans-serif;
   color: #3b3a36;
@@ -38,104 +39,133 @@
   }
 
   .profile-container {
-    position: relative;
     display: flex;
     justify-content: center;
+    position: relative;
+  }
 
-    .skin-wrapper {
-      position: absolute;
-      top: -90px;
-      left: 0rem;
-      z-index: 10;
+  .skin-wrapper {
+    margin-right: 2rem;
 
-      .skin-render {
-        width: 120px;
-        height: auto;
-        border-radius: 0.5rem;
-        filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5));
-        transition: transform 0.3s ease;
+    .avatar-frame {
+      border-radius: 12px;
+      animation: float-eco 2.5s ease-in-out infinite alternate;
+      padding: 8px;
 
-        &:hover {
-          transform: scale(1.05) rotate(-1deg);
-        }
-      }
-    }
-
-    .profile-panel {
-      background: #fdf5ce;
-      border-radius: 1rem;
-      padding: 2rem 2rem 2rem 8rem;
-      border: 2px solid #c1af83;
-      box-shadow: inset 0 1px 0 #fff9dc, inset 0 -1px 2px #c1af83;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      position: relative;
-    }
-
-    .profile-right {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 0.6rem;
-
-      .username {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #2e2e2e;
-      }
-
-      .stat-row {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 1rem;
-
-        .label {
-          color: #6b6046;
-        }
-
-        .value {
-          font-weight: bold;
-          color: #16a34a;
-        }
-      }
-
-      progress {
-        appearance: none;
-        width: 100%;
-        height: 12px;
-        border-radius: 6px;
-        background-color: #ede4c0;
-        margin-top: 0.5rem;
-        overflow: hidden;
-
-        &::-webkit-progress-bar {
-          background: #e7dbb7;
-          border-radius: 6px;
-        }
-
-        &::-webkit-progress-value {
-          background: repeating-linear-gradient(
-            45deg,
-            #4ade80,
-            #4ade80 10px,
-            #22c55e 10px,
-            #22c55e 20px
-          );
-          animation: flowing-bar 1.5s linear infinite;
-          border-radius: 6px;
-        }
-      }
     }
   }
 
-  @keyframes flowing-bar {
-    from {
-      background-position: 0 0;
+  .profile-panel {
+    flex: 1;
+    background: #fdf5ce;
+    border-radius: 1rem;
+    padding: 2rem;
+    border: 2px solid #c1af83;
+    box-shadow: inset 0 1px 0 #fff9dc, inset 0 -1px 2px #c1af83;
+  }
+
+  .profile-info {
+    text-align: center;
+
+    .nivel-badge-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
     }
-    to {
-      background-position: 40px 0;
+
+    .nivel-badge {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      border: 2px solid #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+
+    .nivel-num {
+      z-index: 2;
+    }
+
+    .username {
+      font-family: 'IM Fell English SC', serif;
+      font-size: 2.4rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #222;
+    }
+
+    .xp-block {
+      .xp-circle-wrapper {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 0.5rem;
+      }
+
+      .xp-label {
+        font-size: 0.95rem;
+        color: #333;
+      }
+    }
+
+    .eco-highlight {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.2rem;
+      font-size: 1.5rem;
+
+      .eco-icon {
+        height: 28px;
+        animation: float-eco 2.5s ease-in-out infinite alternate;
+      }
+
+      .eco-label {
+        font-weight: bold;
+        color: #1fa2ff;
+      }
+
+      .eco-value {
+        font-weight: bold;
+        color: #3b82f6;
+      }
+    }
+
+    .dolares-block {
+      margin-top: 1.5rem;
+
+      .label {
+        font-weight: bold;
+        color: #444444;
+        margin-bottom: 0.5rem;
+      }
+
+      .dolares-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        
+
+        li {
+          background: #f2e9bf;
+          border-radius: 10px;
+          padding: 0.75rem 1.25rem;
+          font-size: 1rem;
+          font-weight: 600;
+          color: #2c2c2c;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+      }
     }
   }
 
@@ -162,3 +192,20 @@
     color: #b91c1c;
   }
 }
+
+@keyframes float-eco {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-5px); }
+}
+
+@keyframes spin-bg {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.nivel-glow-0 { background: #fef08a; }
+.nivel-glow-1 { background: #facc15; }
+.nivel-glow-2 { background: linear-gradient(135deg, #fcd34d, #f59e0b); }
+.nivel-glow-3 { background: linear-gradient(135deg, #fb923c, #ef4444); }
+.nivel-glow-4 { background: linear-gradient(135deg, #c084fc, #9333ea); }
+.nivel-glow-5 { background: linear-gradient(135deg, #38bdf8, #0ea5e9); }

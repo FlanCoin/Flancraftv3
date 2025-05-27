@@ -1,89 +1,189 @@
+// _logrolist.scss adaptado a estilo FlanCraft RPG Scroll
 .logros-container {
-  background: #f2dfc1;
-  border: 2px solid #7b5c3a;
-  padding: 1rem;
-  border-radius: 8px;
+  background: #fff8e1;
+  padding: 2.5rem;
+  border-radius: 1.4rem;
+  border: 2px solid #e0c99b;
+  box-shadow: inset 0 1px 1px #fdf6e3, 0 6px 24px rgba(0, 0, 0, 0.08);
+  margin-top: 2rem;
+  overflow: hidden;
+  position: relative;
 
   h2 {
-    font-size: 1rem;
-    margin-bottom: 1rem;
-    color: #5e422b;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #3a2d17;
+    text-shadow: 0 1px 0 #fff3c0;
+  }
+
+  .filtros-servidor {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+
+    button {
+      background: linear-gradient(to bottom, #fff9c4, #f4e39f);
+      border: 2px solid #d1b46c;
+      padding: 0.5rem 1.2rem;
+      border-radius: 12px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #5a4a1f;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 0 #d1b46c;
+
+      &:hover {
+        background: #ffe98a;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      &.activo {
+        background: #ffeb60;
+        color: #3a2d17;
+        border-color: #c9a93f;
+        box-shadow: 0 0 0 2px #fff8dc inset, 0 2px 6px rgba(0, 0, 0, 0.1);
+        transform: scale(1.05);
+      }
+    }
   }
 
   .logros-list {
     list-style: none;
     padding: 0;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.4s ease, transform 0.4s ease;
 
-    .logro-item {
-      background: #fceacb;
-      border: 2px solid #9a704d;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border-radius: 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    &.fade-swap {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+  }
 
-      &.completado {
-        background-color: #e6f5d0;
-        border-color: #6aa84f;
+  .logro-item {
+    background: #fffef9;
+    padding: 1.2rem 1.5rem;
+    border-radius: 14px;
+    border: 2px solid #e7cfa1;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    animation: fadeInUp 0.4s ease forwards;
+
+    &.completado {
+      border-color: #81e6d9;
+      background: #f0fff4;
+    }
+
+    .logro-info {
+      flex: 1;
+
+      h4 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #372f1d;
       }
 
-      .logro-info {
-        flex: 1;
+      p {
+        margin: 0.4rem 0;
+        font-size: 0.95rem;
+        color: #4a3e29;
+      }
 
-        h4 {
-          font-size: 1rem;
-          color: #463018;
-        }
+      .barra-progreso {
+        background: #f5e5b3;
+        border-radius: 6px;
+        overflow: hidden;
+        height: 12px;
+        margin: 0.6rem 0;
 
-        .barra-progreso {
-          background: #d9c2a1;
-          height: 12px;
-          border-radius: 6px;
-          overflow: hidden;
-          margin: 0.5rem 0;
-
-          .progreso {
-            height: 100%;
-            background: #c88d39;
-          }
-        }
-
-        .progreso-texto {
-          font-size: 0.8rem;
+        .progreso {
+          height: 100%;
+          background: linear-gradient(to right, #34d399, #059669);
         }
       }
 
-      .logro-acciones {
+      .progreso-texto {
+        font-size: 0.85rem;
+        color: #5e5034;
         display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-
-        button {
-          background: #ffe182;
-          border: 2px solid #a68a0e;
-          font-size: 0.75rem;
-          padding: 0.3rem 0.6rem;
-          cursor: pointer;
-          border-radius: 4px;
-          font-weight: bold;
-
-          &:hover {
-            background: #fff4b2;
-          }
-        }
-
-        .reclamado,
-        .incompleto {
-          font-size: 0.75rem;
-          color: #5e422b;
-          display: flex;
-          align-items: center;
-          gap: 0.3rem;
-        }
+        align-items: center;
+        gap: 0.3rem;
       }
     }
+
+    .logro-acciones {
+      display: flex;
+      align-items: center;
+
+      button {
+        background: linear-gradient(to bottom, #22c55e, #16a34a);
+        color: #fff;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+
+        &:hover {
+          background: #15803d;
+        }
+      }
+
+      .reclamado, .incompleto {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #6b4c1e;
+      }
+
+      .reclamado {
+        color: #22c55e;
+      }
+
+      .incompleto {
+        color: #eab308;
+      }
+    }
+  }
+
+  .error {
+    text-align: center;
+    color: #b91c1c;
+    font-weight: bold;
+    margin-top: 2rem;
+    background: #fee2e2;
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid #fca5a5;
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
