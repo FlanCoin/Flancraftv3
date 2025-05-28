@@ -1,10 +1,7 @@
-// ✅ DashboardPage.jsx FINAL — XP por nivel + progreso acumulado
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RewardList from "./RewardList";
 import LogroList from "./LogroList";
-import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
 import "../styles/pages/dashboard/_dashboardpage.scss";
 
 export default function DashboardPage() {
@@ -12,9 +9,8 @@ export default function DashboardPage() {
   const [xpData, setXpData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const progressRef = useRef(null);
-  const xpFlyRef = useRef(null);
   const navigate = useNavigate();
+  const ecosRef = useRef(null);
 
   useEffect(() => {
     const stored = localStorage.getItem("flan_user");
@@ -50,77 +46,97 @@ export default function DashboardPage() {
     cargarDatos();
   }, [navigate]);
 
-  const avatarUrl = `https://minotar.net/armor/body/${user?.uid}/200.png`;
+  const actualizarMonedas = async () => {
+    try {
+      const res = await fetch(`https://flancraftweb-backend.onrender.com/api/monedas/${user.uuid}`);
+      if (!res.ok) throw new Error("Error al actualizar monedas");
+      const monedasActualizadas = await res.json();
+      setUser((prev) => ({ ...prev, monedas: monedasActualizadas }));
+    } catch (err) {
+      console.error("[MONEDAS]", err.message);
+    }
+  };
 
+  const avatarUrl = `https://minotar.net/armor/body/${user?.uid}/200.png`;
   const nivelInfo = xpData?.niveles.find(n => n.nivel === user?.nivel);
   const xpDelNivelActual = nivelInfo?.xp_requerida || 1;
   const porcentajeNivel = (user?.xp_actual / xpDelNivelActual) * 100;
 
+  const [servidorSeleccionado, setServidorSeleccionado] = useState("anarquico");
+  const servidores = Object.keys(user?.monedas?.dolares || {});
+
   return (
     <div className="dashboard-wrapper">
-      <div className="xp-fly hidden" id="xp-fly" ref={xpFlyRef}></div>
-
       {loading ? (
         <p className="loading">Cargando perfil...</p>
       ) : error ? (
         <p className="error">Error al cargar perfil: {error}</p>
       ) : (
         <div className="dashboard-content">
-          <div className="profile-container">
+          <div className="dashboard-header-layout">
             <div className="skin-wrapper">
-              <div className="avatar-frame">
-                <img src={avatarUrl} alt={`Skin de ${user.uid}`} className="skin-render" />
+              <img src={avatarUrl} alt={`Skin de ${user.uid}`} className="skin-render" />
+            </div>
+
+            <div className="center-info">
+              <h1 className="username fancy-font">{user.uid}</h1>
+              <div className="barra-nivel-wrapper">
+                <div className="barra-nivel-header">
+                  <div className="nivel-text">Lvl {user.nivel}</div>
+                  <div className="xp-text">
+                    <span className="xp-actual">{user.xp_actual}</span> / {xpDelNivelActual} XP
+                  </div>
+                </div>
+                <div className="barra-nivel">
+                  {Array.from({ length: 10 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className={`segmento ${porcentajeNivel >= (i + 1) * 10 ? "relleno" : ""}`}
+                    ></div>
+                  ))}
+                </div>
               </div>
             </div>
 
-            <div className="profile-panel">
-              <div className="profile-info">
-                <h1 className="username fancy-font">{user.uid}</h1>
+            <div className="monedas-info">
+              {user.monedas && (
+                <div className="monedas-panel">
+                  <div className="monedas-titulo">MONEDAS</div>
 
-                <div className="xp-block">
-                  <div className="xp-circle-wrapper">
-                    <CircularProgressbar
-                      value={porcentajeNivel}
-                      text={`${user.nivel}`}
-                      strokeWidth={10}
-                      styles={buildStyles({
-                        pathColor: "#22c55e",
-                        textColor: "#0f172a",
-                        trailColor: "#fef9c3",
-                        textSize: "24px",
-                      })}
-                      ref={progressRef}
-                    />
+                  <div className="moneda-row">
+                    <span className="eco-label">ECOS:</span>
+                    <span className="eco-value" ref={ecosRef}>{user.monedas.ecos}</span>
+                    <img src="/assets/eco.png" alt="ECO" className="eco-icon" />
                   </div>
-                  <p className="xp-label">
-                    {user.xp_actual} / {xpDelNivelActual} XP
-                  </p>
-                </div>
 
-                {user.monedas && (
-                  <>
-                    <div className="eco-highlight">
-                      <span className="eco-label">ECOS:</span>
-                      <span className="eco-value">{user.monedas.ecos}</span>
-                      <img src="/assets/eco.png" alt="ECO" className="eco-icon" />
-                    </div>
-
-                    <div className="dolares-block">
-                      <div className="label">💰 Dólares por servidor:</div>
-                      <ul className="dolares-list">
-                        {Object.entries(user.monedas.dolares).map(([servidor, cantidad]) => (
-                          <li key={servidor}><strong>{servidor}</strong>: {cantidad}$</li>
+                  <div className="moneda-row">
+                    <span className="dolares-label">DÓLARES:</span>
+                    <div className="dropdown-inline">
+                      {servidorSeleccionado}: {user.monedas.dolares[servidorSeleccionado]}$
+                      <div className="opciones">
+                        {servidores.filter(s => s !== servidorSeleccionado).map((s) => (
+                          <div
+                            key={s}
+                            onClick={() => setServidorSeleccionado(s)}
+                          >
+                            {s}: {user.monedas.dolares[s]}$
+                          </div>
                         ))}
-                      </ul>
+                      </div>
                     </div>
-                  </>
-                )}
-              </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
           <div className="dashboard-sections">
-            <RewardList user={user} xpData={xpData} />
+            <RewardList
+              user={user}
+              xpData={xpData}
+              ecosRef={ecosRef}
+              onActualizarMonedas={actualizarMonedas}
+            />
             <LogroList user={user} />
           </div>
         </div>

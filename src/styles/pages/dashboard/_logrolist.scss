@@ -1,91 +1,105 @@
-// _logrolist.scss adaptado a estilo FlanCraft RPG Scroll
 .logros-container {
-  background: #fff8e1;
-  padding: 2.5rem;
-  border-radius: 1.4rem;
-  border: 2px solid #e0c99b;
-  box-shadow: inset 0 1px 1px #fdf6e3, 0 6px 24px rgba(0, 0, 0, 0.08);
-  margin-top: 2rem;
-  overflow: hidden;
-  position: relative;
+  background: #181818;
+  padding: 3rem 4rem;
+  border-radius: 1.6rem;
+  border: 1px solid #2f2f2f;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.4);
+  font-family: 'IM Fell English SC', serif;
 
   h2 {
-    font-family: 'IM Fell English SC', serif;
-    font-size: 2.2rem;
     text-align: center;
+    font-size: 2.4rem;
+    color: #f4f4f4;
     margin-bottom: 2rem;
-    color: #3a2d17;
-    text-shadow: 0 1px 0 #fff3c0;
+    text-shadow: 1px 1px 3px #000;
   }
 
-  .filtros-servidor {
+  .filtros-servidor,
+  .filtros-orden {
     display: flex;
     justify-content: center;
     gap: 1rem;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    align-items: center;
 
-    button {
-      background: linear-gradient(to bottom, #fff9c4, #f4e39f);
-      border: 2px solid #d1b46c;
-      padding: 0.5rem 1.2rem;
-      border-radius: 12px;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: #5a4a1f;
+    select {
+      font-family: 'IM Fell English SC', serif;
+      background: #2a2a2a;
+      border: 2px solid #444;
+      color: #eee;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border-radius: 0.6rem;
       cursor: pointer;
       transition: all 0.2s ease;
-      box-shadow: 0 2px 0 #d1b46c;
 
       &:hover {
-        background: #ffe98a;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        border-color: #3ee3ff;
+      }
+    }
+
+    svg {
+      color: #3ee3ff;
+    }
+
+    button {
+      font-family: 'IM Fell English SC', serif;
+      background: #2a2a2a;
+      border: 2px solid #444;
+      color: #eee;
+      padding: 0.5rem 1.4rem;
+      font-size: 1rem;
+      border-radius: 0.6rem;
+      cursor: pointer;
+      box-shadow: inset 0 0 0 rgba(255,255,255,0);
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        background: #3a3a3a;
+        box-shadow: inset 0 0 10px #3ee3ff33;
       }
 
       &.activo {
-        background: #ffeb60;
-        color: #3a2d17;
-        border-color: #c9a93f;
-        box-shadow: 0 0 0 2px #fff8dc inset, 0 2px 6px rgba(0, 0, 0, 0.1);
-        transform: scale(1.05);
+        background: #3ee3ff22;
+        border-color: #3ee3ff;
+        color: #ffffff;
+        font-weight: bold;
       }
     }
   }
 
   .logros-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 1.8rem;
+    gap: 2rem;
     opacity: 1;
     transform: translateY(0);
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    transition: all 0.3s ease;
 
     &.fade-swap {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(20px) rotateX(5deg);
     }
   }
 
   .logro-item {
-    background: #fffef9;
-    padding: 1.2rem 1.5rem;
-    border-radius: 14px;
-    border: 2px solid #e7cfa1;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    background: #121212;
+    border: 1px solid #2a2a2a;
+    border-left: 4px solid #38bdf8;
+    border-radius: 1rem;
+    padding: 1.4rem 1.8rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     gap: 1.5rem;
-    animation: fadeInUp 0.4s ease forwards;
+    animation: fadeInDeck 0.6s ease forwards;
 
     &.completado {
-      border-color: #81e6d9;
-      background: #f0fff4;
+      background: #052e2c;
+      border-left-color: #10b981;
+      box-shadow: 0 0 15px #10b98144;
     }
 
     .logro-info {
@@ -93,36 +107,42 @@
 
       h4 {
         margin: 0;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #372f1d;
+        font-size: 1.2rem;
+        color: #fefefe;
       }
 
       p {
         margin: 0.4rem 0;
         font-size: 0.95rem;
-        color: #4a3e29;
+        color: #bbb;
       }
 
       .barra-progreso {
-        background: #f5e5b3;
+        width: 100%;
+        height: 10px;
+        background: #333;
         border-radius: 6px;
         overflow: hidden;
-        height: 12px;
         margin: 0.6rem 0;
 
         .progreso {
           height: 100%;
-          background: linear-gradient(to right, #34d399, #059669);
+          background: linear-gradient(90deg, #3ee3ff, #38bdf8, #0ea5e9);
+          background-size: 200% 100%;
+          animation: fluido 1.6s linear infinite;
         }
       }
 
       .progreso-texto {
         font-size: 0.85rem;
-        color: #5e5034;
+        color: #ccc;
         display: flex;
         align-items: center;
         gap: 0.3rem;
+
+        svg {
+          color: #22d3ee;
+        }
       }
     }
 
@@ -131,59 +151,67 @@
       align-items: center;
 
       button {
-        background: linear-gradient(to bottom, #22c55e, #16a34a);
+        background: linear-gradient(to bottom, #22c55e, #15803d);
         color: #fff;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 10px;
         font-weight: bold;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         cursor: pointer;
-        transition: background 0.2s ease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        transition: background 0.2s;
 
         &:hover {
-          background: #15803d;
+          background: #16a34a;
         }
       }
 
-      .reclamado, .incompleto {
+      .reclamado,
+      .incompleto {
         display: flex;
         align-items: center;
         gap: 0.4rem;
         font-size: 0.9rem;
         font-weight: 500;
-        color: #6b4c1e;
       }
 
       .reclamado {
-        color: #22c55e;
+        color: #4ade80;
       }
 
       .incompleto {
-        color: #eab308;
+        color: #facc15;
       }
     }
   }
 
   .error {
-    text-align: center;
-    color: #b91c1c;
-    font-weight: bold;
-    margin-top: 2rem;
-    background: #fee2e2;
+    color: #f87171;
+    background: #1f1f1f;
+    border: 1px solid #f87171;
     padding: 1rem;
-    border-radius: 10px;
-    border: 1px solid #fca5a5;
+    border-radius: 0.75rem;
+    text-align: center;
+    font-weight: bold;
   }
 }
 
-@keyframes fadeInUp {
+@keyframes fadeInDeck {
   0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(20px) rotateX(5deg);
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) rotateX(0);
+  }
+}
+
+@keyframes fluido {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
   }
 }

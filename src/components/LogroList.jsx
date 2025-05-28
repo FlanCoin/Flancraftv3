@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { CheckCircle, Clock, Gift } from "lucide-react";
+import { CheckCircle, Clock, Gift, ArrowDown, ArrowUp, Filter } from "lucide-react";
 import "../styles/pages/dashboard/_logrolist.scss";
 
 const SERVIDORES = [
@@ -11,12 +11,21 @@ const SERVIDORES = [
   { nombre: "Anárquico", valor: "anarquico" },
 ];
 
+const CRITERIOS = [
+  { nombre: "Completados primero", valor: "completado" },
+  { nombre: "XP descendente", valor: "xp-desc" },
+  { nombre: "XP ascendente", valor: "xp-asc" },
+  { nombre: "Progreso descendente", valor: "progreso-desc" },
+  { nombre: "Progreso ascendente", valor: "progreso-asc" },
+];
+
 function LogroList({ user, onXpClaimed }) {
   const [logros, setLogros] = useState([]);
   const [error, setError] = useState(null);
   const [reclamadoId, setReclamadoId] = useState(null);
   const [cargandoId, setCargandoId] = useState(null);
   const [servidorActivo, setServidorActivo] = useState(null);
+  const [criterio, setCriterio] = useState("completado");
   const buttonRefs = useRef({});
 
   useEffect(() => {
@@ -66,6 +75,31 @@ function LogroList({ user, onXpClaimed }) {
     }
   };
 
+  const ordenarLogros = (lista) => {
+    switch (criterio) {
+      case "xp-desc":
+        return [...lista].sort((a, b) => b.xp_otorgada - a.xp_otorgada);
+      case "xp-asc":
+        return [...lista].sort((a, b) => a.xp_otorgada - b.xp_otorgada);
+      case "progreso-desc":
+        return [...lista].sort(
+          (a, b) =>
+            b.progreso_actual / b.objetivo - a.progreso_actual / a.objetivo
+        );
+      case "progreso-asc":
+        return [...lista].sort(
+          (a, b) =>
+            a.progreso_actual / a.objetivo - b.progreso_actual / b.objetivo
+        );
+      case "completado":
+      default:
+        return [...lista].sort((a, b) => {
+          if (a.completado === b.completado) return 0;
+          return a.completado ? -1 : 1;
+        });
+    }
+  };
+
   return (
     <div className="logros-container">
       <h2>Logros de Flancraft</h2>
@@ -82,11 +116,22 @@ function LogroList({ user, onXpClaimed }) {
         ))}
       </div>
 
+      <div className="filtros-orden">
+        <Filter size={18} />
+        <select value={criterio} onChange={(e) => setCriterio(e.target.value)}>
+          {CRITERIOS.map((c) => (
+            <option key={c.valor} value={c.valor}>
+              {c.nombre}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {error ? (
         <p className="error">Error al cargar logros: {error}</p>
       ) : (
         <ul className="logros-list">
-          {logros.map((logro) => {
+          {ordenarLogros(logros).map((logro) => {
             const progresoPercent = Math.min(
               100,
               (logro.progreso_actual / logro.objetivo) * 100
