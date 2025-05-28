@@ -110,7 +110,7 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="moneda-row">
-                    <span className="dolares-label">DÓLARES:</span>
+                    <span className="dolares-label">DOLARES:</span>
                     <div className="dropdown-inline">
                       {servidorSeleccionado}: {user.monedas.dolares[servidorSeleccionado]}$
                       <div className="opciones">
