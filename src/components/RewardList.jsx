@@ -1,21 +1,29 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { Lock, CheckCircle } from "lucide-react";
 import "../styles/pages/dashboard/_rewardlist.scss";
 
-export default function RewardList({ user }) {
+export default function RewardList({ user, xpData }) {
   const [reclamadas, setReclamadas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const scrollRef = useRef(null);
+  const nodo1Ref = useRef(null);
+  const nodoFinalRef = useRef(null);
+  const [offsetNodo1, setOffsetNodo1] = useState(0);
+  const [anchoBarra, setAnchoBarra] = useState("0px");
 
   const recompensas = [
-    { nivel: 1, descripcion: "100 ECOS", tipo: "eco" },
-    { nivel: 5, descripcion: "200 ECOS", tipo: "eco" },
-    { nivel: 10, descripcion: "300 ECOS", tipo: "eco" },
-    { nivel: 15, descripcion: "500 ECOS", tipo: "eco" },
-    { nivel: 20, descripcion: "1000 ECOS", tipo: "eco" },
-    { nivel: 25, descripcion: "10000$", tipo: "dolar" },
-    { nivel: 30, descripcion: "2500 ECOS", tipo: "eco" }
+    { nivel: 1, descripcion: "17 ECOS", tipo: "eco" },
+    { nivel: 5, descripcion: "134 ECOS", tipo: "eco" },
+    { nivel: 10, descripcion: "255 ECOS", tipo: "eco" },
+    { nivel: 15, descripcion: "351 ECOS", tipo: "eco" },
+    { nivel: 20, descripcion: "431 ECOS", tipo: "eco" },
+    { nivel: 25, descripcion: "501 ECOS", tipo: "eco" },
+    { nivel: 30, descripcion: "562 ECOS", tipo: "eco" },
+    { nivel: 35, descripcion: "617 ECOS", tipo: "eco" },
+    { nivel: 40, descripcion: "671 ECOS", tipo: "eco" },
+    { nivel: 45, descripcion: "717 ECOS", tipo: "eco" },
+    { nivel: 50, descripcion: "744 ECOS", tipo: "eco" },
   ];
 
   useEffect(() => {
@@ -29,12 +37,30 @@ export default function RewardList({ user }) {
       .finally(() => setLoading(false));
   }, [user.uuid]);
 
+  useLayoutEffect(() => {
+    if (nodo1Ref.current && nodoFinalRef.current && xpData) {
+      const left = nodo1Ref.current.offsetLeft + nodo1Ref.current.offsetWidth / 2;
+      setOffsetNodo1(left);
+
+      const totalWidth = nodoFinalRef.current.offsetLeft + nodoFinalRef.current.offsetWidth / 2 - left;
+      const porcentaje = calcularProgresoVisual();
+
+      if (porcentaje <= 0) {
+        setAnchoBarra("0px");
+      } else if (porcentaje >= 100) {
+        setAnchoBarra(`${totalWidth}px`);
+      } else {
+        setAnchoBarra(`${(totalWidth * porcentaje) / 100}px`);
+      }
+    }
+  }, [xpData]);
+
   const handleReclamar = async (nivel) => {
     try {
       const res = await fetch("https://flancraftweb-backend.onrender.com/api/recompensas/reclamar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ uuid: user.uuid, nivel })
+        body: JSON.stringify({ uuid: user.uuid, nivel }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -44,22 +70,54 @@ export default function RewardList({ user }) {
     }
   };
 
-  const calcularProgreso = (nivel) => {
-    if (nivel < user.nivel) return "progresado";
-    if (nivel === user.nivel + 1) return "siguiente";
-    return "pendiente";
+  const calcularProgresoVisual = () => {
+    if (!xpData) return 0;
+
+    const niveles = xpData.niveles;
+    const xpActual = xpData.xp_total_actual;
+    const xpMinimo = niveles.find(n => n.nivel === 1)?.xp_total_acumulada || 0;
+
+    if (xpActual <= xpMinimo) return 0;
+
+    const nodos = recompensas.map(r =>
+      niveles.find(n => n.nivel === r.nivel)?.xp_total_acumulada || 0
+    );
+
+    const totalTramos = nodos.length - 1;
+
+    for (let i = 0; i < totalTramos; i++) {
+      const inicio = nodos[i];
+      const fin = nodos[i + 1];
+
+      if (xpActual >= fin) continue;
+
+      const progresoRelativo = (xpActual - inicio) / (fin - inicio);
+      return ((i + progresoRelativo) / totalTramos) * 100;
+    }
+
+    return 100;
   };
 
-  const calcularProgresoReal = () => {
-    if (!user) return 0;
-    const xpActual = user.xp_actual || 0;
-    const nivelActual = user.nivel || 1;
-    const xpToNextLevel = nivelActual * 500;
-    const porcentajeXP = Math.min((xpActual / xpToNextLevel) * 100, 100);
-    return porcentajeXP;
-  };
+const calcularProgreso = (nivel, index) => {
+  if (!xpData) return "pendiente";
 
-  const progreso = calcularProgresoReal();
+  const nodoXP = xpData.niveles.find(n => n.nivel === nivel)?.xp_total_acumulada || 0;
+  const progresoActual = xpData.xp_total_actual;
+
+  // Si ya se ha alcanzado este nodo, está progresado
+  if (progresoActual >= nodoXP) return "progresado";
+
+  // Si este nodo es el siguiente inmediato que aún no se ha alcanzado, se marca como 'siguiente'
+  const anteriorNodo = recompensas[index - 1];
+  const xpAnterior = anteriorNodo
+    ? xpData.niveles.find(n => n.nivel === anteriorNodo.nivel)?.xp_total_acumulada || 0
+    : 0;
+
+  if (progresoActual >= xpAnterior && progresoActual < nodoXP) return "siguiente";
+
+  return "pendiente";
+};
+
 
   const scrollBy = (direction) => {
     if (scrollRef.current) {
@@ -78,26 +136,33 @@ export default function RewardList({ user }) {
         <div className="fade-right" />
 
         <div className="rewards-wrapper" ref={scrollRef}>
-          <div className="progreso-container">
-            <div className="linea-fondo"></div>
-            <div className="linea-relleno" style={{ width: `${progreso}%` }}></div>
-          </div>
-
           <div className="rewards-row">
+            <div className="progreso-wrapper">
+              <div className="linea-fondo"></div>
+              <div
+                className="linea-relleno"
+                style={{ width: anchoBarra, left: `${offsetNodo1}px`, transform: "translateY(-50%)" }}
+              ></div>
+            </div>
+
             {recompensas.map((r, i) => {
+              const estadoNodo = calcularProgreso(r.nivel, i);
               const yaReclamada = reclamadas.includes(r.nivel);
-              const alcanzado = user.nivel >= r.nivel;
-              const icono = r.tipo === "eco"
-                ? <img src="/assets/eco.png" alt="ECO" />
-                : <img src="/assets/dolar.png" alt="Dolar" />;
+              const puedeReclamar = estadoNodo === "progresado" && !yaReclamada;
+              const icono = <img src="/assets/eco.png" alt="ECO" />;
 
               return (
-                <div key={i} className="reward-slot">
-                  <div className={`reward-box ${alcanzado ? "unlocked" : "locked"} ${yaReclamada ? "claimed" : ""}`}>
-                    <div className="reward-icon">{alcanzado ? icono : <Lock size={20} />}</div>
+                <div
+                  key={i}
+                  className="reward-slot"
+                  ref={i === 0 ? nodo1Ref : i === recompensas.length - 1 ? nodoFinalRef : null}
+                >
+                  <div className={`reward-box ${estadoNodo !== "pendiente" ? "unlocked" : "locked"} ${yaReclamada ? "claimed" : ""}`}>
+                    <div className="reward-icon">{estadoNodo !== "pendiente" ? icono : <Lock size={20} />}</div>
                     <div className="reward-desc">{r.descripcion}</div>
                     <div className="reward-nivel">Nivel {r.nivel}</div>
-                    {alcanzado && !yaReclamada && (
+
+                    {puedeReclamar && (
                       <button onClick={() => handleReclamar(r.nivel)} className="reclamar-btn">Reclamar</button>
                     )}
                     {yaReclamada && (
@@ -106,7 +171,8 @@ export default function RewardList({ user }) {
                       </div>
                     )}
                   </div>
-                  <div className={`nodo ${calcularProgreso(r.nivel)}`}>
+
+                  <div className={`nodo nodo-${estadoNodo}`}>
                     <span>{r.nivel}</span>
                   </div>
                 </div>
@@ -114,10 +180,6 @@ export default function RewardList({ user }) {
             })}
           </div>
         </div>
-      </div>
-
-      <div className="xp-indicador">
-        {user.xp_actual} / {user.nivel * 500} XP
       </div>
 
       {loading && <p className="estado">Cargando recompensas...</p>}

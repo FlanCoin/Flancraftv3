@@ -1,3 +1,4 @@
+// ✅ DashboardPage.jsx FINAL — XP por nivel + progreso acumulado
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RewardList from "./RewardList";
@@ -8,6 +9,7 @@ import "../styles/pages/dashboard/_dashboardpage.scss";
 
 export default function DashboardPage() {
   const [user, setUser] = useState(null);
+  const [xpData, setXpData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const progressRef = useRef(null);
@@ -23,17 +25,21 @@ export default function DashboardPage() {
 
     const cargarDatos = async () => {
       try {
-        const [usuarioRes, monedasRes] = await Promise.all([
+        const [usuarioRes, monedasRes, xpRes] = await Promise.all([
           fetch(`https://flancraftweb-backend.onrender.com/api/usuarios/${parsed.uuid}`),
           fetch(`https://flancraftweb-backend.onrender.com/api/monedas/${parsed.uuid}`),
+          fetch(`https://flancraftweb-backend.onrender.com/api/usuarios/${parsed.uuid}/xp`),
         ]);
 
-        if (!usuarioRes.ok || !monedasRes.ok) throw new Error("Error al cargar datos");
+        if (!usuarioRes.ok || !monedasRes.ok || !xpRes.ok)
+          throw new Error("Error al cargar datos");
 
         const usuario = await usuarioRes.json();
         const monedas = await monedasRes.json();
+        const xp = await xpRes.json();
 
         setUser({ ...usuario, monedas });
+        setXpData(xp);
       } catch (err) {
         setError(err.message || "Error");
       } finally {
@@ -44,59 +50,11 @@ export default function DashboardPage() {
     cargarDatos();
   }, [navigate]);
 
-  const xpToNextLevel = user?.nivel ? user.nivel * 500 : 100;
   const avatarUrl = `https://minotar.net/armor/body/${user?.uid}/200.png`;
 
-  const getNivelClass = (nivel) => {
-    if (nivel >= 50) return "nivel-glow-5";
-    if (nivel >= 40) return "nivel-glow-4";
-    if (nivel >= 30) return "nivel-glow-3";
-    if (nivel >= 20) return "nivel-glow-2";
-    if (nivel >= 10) return "nivel-glow-1";
-    return "nivel-glow-0";
-  };
-
-  const handleXpClaimed = (xp, sourceButton) => {
-    if (!user || !progressRef.current || !xpFlyRef.current) return;
-    const start = sourceButton.getBoundingClientRect();
-    const end = progressRef.current.getBoundingClientRect();
-    const fly = xpFlyRef.current;
-
-    fly.classList.remove("hidden");
-    fly.style.top = `${start.top + window.scrollY}px`;
-    fly.style.left = `${start.left + window.scrollX}px`;
-
-    fly.animate(
-      [
-        { transform: "translate(0, 0)", opacity: 1 },
-        { transform: `translate(${end.left - start.left}px, ${end.top - start.top}px)`, opacity: 0 },
-      ],
-      { duration: 800, easing: "ease-in-out" }
-    );
-
-    setTimeout(() => fly.classList.add("hidden"), 800);
-
-    const oldXp = user.xp_actual;
-    const newXp = Math.min(oldXp + xp, xpToNextLevel);
-    let current = oldXp;
-    let raf = requestAnimationFrame(function animate() {
-      current += Math.ceil(xp / 30);
-      if (current >= newXp) {
-        current = newXp;
-        cancelAnimationFrame(raf);
-
-        if (newXp >= xpToNextLevel && user.nivel) {
-          const fireworks = document.createElement('div');
-          fireworks.className = 'level-up-fireworks';
-          document.body.appendChild(fireworks);
-          setTimeout(() => fireworks.remove(), 2000);
-        }
-      } else {
-        raf = requestAnimationFrame(animate);
-      }
-      setUser((prev) => ({ ...prev, xp_actual: current }));
-    });
-  };
+  const nivelInfo = xpData?.niveles.find(n => n.nivel === user?.nivel);
+  const xpDelNivelActual = nivelInfo?.xp_requerida || 1;
+  const porcentajeNivel = (user?.xp_actual / xpDelNivelActual) * 100;
 
   return (
     <div className="dashboard-wrapper">
@@ -117,15 +75,12 @@ export default function DashboardPage() {
 
             <div className="profile-panel">
               <div className="profile-info">
-
-
-
                 <h1 className="username fancy-font">{user.uid}</h1>
 
                 <div className="xp-block">
                   <div className="xp-circle-wrapper">
                     <CircularProgressbar
-                      value={(user.xp_actual / xpToNextLevel) * 100}
+                      value={porcentajeNivel}
                       text={`${user.nivel}`}
                       strokeWidth={10}
                       styles={buildStyles({
@@ -137,7 +92,9 @@ export default function DashboardPage() {
                       ref={progressRef}
                     />
                   </div>
-                  <p className="xp-label">{user.xp_actual} / {xpToNextLevel} XP</p>
+                  <p className="xp-label">
+                    {user.xp_actual} / {xpDelNivelActual} XP
+                  </p>
                 </div>
 
                 {user.monedas && (
@@ -163,8 +120,8 @@ export default function DashboardPage() {
           </div>
 
           <div className="dashboard-sections">
-            <RewardList user={user} />
-            <LogroList user={user} onXpClaimed={handleXpClaimed} />
+            <RewardList user={user} xpData={xpData} />
+            <LogroList user={user} />
           </div>
         </div>
       )}

@@ -65,44 +65,59 @@
       display: none;
     }
 
-    scrollbar-width: none;
-
-    .progreso-container {
-      position: relative;
-      height: 12px;
-      margin: 2rem 2rem 0 2rem;
-
-      .linea-fondo,
-      .linea-relleno {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        border-radius: 999px;
-      }
-
-      .linea-fondo {
-        width: 100%;
-        background-color: #404040;
-        z-index: 1;
-      }
-
-      .linea-relleno {
-        background: linear-gradient(90deg, #3b82f6, #60a5fa, #3b82f6);
-        background-size: 200% 100%;
-        animation: flujoXP 3s linear infinite;
-        z-index: 2;
-        transition: width 0.5s ease-in-out;
-        box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
-      }
-    }
-
     .rewards-row {
       display: flex;
       gap: 2rem;
-      padding: 2rem;
-      min-width: fit-content;
       position: relative;
+      padding: 0 2rem;
+      min-width: max-content;
+
+      .progreso-wrapper {
+        position: absolute;
+        top: calc(100% + 14px);
+        left: 0;
+        width: 100%;
+        height: 10px;
+        z-index: 0;
+        overflow: visible;
+
+        .linea-fondo {
+          position: absolute;
+          top: 50%;
+          left: 0;
+          transform: translateY(-50%);
+          width: 100%;
+          height: 6px;
+          background: linear-gradient(to bottom, #4a4a4a, #1c1c1c);
+          border-radius: 3px;
+          box-shadow:
+            inset 0 1px 2px rgba(0, 0, 0, 0.6),
+            0 1px 3px rgba(0, 0, 0, 0.3);
+          z-index: 1;
+        }
+
+.linea-relleno {
+  position: absolute;
+  top: 50%;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, #50d9ff, #38b0e0);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    0 0 3px rgba(56, 189, 248, 0.6);
+  z-index: 2;
+  transition: width 0.4s ease-in-out;
+  transform: translateY(-50%);
+  left: 0; // será sobrescrito dinámicamente por el estilo inline
+        }
+
+        .linea-relleno[style*="width: 0px"] {
+          background: none;
+          box-shadow: none;
+          transform: translateX(-50%) translateY(-50%);
+          left: 140px; /* Centra visualmente sobre el nodo 1 */
+        }
+      }
 
       .reward-slot {
         display: flex;
@@ -190,44 +205,52 @@
 
       .nodo {
         position: absolute;
-        bottom: -35px;
+        bottom: -32px;
         left: 50%;
         transform: translateX(-50%);
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        background: #404040;
+        width: 40px;
+        height: 30px;
+        clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+        font-weight: 700;
+        font-size: 0.9rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: #fff;
         z-index: 3;
-        box-shadow: 0 0 0 3px #1e1e1e;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 
-        &.progresado {
-          background: #3b82f6;
+        &.nodo-progresado {
+          background: linear-gradient(to bottom, #50d9ff, #38b0e0);
+          border-color: #a0ebff;
+          color: white;
         }
 
-        &.siguiente {
-          background: #f97316;
-          animation: pulse 1.5s infinite;
+        &.nodo-siguiente {
+          background: linear-gradient(to bottom, #f7b733, #f57c00);
+          color: #111;
+          border-color: #ffe38c;
+          animation: pulseDorado 1.5s infinite;
         }
 
-        &.pendiente {
-          background: #404040;
+        &.nodo-pendiente {
+          background: linear-gradient(to bottom, #2e2e2e, #1a1a1a);
+          color: #888;
+          border-color: #444;
+        }
+      }
+
+      @keyframes pulseDorado {
+        0% {
+          box-shadow: 0 0 0 0 rgba(247, 183, 51, 0.6);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(247, 183, 51, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(247, 183, 51, 0);
         }
       }
     }
-  }
-
-  .xp-indicador {
-    margin-top: 1rem;
-    text-align: center;
-    color: #ccc;
-    font-size: 0.9rem;
-    font-style: italic;
   }
 
   .estado {
@@ -238,27 +261,6 @@
 
     &.error {
       color: #f87171;
-    }
-  }
-
-  @keyframes flujoXP {
-    0% {
-      background-position: 0% 0%;
-    }
-    100% {
-      background-position: 200% 0%;
-    }
-  }
-
-  @keyframes pulse {
-    0% {
-      box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.6);
-    }
-    70% {
-      box-shadow: 0 0 0 10px rgba(249, 115, 22, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(249, 115, 22, 0);
     }
   }
 }
