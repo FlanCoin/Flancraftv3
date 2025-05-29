@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { FaBalanceScale } from 'react-icons/fa';
 import { supabase } from '@lib/supabaseClient';
 import LogoutButton from './Auth/LogoutButton';
+import { UserContext } from '../context/UserContext';
 import '../styles/components/_navbar.scss';
 
 const Navbar = ({ onLoginClick }) => {
@@ -12,12 +13,11 @@ const Navbar = ({ onLoginClick }) => {
   const dropdownTimeout = useRef(null);
   const profileTimeout = useRef(null);
 
-  const stored = localStorage.getItem("flan_user");
-  const parsed = stored ? JSON.parse(stored) : null;
-  const isLoggedIn = Boolean(parsed && parsed.loggedIn);
+  const { user, setUser } = useContext(UserContext);
+  const isLoggedIn = Boolean(user && user.loggedIn);
 
   const [userData, setUserData] = useState({
-    username: parsed?.name || '',
+    username: user?.name || '',
     uuid: '',
     userXP: 0,
     userXPMax: 100,
@@ -35,7 +35,6 @@ const Navbar = ({ onLoginClick }) => {
       document.body.style.position = '';
       document.body.style.width = '';
     }
-
     return () => {
       document.body.style.overflow = '';
       document.body.style.position = '';
@@ -44,36 +43,33 @@ const Navbar = ({ onLoginClick }) => {
   }, [menuOpen]);
 
   useEffect(() => {
-  if (!parsed?.uuid) return;
+    if (!user?.uuid) return;
+    const fetchUser = async () => {
+      try {
+        const [userRes, monedasRes] = await Promise.all([
+          supabase.from("usuarios").select("*").eq("uuid", user.uuid).single(),
+          fetch(`https://flancraftweb-backend.onrender.com/api/monedas/${user.uuid}`)
+        ]);
 
-  const fetchUser = async () => {
-    try {
-      const [userRes, monedasRes] = await Promise.all([
-        supabase.from("usuarios").select("*").eq("uuid", parsed.uuid).single(),
-        fetch(`https://flancraftweb-backend.onrender.com/api/monedas/${parsed.uuid}`)
-      ]);
+        const userData = userRes.data;
+        const monedas = monedasRes.ok ? await monedasRes.json() : { ecos: 0 };
 
-      const userData = userRes.data;
-      const monedas = monedasRes.ok ? await monedasRes.json() : { ecos: 0 };
-
-      if (userData) {
-        setUserData({
-          username: userData.uid,
-          uuid: userData.uuid || 'desconocido',
-          userXP: userData.xp_actual,
-          userXPMax: 100,
-          userLevel: userData.nivel,
-          ecos: monedas.ecos || 0,
-        });
+        if (userData) {
+          setUserData({
+            username: userData.uid,
+            uuid: userData.uuid || 'desconocido',
+            userXP: userData.xp_actual,
+            userXPMax: 100,
+            userLevel: userData.nivel,
+            ecos: monedas.ecos || 0,
+          });
+        }
+      } catch (error) {
+        console.error("Error al cargar usuario:", error);
       }
-    } catch (error) {
-      console.error("Error al cargar usuario:", error);
-    }
-  };
-
-  fetchUser();
-}, []);
-
+    };
+    fetchUser();
+  }, [user]);
 
   const handleDropdownHover = (key) => {
     clearTimeout(dropdownTimeout.current);
@@ -101,6 +97,16 @@ const Navbar = ({ onLoginClick }) => {
     setActiveDropdown((prev) => (prev === key ? null : key));
   };
 
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (!e.target.closest('.profile-button')) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener('click', handleOutsideClick);
+    return () => document.removeEventListener('click', handleOutsideClick);
+  }, []);
+
   return (
     <nav className={`navbar-flancraft ${menuOpen ? 'menu-open' : ''}`}>
       {/* Mobile Header */}
@@ -117,9 +123,59 @@ const Navbar = ({ onLoginClick }) => {
           </Link>
         </div>
 
-        <div className="profile-button">
-          <img src={`https://mc-heads.net/avatar/${userData.username}/32`} alt="avatar" />
+        <div
+  className="profile-button mobile-only"
+  onClick={() => setProfileOpen(!profileOpen)}
+>
+  <img
+    src={`https://mc-heads.net/avatar/${userData.username}/32`}
+    alt="avatar"
+    className="user-avatar"
+  />
+  {isLoggedIn && (
+    <div className={`user-dropdown-wrapper mobile ${profileOpen ? 'open' : ''}`}>
+      <div className="user-dropdown">
+        <div className="user-header">
+          <img
+            src={`https://mc-heads.net/avatar/${userData.username}/64`}
+            alt="avatar"
+            className="user-avatar-large"
+          />
+          <div>
+            <p className="username-big">
+              {userData.username} <span className="level-text">Nv. {userData.userLevel}</span>
+            </p>
+            <p className="uuid">ID: {userData.uuid.slice(0, 6)}...</p>
+          </div>
         </div>
+
+        <div className="xp-bar-profile">
+          <div
+            className="xp-fill"
+            style={{ width: `${(userData.userXP / userData.userXPMax) * 100}%` }}
+          />
+        </div>
+
+        <div className="balance-wrapper">
+          <div className="balance-item">
+            <img src="/assets/eco.png" alt="ECOS" className="eco-icon-navbar" />
+            <span>{userData.ecos} ECOS</span>
+          </div>
+        </div>
+
+        <NavLink to="/dashboard" className="dropdown-link">
+          <i className="fas fa-gift" /> Recompensas
+        </NavLink>
+        <NavLink to={`/perfil/${userData.username}`} className="dropdown-link">
+          <i className="fas fa-chart-bar" /> Ver estadísticas
+        </NavLink>
+
+        <LogoutButton />
+      </div>
+    </div>
+  )}
+</div>
+
       </div>
 
       {/* Desktop Navigation */}

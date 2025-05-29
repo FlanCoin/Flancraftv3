@@ -30,7 +30,7 @@ const App = () => {
 
       <Routes>
         {/* 🌐 Público */}
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home onLoginClick={() => setShowLogin(true)} />} />
         <Route path="/news" element={<AllNews />} />
         <Route path="/news/:slug" element={<NewsDetail />} />
         <Route path="/tienda" element={<Tienda />} />

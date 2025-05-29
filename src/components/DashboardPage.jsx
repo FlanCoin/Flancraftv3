@@ -147,6 +147,7 @@ export default function DashboardPage() {
               ecosRef={ecosRef}
               onActualizarMonedas={actualizarMonedas}
             />
+            <div class="separador-magico"></div>
             <LogroList user={user} />
           </div>
         </div>

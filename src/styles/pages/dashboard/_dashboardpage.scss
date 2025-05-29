@@ -4,14 +4,14 @@
   padding: 2rem;
   background: transparent;
   font-family: 'IM Fell English SC', serif;
-  color: #3b3a36;
+  color: #e2d2b5;
   position: relative;
 
   .xp-fly {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: radial-gradient(circle, #22c55e, #16a34a);
+    background: radial-gradient(circle, #22c55e, #166534);
     position: absolute;
     z-index: 9999;
     pointer-events: none;
@@ -26,13 +26,14 @@
   .dashboard-content {
     max-width: 1280px;
     width: 100%;
-    background-color: #1e1e1eab;
+    background-color: rgba(26, 17, 10, 0.85); // tierra oscura
     padding: 2.5rem;
-    border: 3px solid #55360E;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    border: 3px solid #6e4d1f; // borde madera vieja
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
     gap: 3rem;
+    border-radius: 0.75rem;
   }
 
   .dashboard-header-layout {
@@ -48,6 +49,7 @@
       border-radius: 0.75rem;
       width: 150px;
       height: auto;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
     }
   }
 
@@ -59,7 +61,7 @@
       font-size: 3rem;
       font-weight: bold;
       margin-bottom: 2.5rem;
-      color: #ffffff;
+      color: #ffeeb1;
       text-shadow: 0 0 6px #000, 0 0 3px #000;
     }
 
@@ -79,7 +81,7 @@
         .xp-text {
           font-weight: 700;
           font-size: 1.1rem;
-          color: #ffffff;
+          color: #ffeeb1;
           text-shadow: 0 0 4px #000, 0 0 2px #000;
         }
 
@@ -92,17 +94,17 @@
         display: flex;
         width: 400px;
         height: 26px;
-        background: #0f172a;
+        background: #1a0f06;
         border: 2px solid #000000;
-        border-radius: 2px;
+        border-radius: 3px;
         overflow: hidden;
-        box-shadow: 0 0 15px rgba(0, 179, 255, 0.6);
+        box-shadow: 0 0 15px rgba(0, 179, 255, 0.3);
         transform: skewX(-25deg);
 
         .segmento {
           flex: 1;
           margin-right: 1px;
-          background: #1e293b;
+          background: #3a2a1a;
           clip-path: polygon(5% 0%, 100% 0%, 90% 100%, 0% 100%);
           transition: background 0.3s ease;
 
@@ -123,11 +125,11 @@
 
   .monedas-info {
     .monedas-panel {
-      background: #1a1a1a;
+      background: rgba(34, 24, 14, 0.9);
       padding: 1.5rem;
       border-radius: 1rem;
-      border: 1px solid #444;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+      border: 1px solid #5c3b19;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.03);
       display: flex;
       flex-direction: column;
       gap: 1.2rem;
@@ -135,11 +137,11 @@
       .monedas-titulo {
         font-size: 1.3rem;
         font-weight: bold;
-        border-bottom: 2px solid #444;
+        border-bottom: 2px solid #5c3b19;
         padding-bottom: 0.5rem;
         margin-bottom: 0.5rem;
         text-align: center;
-        color: #ffffff;
+        color: #fff3c2;
       }
 
       .moneda-row {
@@ -147,7 +149,7 @@
         align-items: center;
         font-size: 1.3rem;
         font-weight: bold;
-        color: #fff;
+        color: #ffffff;
         gap: 0.6rem;
 
         .eco-label {
@@ -165,7 +167,7 @@
         }
 
         .dolares-label {
-          color: #20a053;
+          color: #4ade80;
         }
 
         .dropdown-inline {
@@ -215,54 +217,64 @@
   }
 
   .loading-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(10, 10, 10, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  animation: fadeIn 0.5s ease forwards;
-}
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.5s ease forwards;
+  }
 
-.loading-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.2rem;
-}
+  .loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+  }
 
-.loading-gem {
-  width: 64px;
-  height: 84px;
-  animation: rotateGem 2s linear infinite;
-  filter: drop-shadow(0 0 6px rgba(0, 255, 255, 0.4));
-}
+  .loading-gem {
+    width: 64px;
+    height: 84px;
+    animation: rotateGem 2s linear infinite;
+    filter: drop-shadow(0 0 6px rgba(0, 255, 255, 0.4));
+  }
 
-.loading-text {
-  font-family: "IM Fell English SC", serif;
-  font-size: 1.4rem;
-  color: #00eaff;
-  text-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
-  animation: blink 1.5s infinite;
+  .loading-text {
+    font-family: "IM Fell English SC", serif;
+    font-size: 1.4rem;
+    color: #00eaff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+    animation: blink 1.5s infinite;
+  }
 }
 
 @keyframes rotateGem {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes float-eco {
@@ -284,4 +296,12 @@
   100% {
     background-position: 0% 50%;
   }
+}
+.separador-magico {
+  height: 2px;
+  width: 80%;
+  margin: 3rem auto;
+  background: linear-gradient(to right, transparent, #3ee3ff, transparent);
+  box-shadow: 0 0 10px #3ee3ff88;
+  border-radius: 10px;
 }

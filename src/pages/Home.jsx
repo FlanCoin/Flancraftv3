@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// src/pages/Home.jsx
+import React, { useState, useContext } from "react";
 import "../styles/pages/_home.scss";
 
 import MapRPG from "../components/MapRPG";
@@ -10,14 +11,29 @@ import SectionDivider2 from "../components/SectionDivider2";
 import PlayerDashboard from "../components/PlayerDashboard";
 import RitualEko from "../components/RitualEko";
 import Footer from "../components/Footer";
+import LoginModal from "../components/Auth/LoginModal";
+
+import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const { user, setUser } = useContext(UserContext);
   const [copied, setCopied] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const navigate = useNavigate();
 
   const copyIP = () => {
     navigator.clipboard.writeText("play.flancraft.com");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleMainButtonClick = () => {
+    if (!user) {
+      setShowLogin(true);
+    } else {
+      navigate("/dashboard");
+    }
   };
 
   return (
@@ -38,13 +54,34 @@ const Home = () => {
 
           <ServerStatus />
 
-          <button className="hero-btn" onClick={copyIP}>
-            {copied ? "¡IP Copiada!" : "Conectarse a Flancraft"}
+          <button className="hero-btn" onClick={handleMainButtonClick}>
+            {!user
+              ? "Conectarse a Flancraft"
+              : `Disfruta de tu hogar, ${user.name || "aventurero"}`}
           </button>
         </div>
       </header>
-      <SectionDivider />
 
+      {showLogin && (
+        <LoginModal
+          onClose={() => {
+            setShowLogin(false);
+            const stored = localStorage.getItem("flan_user");
+            if (stored) {
+              try {
+                const parsed = JSON.parse(stored);
+                if (parsed?.loggedIn) {
+                  setUser(parsed);
+                }
+              } catch (e) {
+                console.error("Error al parsear flan_user:", e);
+              }
+            }
+          }}
+        />
+      )}
+
+      <SectionDivider />
       <MapRPG />
       <SectionDivider />
       <PlayerDashboard />
@@ -53,7 +90,6 @@ const Home = () => {
       <SectionDivider />
       <GameModes />
       <SectionDivider />
-
       <div className="main-content">
         <TeamCarousel />
         <section className="sections"></section>
