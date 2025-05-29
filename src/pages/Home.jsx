@@ -18,10 +18,8 @@ import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const { user, setUser } = useContext(UserContext);
-
   const [showLogin, setShowLogin] = useState(false);
   const navigate = useNavigate();
-
 
 
   const handleMainButtonClick = () => {
