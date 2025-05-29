@@ -18,15 +18,11 @@ import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const { user, setUser } = useContext(UserContext);
-  const [copied, setCopied] = useState(false);
+
   const [showLogin, setShowLogin] = useState(false);
   const navigate = useNavigate();
 
-  const copyIP = () => {
-    navigator.clipboard.writeText("play.flancraft.com");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+
 
   const handleMainButtonClick = () => {
     if (!user) {

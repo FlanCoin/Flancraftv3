@@ -1,112 +1,214 @@
-// src/styles/components/Auth/_loginmodal.scss
 .login-modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(15, 10, 5, 0.7);
+  inset: 0;
+  background: rgba(5, 5, 5, 0.88);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.25s ease-out;
+
+  .overlay {
+    position: absolute;
+    inset: 0;
+  }
 
   .login-box {
-    background: url("/assets/papertexture.jpeg") no-repeat center;
-    background-size: cover;
-    border: 3px solid #3f2c1c;
-    border-radius: 15px;
-    padding: 2rem;
+    position: relative;
+    z-index: 10;
+    background: #1b1209;
+    border: 2px solid #7c5a33;
+    border-radius: 14px;
+    padding: 2.5rem;
     width: 100%;
-    max-width: 480px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
-    font-family: 'Minecraftia', sans-serif;
+    max-width: 440px;
+    font-family: 'IM Fell English SC', serif;
+    color: #fef3d6;
+    text-align: center;
+    box-shadow: 0 0 26px #000000aa;
+    animation: slideUp 0.3s ease;
 
     h2 {
-      text-align: center;
-      margin-bottom: 1rem;
-      font-size: 1.4rem;
-      color: #33220f;
+      font-size: 1.65rem;
+      color: #fdf3c2;
+      margin-bottom: 1.6rem;
+      text-shadow: 0 0 6px #000;
     }
 
     p {
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
-      color: #3a2a18;
+      font-size: 1rem;
+      margin: 0.6rem 0;
+      color: #e6d3a8;
     }
 
     code {
-      background: #e3d5b8;
-      padding: 0.1rem 0.4rem;
-      border-radius: 3px;
+      background: #3c2e1c;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      color: #fff;
       font-weight: bold;
+      font-size: 0.95rem;
     }
 
     input {
-      display: block;
       width: 100%;
       margin: 0.5rem 0;
-      padding: 0.6rem;
-      border: 2px solid #b8a580;
-      border-radius: 6px;
-      background: #fff8e1;
+      padding: 0.75rem 1rem;
+      background: #2c1f14;
+      color: #fef3db;
+      border: 2px solid #a17b48;
+      border-radius: 8px;
       font-family: inherit;
       font-size: 1rem;
-      color: #33220f;
+      transition: border-color 0.3s, box-shadow 0.3s;
 
       &:focus {
         outline: none;
-        border-color: #a77b3f;
+        border-color: #38bdf8;
+        box-shadow: 0 0 10px #38bdf880;
       }
     }
 
     button {
-      display: block;
       width: 100%;
-      background: #c59e68;
-      color: #fff;
+      padding: 0.85rem;
+      margin-top: 1rem;
+      font-size: 1rem;
       font-weight: bold;
       border: none;
       border-radius: 10px;
-      padding: 0.75rem;
-      margin-top: 0.8rem;
       cursor: pointer;
-      transition: background 0.2s;
-
-      &:hover {
-        background: #b58850;
-      }
+      font-family: inherit;
+      transition: all 0.2s ease;
 
       &:disabled {
-        background: #999;
+        background: #444;
         cursor: not-allowed;
+        opacity: 0.6;
       }
     }
 
-    .no-account {
-      margin-top: 1rem;
-      text-align: center;
+    // Botón principal
+    button:not(.close-btn):not(.auth-link):not(:disabled) {
+      background: linear-gradient(to right, #34d399, #10b981);
+      color: #ffffff;
+      box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.2), 0 0 10px #22c55e66;
 
-      button {
-        background: none;
-        color: #7a541a;
-        border: none;
-        font-weight: bold;
-        cursor: pointer;
-        padding: 0;
-        margin-left: 0.3rem;
+      &:hover {
+        background: linear-gradient(to right, #22c55e, #15803d);
+        transform: translateY(-1px);
+        box-shadow: 0 0 12px #22c55eaa;
+      }
 
-        &:hover {
-          text-decoration: underline;
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+
+    .auth-options {
+      margin-top: 1.8rem;
+      font-size: 0.9rem;
+      color: #cab99e;
+
+      p {
+        margin: 0.4rem 0;
+
+        button {
+          background: none;
+          color: #3ee3ff;
+          font-weight: bold;
+          border: none;
+          cursor: pointer;
+          padding: 0;
+          margin-left: 0.3rem;
+          font-family: inherit;
+          font-size: inherit;
+          transition: color 0.2s ease;
+
+          &:hover {
+            color: #60f0ff;
+            text-decoration: underline;
+          }
         }
       }
     }
 
     .error {
       margin-top: 1rem;
-      color: #b30000;
-      text-align: center;
-      font-weight: bold;
+      background: #3c1f1f;
+      color: #f87171;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      border: 1px solid #992222;
+      box-shadow: 0 0 6px #ff000030;
     }
+
+    .success {
+      margin-top: 1rem;
+      background: #193d24;
+      color: #4ade80;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      border: 1px solid #15803d;
+      box-shadow: 0 0 6px #22c55e55;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.2rem;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #fef3d6;
+      background: transparent;
+      border: 2px solid transparent;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+      &:hover {
+        color: #facc15;
+        transform: scale(1.05);
+        box-shadow: 0 0 6px #facc1580;
+        border-color: #facc15;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: #facc15;
+        box-shadow: 0 0 0 2px #facc15aa;
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+}
+
+// Animaciones mágicas ✨
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

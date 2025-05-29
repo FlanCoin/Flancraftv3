@@ -13,7 +13,7 @@ const Navbar = ({ onLoginClick }) => {
   const dropdownTimeout = useRef(null);
   const profileTimeout = useRef(null);
 
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const isLoggedIn = Boolean(user && user.loggedIn);
 
   const [userData, setUserData] = useState({
