@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import AllNews from "./components/AllNews";
 import NewsDetail from "./components/NewsDetail";
 import DashboardPage from "./components/DashboardPage";
+import Tienda from './components/Tienda';
 
 // Tribunal System
 import TribunalMain from "./pages/tribunal/TribunalMain";
@@ -32,7 +33,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/news" element={<AllNews />} />
         <Route path="/news/:slug" element={<NewsDetail />} />
-
+        <Route path="/tienda" element={<Tienda />} />
         <Route path="/dashboard" element={<DashboardPage />} />
 
 

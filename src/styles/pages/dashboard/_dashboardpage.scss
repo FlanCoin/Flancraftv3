@@ -214,13 +214,55 @@
     }
   }
 
-  .loading,
-  .error {
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #b91c1c;
-  }
+  .loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.loading-gem {
+  width: 64px;
+  height: 64px;
+  animation: rotateGem 2s linear infinite;
+  filter: drop-shadow(0 0 6px rgba(0, 255, 255, 0.4));
+}
+
+.loading-text {
+  font-family: "IM Fell English SC", serif;
+  font-size: 1.4rem;
+  color: #00eaff;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+  animation: blink 1.5s infinite;
+}
+
+@keyframes rotateGem {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+
 }
 
 @keyframes float-eco {

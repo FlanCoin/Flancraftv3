@@ -68,10 +68,20 @@ export default function DashboardPage() {
   return (
     <div className="dashboard-wrapper">
       {loading ? (
-        <p className="loading">Cargando perfil...</p>
-      ) : error ? (
-        <p className="error">Error al cargar perfil: {error}</p>
-      ) : (
+  <div className="loading-overlay">
+    <div className="loading-content">
+      <img
+        src="/assets/eco.png"
+        alt="Gema ECOS"
+        className="loading-gem"
+      />
+      <p className="loading-text">Cargando perfil...</p>
+    </div>
+  </div>
+) : error ? (
+  <p className="error">Error al cargar perfil: {error}</p>
+) : (
+
         <div className="dashboard-content">
           <div className="dashboard-header-layout">
             <div className="skin-wrapper">

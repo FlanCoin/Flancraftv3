@@ -1,0 +1,96 @@
+@use '../../base/variables' as *;
+
+.nav-center {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+
+  a,
+  .dropdown-toggle {
+    background: linear-gradient(to bottom, #4a3522, #261d16);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    gap: 0.4rem;
+    padding: 0.45rem 0.8rem;
+    font-size: 1rem;
+    color: #ffffff;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+    border-radius: 6px;
+    font-weight: bold;
+    border: 2px solid #55360E;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: linear-gradient(to bottom, #6b4a2e, #3e2a1a);
+      box-shadow: 0 0 12px #ffffff, inset 0 0 4px rgba(255, 255, 255, 0.08);
+      transform: scale(1.05);
+
+      i {
+        color: #ffffff;
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.85);
+        filter: drop-shadow(0 0 8px rgba(255, 224, 150, 0.6));
+      }
+    }
+
+    &.active {
+      background: linear-gradient(to bottom, #8c673e, #3e2d1e);
+      color: #ffffff;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.85);
+    }
+
+    .arrow-icon {
+      font-size: 0.7rem;
+      margin-left: 0.3rem;
+    }
+  }
+
+  .dropdown {
+    position: relative;
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: rgba(30, 25, 18, 0.96);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 220, 100, 0.4);
+      border-radius: 8px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: all 0.3s ease;
+
+      a {
+        font-size: 0.85rem;
+        color: #eee3c0;
+        border-radius: 4px;
+        text-align: center;
+        padding: 0.4rem 1rem;
+        width: 100%;
+
+        &:hover {
+          background: rgba(255, 230, 100, 0.1);
+          box-shadow: 0 0 8px rgba(255, 225, 120, 0.4), inset 0 0 2px rgba(255, 255, 255, 0.1);
+          transform: scale(1.02);
+        }
+      }
+    }
+
+    &.show-dropdown .dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+  }
+}

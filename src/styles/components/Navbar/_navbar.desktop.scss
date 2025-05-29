@@ -1,0 +1,80 @@
+@use '../../base/variables' as *;
+
+.navbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0.6rem 1.6rem;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+
+  .nav-left-wrapper {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    gap: 2rem;
+
+    .nav-left {
+      flex-shrink: 0;
+
+      .logo {
+        .logo-img {
+          height: 48px;
+        }
+      }
+    }
+
+    .nav-center {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.2rem;
+    }
+  }
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+
+  .rewards-button {
+    background: linear-gradient(135deg, #ffe65a, #ffcc00);
+    padding: 0.45rem 0.9rem;
+    border-radius: 6px;
+    color: #3a2d18;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    box-shadow: 0 0 6px rgba(255, 230, 80, 0.4);
+    animation: pulse-reward 3s infinite ease-in-out;
+
+    &:hover {
+      background: linear-gradient(135deg, #fff176, #ffd54f);
+      box-shadow: 0 0 12px rgba(255, 230, 80, 0.6);
+      transform: scale(1.05);
+    }
+  }
+
+  .login-button {
+    background: linear-gradient(to bottom, #3e2f1e, #2b241d);
+    border: 2px solid #6b4e2e;
+    padding: 0.45rem 0.9rem;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #fdf6dd;
+
+    &:hover {
+      background: linear-gradient(to bottom, #5a3e2a, #3e2f1e);
+      box-shadow: 0 0 8px rgba(255, 204, 0, 0.5);
+      color: $color-acento;
+    }
+  }
+}

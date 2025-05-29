@@ -1,0 +1,112 @@
+@use '../../base/variables' as *;
+
+.navbar-flancraft {
+  background-color: #1b1815;
+  background-image: url("data:image/svg+xml,..."); // Recorta aquí la URL si lo deseas
+  font-family: $font-minecraft;
+  border-bottom: 5px solid #55360E;
+  box-shadow: 0 4px 15px rgba(255, 204, 0, 0.08);
+  position: relative;
+  z-index: 9999;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: radial-gradient(ellipse at center, rgba(255, 215, 85, 0.06), transparent 70%);
+    z-index: -1;
+  }
+
+  .navbar-inner {
+    display: none;
+
+    @media (max-width: 768px) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      padding: 0.6rem 1.2rem;
+
+      .burger {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        z-index: 2;
+
+        span {
+          width: 25px;
+          height: 3px;
+          background: #ddb879;
+          box-shadow: 0 0 4px rgba(255, 204, 0, 0.5);
+          display: block;
+          border-radius: 2px;
+        }
+      }
+
+      .logo-wrapper {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+
+        .logo-img {
+          height: 44px;
+          transition: transform 0.3s ease;
+          filter: brightness(1);
+
+          &:hover {
+            transform: scale(1.05);
+            filter: brightness(1.6) drop-shadow(0 0 8px rgba(255, 224, 150, 0.6));
+          }
+        }
+      }
+
+      .profile-button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(to right, #2d241c, #1f1a15);
+        border: 2px solid #7c5a28;
+        padding: 0.4rem 0.6rem;
+        border-radius: 6px;
+        color: #fdf6dd;
+        font-weight: bold;
+        font-size: 0.9rem;
+        z-index: 2;
+
+        img {
+          width: 32px;
+          height: 32px;
+          border-radius: 4px;
+          border: 2px solid #ffd700;
+        }
+      }
+    }
+
+    .profile-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(to right, #2d241c, #1f1a15);
+      border: 2px solid #7c5a28;
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      color: #fdf6dd;
+      font-weight: bold;
+      font-size: 0.9rem;
+
+      img {
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+        border: 2px solid #ffd700;
+      }
+    }
+  }
+}

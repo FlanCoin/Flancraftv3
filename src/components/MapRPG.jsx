@@ -20,7 +20,7 @@ const zones = [
     icon: <ScrollText />,
     title: 'Taberna de Noticias',
     description: 'Lee las últimas aventuras y eventos del servidor.',
-    route: '/noticias',
+    route: '/news',
     className: 'news',
     image: '/assets/taberna.png',
   },

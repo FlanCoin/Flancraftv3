@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { FaBalanceScale } from 'react-icons/fa';
 import { supabase } from '@lib/supabaseClient';
-import LogoutButton from './Auth/LogoutButton'; // Asegúrate de tener este componente
+import LogoutButton from './Auth/LogoutButton';
 import '../styles/components/_navbar.scss';
 
 const Navbar = ({ onLoginClick }) => {
@@ -22,6 +22,7 @@ const Navbar = ({ onLoginClick }) => {
     userXP: 0,
     userXPMax: 100,
     userLevel: 1,
+    ecos: 0,
   });
 
   useEffect(() => {
@@ -43,28 +44,36 @@ const Navbar = ({ onLoginClick }) => {
   }, [menuOpen]);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      if (!parsed?.uuid) return;
+  if (!parsed?.uuid) return;
 
-      const { data } = await supabase
-        .from("usuarios")
-        .select("*")
-        .eq("uuid", parsed.uuid)
-        .single();
+  const fetchUser = async () => {
+    try {
+      const [userRes, monedasRes] = await Promise.all([
+        supabase.from("usuarios").select("*").eq("uuid", parsed.uuid).single(),
+        fetch(`https://flancraftweb-backend.onrender.com/api/monedas/${parsed.uuid}`)
+      ]);
 
-      if (data) {
+      const userData = userRes.data;
+      const monedas = monedasRes.ok ? await monedasRes.json() : { ecos: 0 };
+
+      if (userData) {
         setUserData({
-          username: data.uid,
-          uuid: data.uuid || 'desconocido',
-          userXP: data.xp_actual,
+          username: userData.uid,
+          uuid: userData.uuid || 'desconocido',
+          userXP: userData.xp_actual,
           userXPMax: 100,
-          userLevel: data.nivel,
+          userLevel: userData.nivel,
+          ecos: monedas.ecos || 0,
         });
       }
-    };
+    } catch (error) {
+      console.error("Error al cargar usuario:", error);
+    }
+  };
 
-    fetchUser();
-  }, [parsed]);
+  fetchUser();
+}, []);
+
 
   const handleDropdownHover = (key) => {
     clearTimeout(dropdownTimeout.current);
@@ -91,11 +100,10 @@ const Navbar = ({ onLoginClick }) => {
   const toggleDropdown = (key) => {
     setActiveDropdown((prev) => (prev === key ? null : key));
   };
-  
 
   return (
     <nav className={`navbar-flancraft ${menuOpen ? 'menu-open' : ''}`}>
-      {/* --- Mobile Header --- */}
+      {/* Mobile Header */}
       <div className="navbar-inner mobile-only">
         <button className="burger" onClick={() => setMenuOpen(!menuOpen)}>
           <span />
@@ -114,7 +122,7 @@ const Navbar = ({ onLoginClick }) => {
         </div>
       </div>
 
-      {/* --- Desktop Navigation --- */}
+      {/* Desktop Navigation */}
       <div className="navbar-content desktop-only">
         <div className="nav-left-wrapper">
           <div className="nav-left">
@@ -124,6 +132,7 @@ const Navbar = ({ onLoginClick }) => {
           </div>
 
           <div className="nav-center links">
+            <NavLink to="/"><i className="fas fa-home" /> Inicio</NavLink>
             <NavLink to="/news"><i className="fas fa-scroll" /> Noticias</NavLink>
 
             <div className={`dropdown ${activeDropdown === 'mundos' ? 'show-dropdown' : ''}`}
@@ -142,8 +151,7 @@ const Navbar = ({ onLoginClick }) => {
               </div>
             </div>
 
-            <NavLink to="/slimefun"><i className="fas fa-flask" /> Slimefun</NavLink>
-            <NavLink to="/estadisticas"><i className="fas fa-chart-line" /> Stats</NavLink>
+            <NavLink to="/estadisticas"><i className="fas fa-chart-line" /> Estadísticas</NavLink>
 
             <div className={`dropdown ${activeDropdown === 'mercado' ? 'show-dropdown' : ''}`}
               onMouseEnter={() => handleDropdownHover('mercado')}
@@ -152,7 +160,7 @@ const Navbar = ({ onLoginClick }) => {
                 <i className="fas fa-store" /> Mercado <i className="fas fa-chevron-down arrow-icon" />
               </span>
               <div className="dropdown-menu">
-                <NavLink to="/tienda-tebex"><i className="fas fa-gem" /> Store Servidor</NavLink>
+                <NavLink to="/tienda"><i className="fas fa-gem" /> Store Servidor</NavLink>
                 <NavLink to="/tienda-merch"><i className="fas fa-shopping-bag" /> Merchandising</NavLink>
               </div>
             </div>
@@ -168,42 +176,68 @@ const Navbar = ({ onLoginClick }) => {
             </button>
           ) : (
             <>
-              <div className="user-box"
-                onMouseEnter={handleProfileEnter}
-                onMouseLeave={handleProfileLeave}>
-                <div className="user-trigger">
-                  <img src={`https://mc-heads.net/avatar/${userData.username}/32`} alt="avatar" className="user-avatar" />
-                  <span className="username">{userData.username}</span>
-                </div>
+              <div
+  className="user-box"
+  onMouseEnter={handleProfileEnter}
+  onMouseLeave={handleProfileLeave}
+>
+<Link to="/dashboard" className="user-trigger">
+  <img
+    src={`https://mc-heads.net/avatar/${userData.username}/32`}
+    alt="avatar"
+    className="user-avatar"
+  />
+  <span className="username">{userData.username}</span>
+</Link>
 
-                <div className={`user-dropdown-wrapper ${profileOpen ? 'open' : ''}`}
-                  onMouseEnter={handleProfileEnter}
-                  onMouseLeave={handleProfileLeave}>
-                  <div className="user-dropdown">
-                    <div className="user-header">
-                      <img src={`https://mc-heads.net/avatar/${userData.username}/64`} alt="avatar" className="user-avatar-large" />
-                      <div>
-                        <p className="username-big">{userData.username} <span className="level-text">Nv. {userData.userLevel}</span></p>
-                        <p className="uuid">ID: {userData.uuid.slice(0, 6)}...</p>
-                      </div>
-                    </div>
 
-                    <div className="xp-bar-profile">
-                      <div className="xp-fill" style={{ width: `${(userData.userXP / userData.userXPMax) * 100}%` }} />
-                    </div>
+  <div
+    className={`user-dropdown-wrapper enhanced ${profileOpen ? 'open' : ''}`}
+    onMouseEnter={handleProfileEnter}
+    onMouseLeave={handleProfileLeave}
+  >
+    <div className="user-dropdown">
+  <div className="user-header">
+    <img
+      src={`https://mc-heads.net/avatar/${userData.username}/64`}
+      alt="avatar"
+      className="user-avatar-large"
+    />
+    <div>
+      <p className="username-big">
+        {userData.username} <span className="level-text">Nv. {userData.userLevel}</span>
+      </p>
+      <p className="uuid">ID: {userData.uuid.slice(0, 6)}...</p>
+    </div>
+  </div>
 
-                    <NavLink to={`/perfil/${userData.username}`} className="dropdown-link">
-                      <i className="fas fa-chart-bar" /> Ver estadísticas
-                    </NavLink>
+  <div className="xp-bar-profile">
+    <div
+      className="xp-fill"
+      style={{ width: `${(userData.userXP / userData.userXPMax) * 100}%` }}
+    />
+  </div>
 
-                    <LogoutButton />
-                  </div>
-                </div>
-              </div>
+  <div className="balance-wrapper">
+  <div className="balance-item">
+    <img src="/assets/eco.png" alt="ECOS" className="eco-icon-navbar" />
+    <span>{userData.ecos} ECOS</span>
+  </div>
+</div>
+<NavLink to="/dashboard" className="dropdown-link">
+    <i className="fas fa-gift" /> Recompensas
+  </NavLink>
+  <NavLink to={`/perfil/${userData.username}`} className="dropdown-link">
+    <i className="fas fa-chart-bar" /> Ver estadísticas
+  </NavLink>
 
-              <NavLink to="/recompensas" className="rewards-button">
-                <i className="fas fa-gift" /> Recompensas
-              </NavLink>
+  
+
+  <LogoutButton />
+</div>
+  </div>
+</div>
+
             </>
           )}
         </div>
@@ -222,7 +256,8 @@ const Navbar = ({ onLoginClick }) => {
         </div>
 
         <div className="mobile-links">
-          <NavLink to="/noticias"><i className="fas fa-scroll" /> Noticias</NavLink>
+          <NavLink to="/"><i className="fas fa-home" /> Inicio</NavLink>
+          <NavLink to="/news"><i className="fas fa-scroll" /> Noticias</NavLink>
           <div className={`mobile-dropdown ${activeDropdown === 'mundos' ? 'open' : ''}`}>
             <div className="mobile-dropdown-toggle" onClick={() => toggleDropdown('mundos')}>
               <i className="fas fa-map-marked-alt" /> Mundos
@@ -238,8 +273,8 @@ const Navbar = ({ onLoginClick }) => {
             </div>
           </div>
 
-          <NavLink to="/slimefun"><i className="fas fa-flask" /> Slimefun</NavLink>
-          <NavLink to="/estadisticas"><i className="fas fa-chart-line" /> Stats</NavLink>
+          
+          <NavLink to="/estadisticas"><i className="fas fa-chart-line" /> Estadisticas</NavLink>
 
           <div className={`mobile-dropdown ${activeDropdown === 'mercado' ? 'open' : ''}`}>
             <div className="mobile-dropdown-toggle" onClick={() => toggleDropdown('mercado')}>
@@ -247,12 +282,12 @@ const Navbar = ({ onLoginClick }) => {
               <i className={`fas fa-chevron-down arrow-icon ${activeDropdown === 'mercado' ? 'open' : ''}`} />
             </div>
             <div className="mobile-dropdown-content">
-              <NavLink to="/tienda-tebex"><i className="fas fa-gem" /> Store Servidor</NavLink>
+              <NavLink to="/tienda"><i className="fas fa-gem" /> Store Servidor</NavLink>
               <NavLink to="/tienda-merch"><i className="fas fa-shopping-bag" /> Merchandising</NavLink>
             </div>
           </div>
 
-          <NavLink to="/justicia"><i className="fas fa-gavel" /> Tribunal</NavLink>
+          <NavLink to="/tribunal"><i className="fas fa-gavel" /> Tribunal</NavLink>
 
           <div className="logo-divider"></div>
           <div className="mobile-social-links">
