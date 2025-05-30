@@ -68,20 +68,19 @@ export default function DashboardPage() {
   return (
     <div className="dashboard-wrapper">
       {loading ? (
-  <div className="loading-overlay">
-    <div className="loading-content">
-      <img
-        src="/assets/eco.png"
-        alt="Gema ECOS"
-        className="loading-gem"
-      />
-      <p className="loading-text">Cargando perfil...</p>
-    </div>
-  </div>
-) : error ? (
-  <p className="error">Error al cargar perfil: {error}</p>
-) : (
-
+        <div className="loading-overlay">
+          <div className="loading-content">
+            <img
+              src="/assets/eco.png"
+              alt="Gema ECOS"
+              className="loading-gem"
+            />
+            <p className="loading-text">Cargando perfil...</p>
+          </div>
+        </div>
+      ) : error ? (
+        <p className="error">Error al cargar perfil: {error}</p>
+      ) : (
         <div className="dashboard-content">
           <div className="dashboard-header-layout">
             <div className="skin-wrapper">
@@ -107,6 +106,18 @@ export default function DashboardPage() {
                 </div>
               </div>
             </div>
+
+            {/* Botón del panel del tribunal justo arriba de MONEDAS */}
+            {user.rol_admin && (
+  <div className="panel-tribunal-wrapper">
+    <button
+      onClick={() => navigate("/tribunal/admin")}
+      className="btn-admin"
+    >
+      Panel del Tribunal ({user.rol_admin})
+    </button>
+  </div>
+)}
 
             <div className="monedas-info">
               {user.monedas && (
@@ -147,7 +158,7 @@ export default function DashboardPage() {
               ecosRef={ecosRef}
               onActualizarMonedas={actualizarMonedas}
             />
-            <div class="separador-magico"></div>
+            <div className="separador-magico"></div>
             <LogroList user={user} />
           </div>
         </div>

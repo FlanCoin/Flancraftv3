@@ -13,7 +13,6 @@ import Tienda from './components/Tienda';
 
 // Tribunal System
 import TribunalMain from "./pages/tribunal/TribunalMain";
-import TribunalLogin from "./pages/tribunal/TribunalLogin";
 import TribunalAdmin from "./pages/tribunal/TribunalAdmin";
 import TribunalStaff from "./pages/tribunal/TribunalStaff";
 import PerfilJugadorTribunal from "./pages/tribunal/PerfilJugadorTribunal";
@@ -38,12 +37,11 @@ const App = () => {
 
 
         {/* ⚖️ Tribunal System (Staff) */}
-        <Route path="/loginstaff" element={<TribunalLogin />} />
         <Route path="/tribunal" element={<TribunalMain />} />
-        <Route path="/admin" element={<TribunalAdmin />} />
-        <Route path="/staff" element={<TribunalStaff />} />
+        <Route path="/tribunal/admin" element={<TribunalAdmin />} />
+        <Route path="/tribunal/staff" element={<TribunalStaff />} />
         <Route path="/perfil/:nombre" element={<PerfilJugadorTribunal />} />
-      </Routes>
+    </Routes>
     </>
   );
 };

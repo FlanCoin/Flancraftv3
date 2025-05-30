@@ -24,10 +24,10 @@ export default function LoginModal({ onClose }) {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const goToDashboard = (uuid, username) => {
-  const userData = { uuid, name: username, loggedIn: true };
+  const goToDashboard = (uuid, username, rol_admin) => {
+  const userData = { uuid, name: username, loggedIn: true, rol_admin };
   localStorage.setItem("flan_user", JSON.stringify(userData));
-  setUser(userData); // 💥 Esto actualiza el contexto
+  setUser(userData);
   navigate("/dashboard");
   if (onClose) onClose();
 };
@@ -45,7 +45,7 @@ export default function LoginModal({ onClose }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Error al iniciar sesión");
 
-      goToDashboard(data.uuid, data.uid);
+      goToDashboard(data.uuid, data.uid, data.rol_admin);
     } catch (err) {
       setError(err.message);
     } finally {

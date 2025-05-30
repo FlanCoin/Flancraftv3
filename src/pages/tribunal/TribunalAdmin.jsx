@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import React, { useEffect, useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { UserContext } from '../../context/UserContext';
 import {
   PencilSimple,
   Trash,
@@ -22,20 +22,15 @@ import {
 
 import '../../styles/pages/_tribunaladmin.scss';
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_KEY
-);
-
 export default function AdminPanel() {
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
+
   const [sanciones, setSanciones] = useState([]);
   const [editing, setEditing] = useState(null);
   const [observacion, setObservacion] = useState('');
   const [estado, setEstado] = useState('pendiente');
-  const [userEmail, setUserEmail] = useState('');
-  const [userRol, setUserRol] = useState('');
   const [motivoEditado, setMotivoEditado] = useState('');
-  const navigate = useNavigate();
 
   const motivos = [
     'hacks', 'fly', 'minar survival', 'insultos', 'tpakill',
@@ -43,98 +38,76 @@ export default function AdminPanel() {
   ];
 
   useEffect(() => {
-    async function verificarSesion() {
-      const { data: { session } } = await supabase.auth.getSession();
-
-      if (!session) {
-        window.location.href = '/loginstaff';
-        return;
-      }
-
-      const email = session.user.email;
-      setUserEmail(email);
-
-      const { data: rolData } = await supabase
-        .from('staff_roles')
-        .select('rol')
-        .eq('email', email)
-        .single();
-
-      if (!rolData) {
-        alert('No tienes permisos para acceder aquí');
-        await supabase.auth.signOut();
-        window.location.href = '/loginstaff';
-        return;
-      }
-
-      setUserRol(rolData.rol);
-      cargarSanciones();
+    if (!user || !user.loggedIn || !user.rol_admin) {
+      navigate('/');
+      return;
     }
 
-    verificarSesion();
-  }, []);
+    cargarSanciones();
+  }, [user, navigate]);
 
   const cargarSanciones = async () => {
-    const { data } = await supabase
-      .from('jails')
-      .select('*')
-      .order('timestamp', { ascending: false });
-
-    setSanciones(data);
+    try {
+      const res = await fetch("https://flancraftweb-backend.onrender.com/api/sanciones");
+      const data = await res.json();
+      setSanciones(data);
+    } catch (err) {
+      console.error("Error cargando sanciones", err);
+    }
   };
 
   const guardarCambios = async (sancion) => {
-    await supabase
-      .from('jails')
-      .update({
-        observacion,
-        estado,
-        type: motivoEditado,
-        revisado_por: userEmail
-      })
-      .eq('id', sancion.id);
+    try {
+      await fetch(`https://flancraftweb-backend.onrender.com/api/sanciones/${sancion.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          observacion,
+          estado,
+          type: motivoEditado,
+          revisado_por: user.uid
+        })
+      });
 
-    cargarSanciones();
-    setEditing(null);
-    setObservacion('');
-    setEstado('pendiente');
-    setMotivoEditado('');
+      cargarSanciones();
+      setEditing(null);
+      setObservacion('');
+      setEstado('pendiente');
+      setMotivoEditado('');
+    } catch (err) {
+      console.error("Error guardando cambios", err);
+    }
   };
 
-  const eliminarSancion = async (sancionId, nombre) => {
-    const confirmacion = confirm(`¿Seguro que quieres eliminar la sanción de ${nombre}?`);
-    if (!confirmacion) return;
-
-    await supabase
-      .from('jails')
-      .delete()
-      .eq('id', sancionId);
-
-    cargarSanciones();
-  };
-
-  const cerrarSesion = async () => {
-    await supabase.auth.signOut();
-    window.location.href = '/loginstaff';
+  const eliminarSancion = async (id, nombre) => {
+    if (!confirm(`¿Seguro que deseas eliminar la sanción de ${nombre}?`)) return;
+    try {
+      await fetch(`https://flancraftweb-backend.onrender.com/api/sanciones/${id}`, {
+        method: 'DELETE'
+      });
+      cargarSanciones();
+    } catch (err) {
+      console.error("Error al eliminar sanción", err);
+    }
   };
 
   const obtenerNombreServidor = (raw) => {
-    const mapaServidores = {
-      'survival': 'Survival',
-      'anarquico': 'Anárquico',
-      'creativo': 'Creativo',
-      'oneblock': 'OneBlock',
-      'kingdoms': 'Kingdoms',
-      'boxpvp': 'BoxPvP',
-      'parkour': 'Parkour',
+    const mapa = {
+      survival: 'Survival',
+      anarquico: 'Anárquico',
+      creativo: 'Creativo',
+      oneblock: 'OneBlock',
+      kingdoms: 'Kingdoms',
+      boxpvp: 'BoxPvP',
+      parkour: 'Parkour',
       'play.flancraft.com': 'Lobby',
     };
-    return mapaServidores[raw?.toLowerCase()] || 'Servidor desconocido';
+    return mapa[raw?.toLowerCase()] || 'Servidor desconocido';
   };
 
   const obtenerIconoServidor = (server) => {
     const baseProps = { size: 16, weight: 'fill', style: { marginRight: '6px' } };
-    const iconMap = {
+    const mapa = {
       survival: <Tree {...baseProps} />,
       anarquico: <Fire {...baseProps} />,
       creativo: <PaintBrush {...baseProps} />,
@@ -144,7 +117,7 @@ export default function AdminPanel() {
       parkour: <PersonSimpleRun {...baseProps} />,
       'play.flancraft.com': <Globe {...baseProps} />,
     };
-    return iconMap[server?.toLowerCase()] || <Globe {...baseProps} />;
+    return mapa[server?.toLowerCase()] || <Globe {...baseProps} />;
   };
 
   const obtenerIconoEstado = (estado) => {
@@ -161,23 +134,18 @@ export default function AdminPanel() {
     if (!duracionRaw) return 'Desconocida';
     const match = duracionRaw.toLowerCase().match(/(\d+)([smhd])/);
     if (!match) return duracionRaw;
-
-    const valor = parseInt(match[1], 10);
-    const unidad = match[2];
+    const [_, valor, unidad] = match;
     const unidades = { s: 'segundo', m: 'minuto', h: 'hora', d: 'día' };
-
-    return `${valor} ${unidades[unidad] || ''}${valor > 1 ? 's' : ''}`;
+    return `${valor} ${unidades[unidad]}${valor > 1 ? 's' : ''}`;
   };
 
   const obtenerFechaFin = (timestamp, duracionRaw) => {
     const match = duracionRaw?.toLowerCase().match(/(\d+)([smhd])/);
     if (!match) return null;
-
     const valor = parseInt(match[1], 10);
     const unidad = match[2];
     const multipliers = { s: 1000, m: 60000, h: 3600000, d: 86400000 };
     const ms = valor * (multipliers[unidad] || 0);
-
     return new Date(parseInt(timestamp) + ms).toLocaleString('es-ES');
   };
 
@@ -193,12 +161,8 @@ export default function AdminPanel() {
 
         <div style={{ marginLeft: 'auto' }}>
           <span style={{ marginRight: '10px', fontWeight: 'bold' }}>
-            Sesión: {userEmail} ({userRol})
+            Sesión: {user?.uid} ({user?.rol_admin})
           </span>
-          <button onClick={cerrarSesion} className="btn logout">
-            <SignOut size={18} weight="bold" style={{ marginRight: '6px' }} />
-            Cerrar sesión
-          </button>
         </div>
       </div>
 
@@ -222,11 +186,7 @@ export default function AdminPanel() {
                 <td>
                   <Link to={`/perfil/${s.name}`} className="player-link">
                     <div className="player-cell">
-                      <img
-                        src={`https://mc-heads.net/avatar/${s.name}/30`}
-                        alt={s.name}
-                        className="avatar"
-                      />
+                      <img src={`https://mc-heads.net/avatar/${s.name}/30`} alt={s.name} className="avatar" />
                       <span>{s.name}</span>
                     </div>
                   </Link>
@@ -294,7 +254,6 @@ export default function AdminPanel() {
                     <div className="action-buttons">
                       <button
                         className="btn"
-                        title={`Editar sanción a ${s.name}`}
                         onClick={() => {
                           setEditing(s.id);
                           setObservacion(s.observacion || '');
@@ -306,10 +265,9 @@ export default function AdminPanel() {
                         Editar
                       </button>
 
-                      {(userRol === 'admin' || userRol === 'srmod' || userRol === 'owner') && (
+                      {(user.rol_admin === 'admin' || user.rol_admin === 'owner') && (
                         <button
                           className="btn eliminar"
-                          title={`Eliminar sanción de ${s.name}`}
                           onClick={() => eliminarSancion(s.id, s.name)}
                         >
                           <Trash size={18} weight="bold" style={{ marginRight: '5px' }} />
