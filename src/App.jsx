@@ -14,7 +14,7 @@ import Tienda from './components/Tienda';
 // Tribunal System
 import TribunalMain from "./pages/tribunal/TribunalMain";
 import TribunalAdmin from "./pages/tribunal/TribunalAdmin";
-import TribunalStaff from "./pages/tribunal/TribunalStaff";
+import GestionStaff from './components/Admin/GestionStaff';
 import PerfilJugadorTribunal from "./pages/tribunal/PerfilJugadorTribunal";
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -35,11 +35,11 @@ const App = () => {
         <Route path="/tienda" element={<Tienda />} />
         <Route path="/dashboard" element={<DashboardPage />} />
 
+        <Route path="/admin" element={<GestionStaff />} />
 
         {/* ⚖️ Tribunal System (Staff) */}
         <Route path="/tribunal" element={<TribunalMain />} />
         <Route path="/tribunal/admin" element={<TribunalAdmin />} />
-        <Route path="/tribunal/staff" element={<TribunalStaff />} />
         <Route path="/perfil/:nombre" element={<PerfilJugadorTribunal />} />
     </Routes>
     </>

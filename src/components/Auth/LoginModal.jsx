@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import ResetPasswordModal from "./ResetPasswordModal";
 import "../../styles/components/Auth/_loginmodal.scss";
@@ -25,12 +24,12 @@ export default function LoginModal({ onClose }) {
   };
 
   const goToDashboard = (uuid, username, rol_admin) => {
-  const userData = { uuid, name: username, loggedIn: true, rol_admin };
-  localStorage.setItem("flan_user", JSON.stringify(userData));
-  setUser(userData);
-  navigate("/dashboard");
-  if (onClose) onClose();
-};
+    const userData = { uuid, name: username, loggedIn: true, rol_admin };
+    localStorage.setItem("flan_user", JSON.stringify(userData));
+    setUser(userData);
+    navigate("/dashboard");
+    if (onClose) onClose();
+  };
 
   const handleLogin = async () => {
     setError(null);
@@ -106,7 +105,11 @@ export default function LoginModal({ onClose }) {
 
       if (!markRes.ok) throw new Error("Error al marcar token como usado");
 
-      goToDashboard(form.uuid, form.username);
+      // ✅ Obtener rol_admin después de registrar
+      const usuarioRes = await fetch(`https://flancraftweb-backend.onrender.com/api/usuarios/${form.uuid}`);
+      const usuarioData = await usuarioRes.json();
+
+      goToDashboard(form.uuid, form.username, usuarioData.rol_admin || null);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -114,7 +117,6 @@ export default function LoginModal({ onClose }) {
     }
   };
 
-  // Subcomponentes inline
   const AuthInput = ({ type = "text", placeholder, value, onChange, disabled }) => (
     <input
       type={type}

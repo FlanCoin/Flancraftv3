@@ -21,20 +21,25 @@ export default function DashboardPage() {
 
     const cargarDatos = async () => {
       try {
-        const [usuarioRes, monedasRes, xpRes] = await Promise.all([
+        const [usuarioRes, monedasRes, xpRes, usuariosRes] = await Promise.all([
           fetch(`https://flancraftweb-backend.onrender.com/api/usuarios/${parsed.uuid}`),
           fetch(`https://flancraftweb-backend.onrender.com/api/monedas/${parsed.uuid}`),
           fetch(`https://flancraftweb-backend.onrender.com/api/usuarios/${parsed.uuid}/xp`),
+          fetch(`https://flancraftweb-backend.onrender.com/api/usuarios`)
         ]);
 
-        if (!usuarioRes.ok || !monedasRes.ok || !xpRes.ok)
+        if (!usuarioRes.ok || !monedasRes.ok || !xpRes.ok || !usuariosRes.ok)
           throw new Error("Error al cargar datos");
 
         const usuario = await usuarioRes.json();
         const monedas = await monedasRes.json();
         const xp = await xpRes.json();
+        const usuarios = await usuariosRes.json();
 
-        setUser({ ...usuario, monedas });
+        const actual = usuarios.find(u => u.uuid === parsed.uuid);
+        const rango_usuario = actual?.rango_usuario || null;
+
+        setUser({ ...usuario, monedas, rango_usuario });
         setXpData(xp);
       } catch (err) {
         setError(err.message || "Error");
@@ -70,11 +75,7 @@ export default function DashboardPage() {
       {loading ? (
         <div className="loading-overlay">
           <div className="loading-content">
-            <img
-              src="/assets/eco.png"
-              alt="Gema ECOS"
-              className="loading-gem"
-            />
+            <img src="/assets/eco.png" alt="Gema ECOS" className="loading-gem" />
             <p className="loading-text">Cargando perfil...</p>
           </div>
         </div>
@@ -88,7 +89,18 @@ export default function DashboardPage() {
             </div>
 
             <div className="center-info">
-              <h1 className="username fancy-font">{user.uid}</h1>
+              <h1 className="username fancy-font" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                {user.rol_admin && (
+                  <span className={`badge-staff ${user.rol_admin}`}>{user.rol_admin.toUpperCase()}</span>
+                )}
+                <span>{user.uid}</span>
+                {user.rango_usuario && (
+                  <span className={`badge-rango ${user.rango_usuario.toLowerCase()}`}>
+                    {user.rango_usuario.toUpperCase()}
+                  </span>
+                )}
+              </h1>
+
               <div className="barra-nivel-wrapper">
                 <div className="barra-nivel-header">
                   <div className="nivel-text">Lvl {user.nivel}</div>
@@ -107,23 +119,32 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Botón del panel del tribunal justo arriba de MONEDAS */}
-            {user.rol_admin && (
-  <div className="panel-tribunal-wrapper">
-    <button
-      onClick={() => navigate("/tribunal/admin")}
-      className="btn-admin"
-    >
-      Panel del Tribunal ({user.rol_admin})
-    </button>
-  </div>
-)}
-
             <div className="monedas-info">
+              {user.rol_admin && (
+                <div className="panel-tribunal-wrapper">
+                  <button
+                    onClick={() => navigate("/tribunal/admin")}
+                    className="btn-admin"
+                  >
+                    Administrar Tribunal
+                  </button>
+                  {user.rol_admin.toLowerCase() === "owner" && (
+                    <button
+                      onClick={() => navigate("/admin")}
+                      className="btn-admin"
+                      style={{ marginTop: "0.5rem" }}
+                    >
+                      Gestión de Staff
+                    </button>
+                  )}
+                </div>
+              )}
+
+              <div className="separador-magico"></div>
+
               {user.monedas && (
                 <div className="monedas-panel">
                   <div className="monedas-titulo">MONEDAS</div>
-
                   <div className="moneda-row">
                     <span className="eco-label">ECOS:</span>
                     <span className="eco-value" ref={ecosRef}>{user.monedas.ecos}</span>
@@ -136,10 +157,7 @@ export default function DashboardPage() {
                       {servidorSeleccionado}: {user.monedas.dolares[servidorSeleccionado]}$
                       <div className="opciones">
                         {servidores.filter(s => s !== servidorSeleccionado).map((s) => (
-                          <div
-                            key={s}
-                            onClick={() => setServidorSeleccionado(s)}
-                          >
+                          <div key={s} onClick={() => setServidorSeleccionado(s)}>
                             {s}: {user.monedas.dolares[s]}$
                           </div>
                         ))}

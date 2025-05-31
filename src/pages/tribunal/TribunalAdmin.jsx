@@ -5,7 +5,6 @@ import {
   PencilSimple,
   Trash,
   FloppyDisk,
-  SignOut,
   ArrowLeft,
   Tree,
   Fire,
@@ -38,13 +37,10 @@ export default function AdminPanel() {
   ];
 
   useEffect(() => {
-    if (!user || !user.loggedIn || !user.rol_admin) {
-      navigate('/');
-      return;
+    if (user?.loggedIn && user?.rol_admin) {
+      cargarSanciones();
     }
-
-    cargarSanciones();
-  }, [user, navigate]);
+  }, [user]);
 
   const cargarSanciones = async () => {
     try {
@@ -148,6 +144,23 @@ export default function AdminPanel() {
     const ms = valor * (multipliers[unidad] || 0);
     return new Date(parseInt(timestamp) + ms).toLocaleString('es-ES');
   };
+
+  // ✅ BLOQUE CONDICIONAL ÚNICO
+if (user === null || !user.loggedIn || !user.rol_admin) {
+  return (
+    <div className="admin-wrapper" style={{ textAlign: 'center', padding: '4rem', color: '#ffffff' }}>
+      <img
+        src="/assets/gandalf_minecraft.png"
+        alt="No tienes poder aquí"
+        style={{ maxWidth: '320px', marginBottom: '1rem' }}
+      />
+      <h2 style={{ fontFamily: "'IM Fell English SC', serif", fontSize: '2rem' }}>
+        ¡No tienes poder aquí!
+      </h2>
+      <p>Acceso denegado al panel administrativo</p>
+    </div>
+  );
+}
 
   return (
     <div className="admin-wrapper">
