@@ -38,8 +38,9 @@ export default function DashboardPage() {
 
         const actual = usuarios.find(u => u.uuid === parsed.uuid);
         const rango_usuario = actual?.rango_usuario || null;
+        const es_premium = actual?.es_premium || false;
 
-        setUser({ ...usuario, monedas, rango_usuario });
+        setUser({ ...usuario, monedas, rango_usuario, es_premium });
         setXpData(xp);
       } catch (err) {
         setError(err.message || "Error");
@@ -85,8 +86,15 @@ export default function DashboardPage() {
         <div className="dashboard-content">
           <div className="dashboard-header-layout">
             <div className="skin-wrapper">
-              <img src={avatarUrl} alt={`Skin de ${user.uid}`} className="skin-render" />
-            </div>
+  {user.es_premium && (
+    <img
+      src="/assets/premium.png"
+      alt="Premium"
+      className="premium-crown"
+    />
+  )}
+  <img src={avatarUrl} alt={`Skin de ${user.uid}`} className="skin-render" />
+</div>
 
             <div className="center-info">
               <h1 className="username fancy-font" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

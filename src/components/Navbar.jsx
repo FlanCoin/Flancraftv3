@@ -207,7 +207,7 @@ const Navbar = ({ onLoginClick }) => {
               </div>
             </div>
 
-            <NavLink to="/estadisticas"><i className="fas fa-chart-line" /> Estadísticas</NavLink>
+            <NavLink to="/leaderboards"><i className="fas fa-chart-line" /> Estadísticas</NavLink>
 
             <div className={`dropdown ${activeDropdown === 'mercado' ? 'show-dropdown' : ''}`}
               onMouseEnter={() => handleDropdownHover('mercado')}
@@ -330,7 +330,7 @@ const Navbar = ({ onLoginClick }) => {
           </div>
 
           
-          <NavLink to="/estadisticas"><i className="fas fa-chart-line" /> Estadisticas</NavLink>
+          <NavLink to="/leaderboards"><i className="fas fa-chart-line" /> Estadisticas</NavLink>
 
           <div className={`mobile-dropdown ${activeDropdown === 'mercado' ? 'open' : ''}`}>
             <div className="mobile-dropdown-toggle" onClick={() => toggleDropdown('mercado')}>

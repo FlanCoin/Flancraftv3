@@ -16,6 +16,7 @@ import TribunalMain from "./pages/tribunal/TribunalMain";
 import TribunalAdmin from "./pages/tribunal/TribunalAdmin";
 import GestionStaff from './components/Admin/GestionStaff';
 import PerfilJugadorTribunal from "./pages/tribunal/PerfilJugadorTribunal";
+import LeaderboardsPage from "./pages/LeaderboardsPage";
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
@@ -34,7 +35,7 @@ const App = () => {
         <Route path="/news/:slug" element={<NewsDetail />} />
         <Route path="/tienda" element={<Tienda />} />
         <Route path="/dashboard" element={<DashboardPage />} />
-
+        <Route path="/leaderboards" element={<LeaderboardsPage />} />
         <Route path="/admin" element={<GestionStaff />} />
 
         {/* ⚖️ Tribunal System (Staff) */}

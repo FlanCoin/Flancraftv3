@@ -1,0 +1,303 @@
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap');
+
+.leaderboard-epic {
+  font-family: 'IM Fell English SC', serif;
+  background: url('/assets/leadertexture.jpeg') repeat;
+  background-size: cover;
+  color: #3b2f1e;
+  padding-bottom: 4rem;
+
+  .epic-header {
+    position: relative;
+    background: url('/assets/leaderboard.png') no-repeat center -250px;
+    background-size: cover;
+    height: 520px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 2rem;
+    color: #fefae0;
+    text-shadow: 2px 2px 5px #000000cc;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, #00000055, #00000055);
+      z-index: 0;
+    }
+
+    h1,
+    p {
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: 3.6rem;
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+
+    p {
+      font-size: 1.25rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+  }
+
+  .selector-panel {
+    background: url('/assets/madera.jpeg') repeat-x center;
+    background-size: cover;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    border-top: 4px solid #3b2f1e;
+    border-bottom: 4px solid #3b2f1e;
+
+    .selector-button {
+      background: #e8d7b9;
+      border: 2px solid #7c5a3a;
+      border-radius: 12px;
+      padding: 0.6rem 1.6rem;
+      font-weight: bold;
+      font-size: 1.1rem;
+      font-family: 'IM Fell English SC', serif;
+      color: #3c2b1b;
+      cursor: pointer;
+      box-shadow:
+        inset 0 2px 3px #ffffff88,
+        0 3px 0 #b38b63,
+        0 4px 6px rgba(0, 0, 0, 0.2);
+      transition: all 0.15s ease-in-out;
+
+      &:hover {
+        background: #f3e6cc;
+        transform: translateY(-1px);
+        box-shadow:
+          inset 0 2px 3px #ffffff88,
+          0 4px 0 #b38b63,
+          0 6px 10px rgba(0, 0, 0, 0.25);
+      }
+
+      &.active {
+        background: #f9edd5;
+        box-shadow:
+          inset 0 2px 4px rgba(0, 0, 0, 0.15),
+          0 2px 0 #b38b63;
+        transform: translateY(1px);
+      }
+    }
+  }
+
+  .tabla-titulo {
+    text-align: center;
+    font-size: 1.5rem;
+    margin: 2rem 0 1rem 0;
+    color: #4a3215;
+    font-weight: bold;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    padding: 0 2rem;
+
+    .tabla-epica {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fdf6e3;
+      box-shadow: 0 0 15px #00000022;
+      border: 3px solid #a78c66;
+
+      thead {
+        background: #d2b48c;
+
+        th {
+          padding: 1rem;
+          font-size: 1rem;
+          cursor: pointer;
+          border-bottom: 2px solid #a67c52;
+
+          &.activo {
+            color: #c0392b;
+            text-decoration: underline;
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          transition: all 0.25s ease-in-out;
+          vertical-align: middle;
+
+          &:nth-child(even) {
+            background: #f7ecd1;
+          }
+
+          &:hover {
+            background: #fff0c2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          }
+
+          td {
+            padding: 0.8rem;
+            text-align: center;
+            vertical-align: middle;
+          }
+
+          td:first-child {
+            width: 64px;
+          }
+
+          &.fila-1 {
+            background: linear-gradient(90deg, #fff7d1 0%, #ffefd1 100%) !important;
+          }
+
+          &.fila-1 td:first-child img,
+&.fila-2 td:first-child img,
+&.fila-3 td:first-child img {
+  display: block;
+  margin: 0 auto;
+  width: 38px;
+  height: auto;
+  image-rendering: auto;
+  transform: translateY(2px);
+}
+
+&.fila-1 td:first-child img {
+  content: url('/assets/oro.png');
+}
+&.fila-2 td:first-child img {
+  content: url('/assets/plata.png');
+}
+&.fila-3 td:first-child img {
+  content: url('/assets/bronce.png');
+}
+
+
+          .jugador-info {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            justify-content: flex-start;
+            text-align: left;
+            padding-left: 0.5rem;
+
+            .avatar-head {
+              width: 32px;
+              height: 32px;
+              border: 2px solid #7f5b3e;
+              border-radius: 4px;
+              transition: transform 0.3s ease;
+              z-index: 1;
+              position: relative;
+            }
+
+            span {
+              font-weight: bold;
+              color: #3a2b15;
+            }
+          }
+
+          &.fila-1 .jugador-info::after {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            background: radial-gradient(circle, #ffd70066 20%, transparent 60%);
+            animation: glowPulse 1.5s infinite ease-in-out;
+            pointer-events: none;
+            z-index: 0;
+          }
+
+          &:hover .avatar-head {
+            animation: wobble 0.4s ease-in-out;
+          }
+
+          .medalla {
+            width: 28px;
+            height: 28px;
+            filter: drop-shadow(0 0 4px #d4af37);
+          }
+
+          .numero-rango {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #5c4327;
+          }
+        }
+      }
+    }
+  }
+
+  .epic-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    gap: 1rem;
+    font-weight: bold;
+
+    button {
+      background: #a67c52;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 2px 6px #00000044;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #c49c68;
+      }
+
+      &:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+      }
+    }
+
+    span {
+      color: #3f2a12;
+      font-size: 1rem;
+    }
+  }
+
+  @keyframes wobble {
+    0% {
+      transform: rotate(0deg) scale(1);
+    }
+    50% {
+      transform: rotate(-5deg) scale(1.1);
+    }
+    100% {
+      transform: rotate(0deg) scale(1);
+    }
+  }
+
+  @keyframes glowPulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+  }
+}
