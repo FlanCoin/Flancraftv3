@@ -368,41 +368,32 @@
   border-radius: 10px;
 }
 .badge-rango {
-  font-size: 0.75rem;
-  padding: 2px 8px;
-  border-radius: 12px;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.5rem;
   font-weight: bold;
+  font-size: 0.85rem;
+  display: inline-block;
   text-transform: uppercase;
-  color: #fff;
-  background: #999;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.05em;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+
+  &.nova {
+    background: linear-gradient(90deg, #9AFB0F, #DCFB8F);
+    color: #1a1a1a;
+  }
+
+  &.alpha {
+    background: linear-gradient(90deg, #28DBFB, #76FBCF);
+    color: #0a0a0a;
+  }
+
+  &.inmortal {
+    background: linear-gradient(90deg, #FF0000, #FFCF00);
+    color: #1a1a1a;
+  }
 }
 
-.badge-rango.elite {
-  background-color: #38bdf8;
-}
 
-.badge-rango.heroe {
-  background-color: #facc15;
-  color: #3b2f1e;
-}
-
-.badge-rango.titan {
-  background-color: #f97316;
-}
-
-.badge-rango.leyenda {
-  background-color: #a855f7;
-}
-
-.badge-rango.ultra {
-  background-color: #1e3a8a;
-}
-
-.badge-rango.god {
-  background-color: #c7f9ff;
-  color: #1e293b;
-}
 .premium-crown {
   position: absolute;
   top: -20px;

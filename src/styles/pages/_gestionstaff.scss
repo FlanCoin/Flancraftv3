@@ -163,9 +163,6 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 
-.rango-badge.elite { background-color: #38bdf8; }
-.rango-badge.heroe { background-color: #facc15; color: #3b2f1e; }
-.rango-badge.titan { background-color: #f97316; }
-.rango-badge.leyenda { background-color: #a855f7; }
-.rango-badge.ultra { background-color: #1e3a8a; }
-.rango-badge.god { background-color: #c7f9ff; color: #1e293b; }
+.rango-badge.nova { background-color: #38bdf8; }
+.rango-badge.alpha { background: linear-gradient(90deg, #28DBFB, #76FBCF); color: #3b2f1e; }
+.rango-badge.inmortal { background: linear-gradient(90deg, #FF0000, #FFCF00);; }

@@ -139,12 +139,10 @@ export default function GestionStaff() {
                 onChange={(e) => actualizarRango(u.uuid, e.target.value)}
               >
                 <option value="">Sin rango</option>
-                <option value="elite">Elite</option>
-                <option value="heroe">Heroe</option>
-                <option value="titan">Titan</option>
-                <option value="leyenda">Leyenda</option>
-                <option value="ultra">Ultra</option>
-                <option value="god">God</option>
+                <option value="nova">Nova</option>
+                <option value="alpha">Alpha</option>
+                <option value="inmortal">Inmortal</option>
+    
               </select>
 
               <select
