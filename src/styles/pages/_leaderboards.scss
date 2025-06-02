@@ -225,7 +225,7 @@
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                max-width: 120px;
+                max-width: 180px;
                 display: inline-block;
               }
             }
@@ -332,14 +332,61 @@ tr.seleccionada .avatar-head {
   box-shadow: 0 0 12px #ffe9b3;
   z-index: 2;
 }
-.nombre-rango.nova {
-  color: #38bdf8;
+.nombre-colored {
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
 }
 
-.nombre-rango.alpha {
-  color: #facc15;
+  .nombre-colored {
+    font-weight: bold;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+    transition: all 0.2s ease;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .nombre-colored:hover {
+    filter: brightness(0.95);
+  }
+
+  .nombre-colored.rango-nova {
+    color: #b5ff6b !important;
+    text-shadow: 0 0 2px #7ed957;
+    font-size: 1.05rem;
+  }
+
+  .nombre-colored.rango-alpha {
+    color: #58d4ff !important;
+    text-shadow: 0 0 2px #30bdee;
+    font-size: 1.08rem;
+  }
+
+  /* ✨ Inmortal: dominante, cálido e imponente */
+  .nombre-colored.rango-inmortal {
+    color: #ff4b2b !important;
+    text-shadow: 0 0 4px #ff8000, 0 0 10px #ff4b2b;
+    font-size: 1.12rem;
+    animation: glowPulse 2.4s infinite ease-in-out;
+  }
+
+  @keyframes glowPulse {
+    0% { text-shadow: 0 0 4px #ff8000, 0 0 10px #ff4b2b; }
+    50% { text-shadow: 0 0 8px #ffb347, 0 0 16px #ff8000; }
+    100% { text-shadow: 0 0 4px #ff8000, 0 0 10px #ff4b2b; }
+  }
+.icono-premium {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-left: 2px;
+  filter: drop-shadow(0 0 2px #facc15);
+  animation: crownFloat 2s ease-in-out infinite;
 }
 
-.nombre-rango.inmortal {
-  color: #f97316;
+@keyframes crownFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
 }
