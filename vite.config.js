@@ -19,8 +19,6 @@ export default defineConfig({
     host: true,
     allowedHosts: [
       'localhost',
-      '.ngrok-free.app',
-      'devflancraft.loca.lt',
     ],
   },
 });

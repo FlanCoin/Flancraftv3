@@ -43,7 +43,7 @@
       }
 
       &:hover {
-        color: lighten($color-acento, 12%);
+        color: color.adjust($color-acento, $lightness: 12%);
         transform: scale(1.05);
       }
     }

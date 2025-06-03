@@ -1,7 +1,28 @@
-// src/styles/components/Navbar/navbar.mobile.scss
-
+@forward '../../base/variables';
 @use '../../base/variables' as *;
+// --- Animaciones globales utilizadas ---
+@keyframes shimmer {
+  0% { background-position: -150% center; }
+  100% { background-position: 150% center; }
+}
 
+@keyframes pulse-reward {
+  0%, 100% { box-shadow: 0 0 6px rgba(255, 230, 80, 0.4); }
+  50% { box-shadow: 0 0 12px rgba(255, 230, 80, 0.6); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 1;
+  }
+}
+
+// --- Navbar móvil ---
 .mobile-only {
   display: flex;
   justify-content: space-between;
@@ -57,6 +78,7 @@
   }
 }
 
+// --- Overlay menú móvil ---
 .mobile-menu-overlay {
   position: fixed;
   inset: 0;
@@ -70,6 +92,7 @@
   }
 }
 
+// --- Menú lateral móvil ---
 .mobile-menu {
   position: fixed;
   top: 0;
@@ -84,8 +107,8 @@
   z-index: 100;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
-  -webkit-overflow-scrolling: touch;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 
   .menu-open & {
     transform: translateX(0);
@@ -113,25 +136,18 @@
       }
     }
 
-    .blockhorn-logo {
-      max-width: 7rem;
-      margin-top: 1rem;
-    }
-
-    .flancraft-logo {
-      max-width: 13rem;
-      margin-top: 0.5rem;
-    }
+    .blockhorn-logo { max-width: 7rem; margin-top: 1rem; }
+    .flancraft-logo { max-width: 13rem; margin-top: 0.5rem; }
 
     .logo-divider {
       width: 80%;
       height: 2px;
       margin: 0.6rem auto;
       background: #ddb879;
+      border-radius: 10px;
       box-shadow:
         0 0 8px rgba(193, 110, 44, 0.25),
         0 0 4px rgba(101, 54, 16, 0.2) inset;
-      border-radius: 10px;
       animation: shimmer 6s infinite linear;
       opacity: 0.9;
     }
@@ -246,14 +262,5 @@
         }
       }
     }
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -150% center;
-  }
-  100% {
-    background-position: 150% center;
   }
 }
