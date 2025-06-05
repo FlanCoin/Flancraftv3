@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RewardList from "./RewardList";
 import LogroList from "./LogroList";
-import useIsMobile from "../hooks/useIsMobile"; // ✅ Usa el hook
+import useIsMobile from "../hooks/useIsMobile";
 import "../styles/pages/dashboard/_dashboardpage.scss";
 
 export default function DashboardPage() {
@@ -12,7 +12,7 @@ export default function DashboardPage() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const ecosRef = useRef(null);
-  const isMobile = useIsMobile(); // ✅ breakpoint 768 por defecto
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const stored = localStorage.getItem("flan_user");
@@ -122,7 +122,9 @@ export default function DashboardPage() {
                       <p className="monedas-top">Saldo de FlanCraft</p>
                       <div className="monedas-linea">
                         <div className="eco-cantidad">
-                          <span>{user.monedas?.ecos || 0}</span>
+                          <span ref={ecosRef} id="contador-ecos">
+                            {user.monedas?.ecos || 0}
+                          </span>
                           <img
                             src="/assets/eco.png"
                             alt="Eco"
@@ -167,7 +169,7 @@ export default function DashboardPage() {
               </div>
             )}
           </div>
-
+            <div className="separador-magico"></div>
           <div className="dashboard-secciones">
             <RewardList
               user={user}

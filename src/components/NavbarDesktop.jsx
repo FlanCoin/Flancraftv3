@@ -12,6 +12,8 @@ const NavbarDesktop = ({
   profileOpen,
   setProfileOpen,
   onLoginClick,
+  handleProfileEnter,
+  handleProfileLeave,
 }) => {
   const [rangoDatos, setRangoDatos] = useState(null);
   const triggerRef = useRef();
@@ -72,9 +74,11 @@ const NavbarDesktop = ({
         <NavLink to="/"><i className="fas fa-home" /> Inicio</NavLink>
         <NavLink to="/news"><i className="fas fa-scroll" /> Noticias</NavLink>
 
-        <div className={`dropdown ${activeDropdown === 'mundos' ? 'show-dropdown' : ''}`}
+        <div
+          className={`dropdown ${activeDropdown === 'mundos' ? 'show-dropdown' : ''}`}
           onMouseEnter={() => handleDropdownHover('mundos')}
-          onMouseLeave={handleDropdownLeave}>
+          onMouseLeave={handleDropdownLeave}
+        >
           <span className="dropdown-toggle">
             <i className="fas fa-map-marked-alt" /> Mundos <i className="fas fa-chevron-down arrow-icon" />
           </span>
@@ -90,9 +94,11 @@ const NavbarDesktop = ({
 
         <NavLink to="/leaderboards"><i className="fas fa-chart-line" /> Estadísticas</NavLink>
 
-        <div className={`dropdown ${activeDropdown === 'mercado' ? 'show-dropdown' : ''}`}
+        <div
+          className={`dropdown ${activeDropdown === 'mercado' ? 'show-dropdown' : ''}`}
           onMouseEnter={() => handleDropdownHover('mercado')}
-          onMouseLeave={handleDropdownLeave}>
+          onMouseLeave={handleDropdownLeave}
+        >
           <span className="dropdown-toggle">
             <i className="fas fa-store" /> Mercado <i className="fas fa-chevron-down arrow-icon" />
           </span>
@@ -111,23 +117,27 @@ const NavbarDesktop = ({
             <i className="fas fa-sign-in-alt" /> Iniciar sesión
           </button>
         ) : (
-          <div className="user-box">
-            <div className="user-trigger" onClick={() => setProfileOpen((prev) => !prev)}>
-  <img
-    src={`https://mc-heads.net/avatar/${userData.username}/32`}
-    alt="avatar"
-    className="user-avatar"
-  />
-  <span className="username-saludo">
-    Hola,&nbsp;
-    <span className={`nombre-colored ${getRangoColorClass()}`}>
-      {userData.username}
-    </span>
-  </span>
-</div>
+          <div
+            className="user-box"
+            onMouseEnter={handleProfileEnter}
+            onMouseLeave={handleProfileLeave}
+          >
+            <div className="user-trigger" ref={triggerRef}>
+              <img
+                src={`https://mc-heads.net/avatar/${userData.username}/32`}
+                alt="avatar"
+                className="user-avatar"
+              />
+              <span className="username-saludo">
+                Hola,&nbsp;
+                <span className={`nombre-colored ${getRangoColorClass()}`}>
+                  {userData.username}
+                </span>
+              </span>
+            </div>
 
             {profileOpen && (
-              <div className={`user-dropdown-wrapper enhanced open`} ref={dropdownRef}>
+              <div className="user-dropdown-wrapper enhanced open" ref={dropdownRef}>
                 <div className="user-dropdown">
                   <div className="user-header">
                     <img
@@ -166,7 +176,8 @@ const NavbarDesktop = ({
                   </div>
 
                   <NavLink to="/dashboard" className="dropdown-link">
-                    <i className="fas fa-gift" /> Tu Posada</NavLink>
+                    <i className="fas fa-gift" /> Tu Posada
+                  </NavLink>
                   <NavLink to={`/perfil/${userData.username}`} className="dropdown-link">
                     <i className="fas fa-chart-bar" /> Ver estadísticas
                   </NavLink>
