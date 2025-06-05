@@ -1,7 +1,5 @@
 @use './base/variables' as *;
 @use './components/buttons';
-@use './base/reset';
 @use './base/globals';
-@use './components/navbar'; // ya no @import
-@use './base/utilities';
-@use './base/tailwind.scss'; // si tailwind es compilado con Sass
+@use './components/Navbar/navbar'; 
+@use './base/tailwind.scss';

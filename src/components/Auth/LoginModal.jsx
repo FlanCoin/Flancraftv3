@@ -23,8 +23,14 @@ export default function LoginModal({ onClose }) {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const goToDashboard = (uuid, username, rol_admin) => {
-    const userData = { uuid, name: username, loggedIn: true, rol_admin };
+  const goToDashboard = (uuid, username, rol_admin, extras = {}) => {
+    const userData = {
+      uuid,
+      username,
+      loggedIn: true,
+      rol_admin,
+      ...extras,
+    };
     localStorage.setItem("flan_user", JSON.stringify(userData));
     setUser(userData);
     navigate("/dashboard");
@@ -44,7 +50,16 @@ export default function LoginModal({ onClose }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Error al iniciar sesión");
 
-      goToDashboard(data.uuid, data.uid, data.rol_admin);
+      const usuarioRes = await fetch(`https://flancraftweb-backend.onrender.com/api/usuarios/${data.uuid}`);
+      const usuarioData = await usuarioRes.json();
+
+      goToDashboard(data.uuid, data.uid, data.rol_admin, {
+        rango_usuario: usuarioData.rango_usuario,
+        userLevel: usuarioData.nivel,
+        userXP: usuarioData.experiencia,
+        userXPMax: usuarioData.experiencia_max,
+        ecos: usuarioData.ecos,
+      });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -105,11 +120,16 @@ export default function LoginModal({ onClose }) {
 
       if (!markRes.ok) throw new Error("Error al marcar token como usado");
 
-      // ✅ Obtener rol_admin después de registrar
       const usuarioRes = await fetch(`https://flancraftweb-backend.onrender.com/api/usuarios/${form.uuid}`);
       const usuarioData = await usuarioRes.json();
 
-      goToDashboard(form.uuid, form.username, usuarioData.rol_admin || null);
+      goToDashboard(form.uuid, form.username, usuarioData.rol_admin || null, {
+        rango_usuario: usuarioData.rango_usuario,
+        userLevel: usuarioData.nivel,
+        userXP: usuarioData.experiencia,
+        userXPMax: usuarioData.experiencia_max,
+        ecos: usuarioData.ecos,
+      });
     } catch (err) {
       setError(err.message);
     } finally {

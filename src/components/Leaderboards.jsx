@@ -39,14 +39,13 @@ const TOOLTIP_DESCRIPCIONES = {
 
 export default function Leaderboards() {
   const [servidor, setServidor] = useState("survival");
-  const [data, setData] = useState([]);
+
   const [datosVisibles, setDatosVisibles] = useState([]);
   const [orden, setOrden] = useState("tiempo_jugado");
   const [ordenAscendente, setOrdenAscendente] = useState(false);
   const [offset, setOffset] = useState(0);
   const [filaSeleccionada, setFilaSeleccionada] = useState(null);
   const [animacion, setAnimacion] = useState("");
-  const [proximosDatos, setProximosDatos] = useState(null);
   const [usuariosVinculados, setUsuariosVinculados] = useState({});
   const limit = 10;
 
@@ -82,8 +81,6 @@ export default function Leaderboards() {
         const ordenada = ordenAscendente
           ? [...lista].sort((a, b) => (a[orden] || 0) - (b[orden] || 0))
           : [...lista].sort((a, b) => (b[orden] || 0) - (a[orden] || 0));
-
-        setProximosDatos(ordenada);
 
         setTimeout(() => {
           if (cancelado) return;

@@ -90,25 +90,55 @@
       }
 
       .hero-btn {
-        margin-top: 2rem;
-        font-size: 1.1rem;
-        padding: 0.75rem 2rem;
-        background: linear-gradient(145deg, #dfb65b, #a97f33);
-        border: 2px solid #4e391d;
-        box-shadow: 0 0 10px rgba(255, 200, 100, 0.4);
-        color: #1d1407;
-        border-radius: 6px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.3s;
-        animation: floatBtn 4s ease-in-out infinite;
-        transform-origin: center;
+  margin-top: 2rem;
+  font-size: 1.1rem;
+  padding: 0.75rem 2rem;
+  background: linear-gradient(145deg, #dfb65b, #a97f33);
+  border: 2px solid #4e391d;
+  box-shadow: 0 0 10px rgba(255, 200, 100, 0.4);
+  color: #1d1407;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  animation: floatBtn 4s ease-in-out infinite;
+  transform-origin: center;
 
-        &:hover {
-          background: linear-gradient(145deg, #f0c769, #b6863f);
-          box-shadow: 0 0 15px rgba(255, 210, 120, 0.6);
-        }
-      }
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  text-align: center;
+
+  .hero-user-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-weight: bold;
+  }
+
+  .greeting-text {
+    color: #1d1407;
+    font-weight: bold;
+  }
+
+  .nombre-colored {
+    font-weight: bold;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.3), 0 1px 1px rgba(0, 0, 0, 0.25);
+    transition: filter 0.2s ease;
+
+    &:hover {
+      filter: brightness(1.05);
+    }
+  }
+
+  &:hover {
+    background: linear-gradient(145deg, #f0c769, #b6863f);
+    box-shadow: 0 0 15px rgba(255, 210, 120, 0.6);
+  }
+}
+
     }
   }
 

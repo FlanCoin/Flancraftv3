@@ -48,11 +48,16 @@ const Home = () => {
 
           <ServerStatus />
 
-          <button className="hero-btn" onClick={handleMainButtonClick}>
-            {!user
-              ? "Conectarse a Flancraft"
-              : `Disfruta de tu hogar, ${user.name || "aventurero"}`}
-          </button>
+<button className="hero-btn" onClick={handleMainButtonClick}>
+  {!user ? (
+    "Conectarse a Flancraft"
+  ) : (
+    <span className="hero-user-wrapper">
+      <span className="greeting-text">Disfruta de tu hogar,</span>
+      <span className="nombre-colored">{user?.name || user?.username || "aventurero"}</span>
+    </span>
+  )}
+</button>
         </div>
       </header>
 

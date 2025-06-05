@@ -25,7 +25,7 @@ export default function DashboardPage() {
           fetch(`https://flancraftweb-backend.onrender.com/api/usuarios/${parsed.uuid}`),
           fetch(`https://flancraftweb-backend.onrender.com/api/monedas/${parsed.uuid}`),
           fetch(`https://flancraftweb-backend.onrender.com/api/usuarios/${parsed.uuid}/xp`),
-          fetch(`https://flancraftweb-backend.onrender.com/api/usuarios`)
+          fetch(`https://flancraftweb-backend.onrender.com/api/usuarios`),
         ]);
 
         if (!usuarioRes.ok || !monedasRes.ok || !xpRes.ok || !usuariosRes.ok)
@@ -36,7 +36,7 @@ export default function DashboardPage() {
         const xp = await xpRes.json();
         const usuarios = await usuariosRes.json();
 
-        const actual = usuarios.find(u => u.uuid === parsed.uuid);
+        const actual = usuarios.find((u) => u.uuid === parsed.uuid);
         const rango_usuario = actual?.rango_usuario || null;
         const es_premium = actual?.es_premium || false;
 
@@ -54,7 +54,9 @@ export default function DashboardPage() {
 
   const actualizarMonedas = async () => {
     try {
-      const res = await fetch(`https://flancraftweb-backend.onrender.com/api/monedas/${user.uuid}`);
+      const res = await fetch(
+        `https://flancraftweb-backend.onrender.com/api/monedas/${user.uuid}`
+      );
       if (!res.ok) throw new Error("Error al actualizar monedas");
       const monedasActualizadas = await res.json();
       setUser((prev) => ({ ...prev, monedas: monedasActualizadas }));
@@ -63,132 +65,115 @@ export default function DashboardPage() {
     }
   };
 
-  const avatarUrl = `https://minotar.net/armor/body/${user?.uid}/200.png`;
-  const nivelInfo = xpData?.niveles.find(n => n.nivel === user?.nivel);
+  const avatarUrl = `https://minotar.net/armor/body/${user?.uid}/160.png`;
+  const nivelInfo = xpData?.niveles.find((n) => n.nivel === user?.nivel);
   const xpDelNivelActual = nivelInfo?.xp_requerida || 1;
   const porcentajeNivel = (user?.xp_actual / xpDelNivelActual) * 100;
 
-  const [servidorSeleccionado, setServidorSeleccionado] = useState("anarquico");
-  const servidores = Object.keys(user?.monedas?.dolares || {});
-
   return (
-    <div className="dashboard-wrapper">
-      {loading ? (
-        <div className="loading-overlay">
-          <div className="loading-content">
-            <img src="/assets/eco.png" alt="Gema ECOS" className="loading-gem" />
-            <p className="loading-text">Cargando perfil...</p>
-          </div>
+  <section className="dashboard-epic">
+    <div className="epic-header-dashboard">
+      <h1>La Posada</h1>
+      <p>Explora tu progreso, logros y riquezas acumuladas en el mundo de FlanCraft.</p>
+    </div>
+
+    {loading ? (
+      <div className="loading-overlay">
+        <div className="loading-content">
+          <img src="/assets/eco.png" alt="Gema ECOS" className="loading-gem" />
+          <p className="loading-text">Cargando perfil...</p>
         </div>
-      ) : error ? (
-        <p className="error">Error al cargar perfil: {error}</p>
-      ) : (
-        <div className="dashboard-content">
-          <div className="dashboard-header-layout">
-            <div className="skin-wrapper">
-  {user.es_premium && (
-    <img
-      src="/assets/premium.png"
-      alt="Premium"
-      className="premium-crown"
-    />
-  )}
-  <img src={avatarUrl} alt={`Skin de ${user.uid}`} className="skin-render" />
-</div>
-
-            <div className="center-info">
-              <h1 className="username fancy-font" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                {user.rol_admin && (
-                  <span className={`badge-staff ${user.rol_admin}`}>{user.rol_admin.toUpperCase()}</span>
-                )}
-                <span>{user.uid}</span>
-                {user.rango_usuario && (
-                  <span className={`badge-rango ${user.rango_usuario.toLowerCase()}`}>
-                    {user.rango_usuario.toUpperCase()}
-                  </span>
-                )}
-              </h1>
-
-              <div className="barra-nivel-wrapper">
-                <div className="barra-nivel-header">
-                  <div className="nivel-text">Lvl {user.nivel}</div>
-                  <div className="xp-text">
-                    <span className="xp-actual">{user.xp_actual}</span> / {xpDelNivelActual} XP
-                  </div>
-                </div>
-                <div className="barra-nivel">
-                  {Array.from({ length: 10 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className={`segmento ${porcentajeNivel >= (i + 1) * 10 ? "relleno" : ""}`}
-                    ></div>
-                  ))}
-                </div>
-              </div>
+      </div>
+    ) : error ? (
+      <p className="error">Error al cargar perfil: {error}</p>
+    ) : (
+      <div className="dashboard-epic-body">
+        <div className="card-perfil-completo">
+          <div className="perfil-header">
+            <div className="skin-marco-posada">
+              {user.es_premium && (
+                <img src="/assets/premium.png" alt="Premium" className="premium-crown" />
+              )}
+              <img src={avatarUrl} alt={`Skin de ${user.uid}`} className="skin-jugador" />
             </div>
 
-            <div className="monedas-info">
-              {user.rol_admin && (
-                <div className="panel-tribunal-wrapper">
-                  <button
-                    onClick={() => navigate("/tribunal/admin")}
-                    className="btn-admin"
-                  >
-                    Administrar Tribunal
-                  </button>
-                  {user.rol_admin.toLowerCase() === "owner" && (
-                    <button
-                      onClick={() => navigate("/admin")}
-                      className="btn-admin"
-                      style={{ marginTop: "0.5rem" }}
-                    >
-                      Gestión de Staff
-                    </button>
-                  )}
-                </div>
-              )}
+            <div className="info-datos">
+              <div className="info-identidad etiquetas-superiores">
+                {user.rol_admin && (
+                  <span className={`badge-staff ${user.rol_admin.toLowerCase()}`}>
+                    {user.rol_admin.toUpperCase()}
+                  </span>
+                )}
+                {user.rango_usuario && (
+                  <img
+                    src={`/assets/etiquetas/${user.rango_usuario.toLowerCase()}.png`}
+                    alt={user.rango_usuario}
+                    className="etiqueta-rango"
+                  />
+                )}
+              </div>
 
-              <div className="separador-magico"></div>
-
-              {user.monedas && (
-                <div className="monedas-panel">
-                  <div className="monedas-titulo">MONEDAS</div>
-                  <div className="moneda-row">
-                    <span className="eco-label">ECOS:</span>
-                    <span className="eco-value" ref={ecosRef}>{user.monedas.ecos}</span>
-                    <img src="/assets/eco.png" alt="ECO" className="eco-icon" />
-                  </div>
-
-                  <div className="moneda-row">
-                    <span className="dolares-label">DOLARES:</span>
-                    <div className="dropdown-inline">
-                      {servidorSeleccionado}: {user.monedas.dolares[servidorSeleccionado]}$
-                      <div className="opciones">
-                        {servidores.filter(s => s !== servidorSeleccionado).map((s) => (
-                          <div key={s} onClick={() => setServidorSeleccionado(s)}>
-                            {s}: {user.monedas.dolares[s]}$
-                          </div>
-                        ))}
+              <div className="bloque-nombre-monedas">
+                <span className="nombre-texto">{user.uid}</span>
+                <div className="info-monedas">
+                  <div className="monedas-bloque">
+                    <p className="monedas-top">Saldo de FlanCraft</p>
+                    <div className="monedas-linea">
+                      <div className="eco-cantidad">
+                        <span>{user.monedas?.ecos || 0}</span>
+                        <img src="/assets/eco.png" alt="Eco" className="icono-eco pulse" />
                       </div>
+                      <a
+                        href="https://store.flancraft.com/category/ecos"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="btn-comprar"
+                      >
+                        Comprar ECOS
+                      </a>
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
+            </div> {/* <- cierre correcto de .info-datos */}
+          </div> {/* <- cierre correcto de .perfil-header */}
+
+          <div className="info-card">
+            <div className="barra-nivel-header">
+              <div className="nivel-text">
+                Nivel <span className="nivel-numero">{user.nivel}</span>
+              </div>
+              <div className="xp-text">
+                <span className="xp-actual">{user.xp_actual}</span> / {xpDelNivelActual} XP
+              </div>
+            </div>
+            <div className="barra-nivel">
+              <div className="segmento relleno" style={{ width: `${porcentajeNivel}%` }} />
             </div>
           </div>
 
-          <div className="dashboard-sections">
-            <RewardList
-              user={user}
-              xpData={xpData}
-              ecosRef={ecosRef}
-              onActualizarMonedas={actualizarMonedas}
-            />
-            <div className="separador-magico"></div>
-            <LogroList user={user} />
-          </div>
+          {user.rol_admin && (
+            <div className="info-botones">
+              <button onClick={() => navigate("/tribunal/admin")}>Tribunal</button>
+              {user.rol_admin.toLowerCase() === "owner" && (
+                <button onClick={() => navigate("/admin")}>Gestión Staff</button>
+              )}
+            </div>
+          )}
+        </div> {/* <- cierre correcto de .card-perfil-completo */}
+
+        <div className="dashboard-secciones">
+          <RewardList
+            user={user}
+            xpData={xpData}
+            ecosRef={ecosRef}
+            onActualizarMonedas={actualizarMonedas}
+          />
+          <div className="separador-magico"></div>
+          <LogroList user={user} />
         </div>
-      )}
-    </div>
-  );
+      </div>
+    )}
+  </section>
+);
 }

@@ -3,11 +3,13 @@ import { UserContext } from "../context/UserContext";
 import { supabase } from "@lib/supabaseClient";
 import NavbarMobile from "./NavbarMobile";
 import NavbarDesktop from "./NavbarDesktop";
-import "../styles/components/navbar.scss";
+import useIsMobile from "../hooks/useIsMobile";
+import "../styles/components/Navbar/navbar.scss";
 
 const Navbar = ({ onLoginClick }) => {
   const { user } = useContext(UserContext);
   const isLoggedIn = Boolean(user && user.loggedIn);
+  const isMobile = useIsMobile();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -25,15 +27,9 @@ const Navbar = ({ onLoginClick }) => {
   });
 
   useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-    } else {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-    }
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    document.body.style.position = menuOpen ? 'fixed' : '';
+    document.body.style.width = menuOpen ? '100%' : '';
     return () => {
       document.body.style.overflow = '';
       document.body.style.position = '';
@@ -49,7 +45,6 @@ const Navbar = ({ onLoginClick }) => {
           supabase.from("usuarios").select("*").eq("uuid", user.uuid).single(),
           fetch(`https://flancraftweb-backend.onrender.com/api/monedas/${user.uuid}`)
         ]);
-
         const userData = userRes.data;
         const monedas = monedasRes.ok ? await monedasRes.json() : { ecos: 0 };
 
@@ -70,15 +65,6 @@ const Navbar = ({ onLoginClick }) => {
     fetchUser();
   }, [user]);
 
-  useEffect(() => {
-    const handleOutsideClick = (e) => {
-      if (!e.target.closest('.profile-button')) {
-        setProfileOpen(false);
-      }
-    };
-    document.addEventListener('click', handleOutsideClick);
-    return () => document.removeEventListener('click', handleOutsideClick);
-  }, []);
 
   const handlers = {
     handleDropdownHover: (key) => {
@@ -113,10 +99,15 @@ const Navbar = ({ onLoginClick }) => {
     ...handlers,
   };
 
+  if (isMobile === null) return null;
+
   return (
     <nav className={`navbar-flancraft ${menuOpen ? 'menu-open' : ''}`}>
-      <NavbarMobile {...sharedProps} />
-      <NavbarDesktop {...sharedProps} />
+      {isMobile ? (
+        <NavbarMobile {...sharedProps} />
+      ) : (
+        <NavbarDesktop {...sharedProps} />
+      )}
     </nav>
   );
 };
