@@ -516,16 +516,40 @@
   }
 }
 @media (max-width: 768px) {
+  .epic-header-dashboard {
+  height: auto;
+  padding-top: 4rem;
+  background-position: center top 0px !important; // ✅ antes estaba en -180px
+  background-size: 180%; // 🔍 acercamos el fondo, más visible en pantallas pequeñas
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+    padding: 0 1rem;
+  }
+}
   .dashboard-epic-body {
-    max-width: 100%;
-    padding: 1rem;
-    margin-top: -2rem;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 1rem !important;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
   }
 
   .card-perfil-completo {
     width: 100%;
-    padding: 1rem;
+    padding: 1.6rem 1rem ;
     border-width: 6px;
+    border-radius: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     &::before {
       inset: 4px;
@@ -535,57 +559,66 @@
   .perfil-header {
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    gap: 1.2rem;
+    gap: 1.4rem;
+    width: 100%;
   }
 
   .skin-marco-posada {
-    width: 130px;
-    padding: 0.3rem;
+    width: 90% !important;
+    padding: 0.4rem;
+    margin: 0 auto; // ✅ centrado visual en contenedor
   }
 
   .skin-jugador {
     width: 100%;
+    display: block;
   }
 
   .premium-crown {
-    width: 50px;
-    height: 38px;
-    margin-top: -1rem;
+    width: 52px;
+    margin-bottom: -0.8rem;
   }
 
   .info-datos {
     width: 100%;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.6rem;
+    text-align: center;
+    gap: 0.8rem;
   }
 
   .info-identidad.etiquetas-superiores {
     justify-content: center;
     gap: 0.4rem;
     flex-wrap: wrap;
-  }
 
-  .badge-staff {
-    font-size: 0.75rem;
-    padding: 0.3rem 0.8rem;
-  }
+    .badge-staff {
+      font-size: 0.75rem;
+      padding: 0.3rem 0.6rem;
+    }
 
-  .etiqueta-rango {
-    height: 30px;
+    .etiqueta-rango {
+      height: 28px;
+    }
   }
 
   .bloque-nombre-monedas {
     width: 100%;
-    padding: 0;
-    gap: 0.4rem;
+    gap: 0.5rem;
+    align-items: center;
 
     .nombre-texto {
-      font-size: 2.4rem;
+      font-size: 2rem !important; // ✅ más compacto
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: 1px;
+      width: 100%;
+      padding: 0;
+      text-align: center;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      text-align: center;
     }
   }
 
@@ -593,13 +626,9 @@
     width: 100%;
 
     .monedas-bloque {
-      align-items: center;
+      width: 100%;
       padding: 1rem;
-    }
-
-    .monedas-top {
-      text-align: center;
-      font-size: 1rem;
+      align-items: center !important;
     }
 
     .monedas-linea {
@@ -609,7 +638,7 @@
     }
 
     .eco-cantidad span {
-      font-size: 1.4rem;
+      font-size: 1.5rem;
     }
 
     .btn-comprar {
@@ -619,6 +648,9 @@
   }
 
   .info-card {
+    width: 100%;
+    margin-top: 1rem;
+
     .barra-nivel-header {
       flex-direction: column;
       align-items: center;
@@ -633,24 +665,131 @@
 
   .info-botones {
     flex-direction: column;
+    width: 100%;
     gap: 0.6rem;
+
     button {
       width: 100%;
     }
   }
 
   .epic-header-dashboard {
-    height: 320px;
-    padding-top: 6rem;
-    background-position: center top -200px;
+    height: auto;
+    padding-top: 4rem;
+    background-position: center top -180px;
 
     h1 {
-      font-size: 2.2rem;
+      font-size: 2rem;
     }
 
     p {
       font-size: 0.9rem;
       padding: 0 1rem;
+    }
+  }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+
+  .epic-header-dashboard {
+  height: auto;
+  padding-top: 4rem;
+  background-position: center top 0px !important; 
+  background-size: 180%; 
+  }
+
+  .dashboard-epic-body {
+    width: 90% !important;
+    max-width: 900px !important;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .card-perfil-completo {
+    padding: 2rem;
+    border-width: 6px;
+    border-radius: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &::before {
+      inset: 6px;
+    }
+  }
+
+  .perfil-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.8rem;
+    width: 100%;
+  }
+
+  .skin-marco-posada {
+    width: 90%!important;
+    padding: 0.4rem;
+    margin: 0 auto;
+  }
+
+  .skin-jugador {
+    width: 100%;
+    max-width: 120px;
+  }
+
+  .premium-crown {
+    width: 60px;
+    margin-bottom: -0.6rem;
+  }
+
+  .bloque-nombre-monedas .nombre-texto {
+    font-size: 2.8rem;
+    line-height: 1.2;
+  }
+
+  .info-identidad.etiquetas-superiores .etiqueta-rango {
+    height: 34px;
+  }
+
+  .info-monedas .eco-cantidad span {
+    font-size: 1.8rem;
+  }
+
+  .btn-comprar {
+    font-size: 1rem;
+    padding: 0.6rem 1.5rem;
+  }
+
+  .info-card .barra-nivel-header {
+    font-size: 1rem;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .info-botones {
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+
+    button {
+      width: auto;
+      min-width: 140px;
+    }
+  }
+
+  .epic-header-dashboard {
+    padding-top: 5rem;
+    background-position: center top -120px;
+    background-size: 160%;
+
+    h1 {
+      font-size: 2.4rem;
+    }
+
+    p {
+      font-size: 1rem;
+      padding: 0 2rem;
     }
   }
 }
