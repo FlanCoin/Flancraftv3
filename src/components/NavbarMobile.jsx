@@ -56,13 +56,27 @@ const NavbarMobile = ({
   }, [isLoggedIn, userData?.uuid]);
 
   const getRangoColorClass = () => {
-  if (!isLoggedIn || !userData?.uuid) return "";
-  const raw = rangoDatos?.rango;
-  if (!raw) return "rango-basico"; // Clase por defecto si aún no cargó
-  return `rango-${raw}`;
-};
+    if (!isLoggedIn || !userData?.uuid) return "";
+    const raw = rangoDatos?.rango;
+    if (!raw) return "rango-basico";
+    return `rango-${raw}`;
+  };
 
-  
+  useEffect(() => {
+    const closeOnClick = (event) => {
+      const dropdown = document.querySelector(".user-dropdown-wrapper");
+      if (
+        dropdown &&
+        !dropdown.contains(event.target) &&
+        !profileButtonRef.current.contains(event.target)
+      ) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener("click", closeOnClick);
+    return () => document.removeEventListener("click", closeOnClick);
+  }, []);
+
   return (
     <>
       <div className="navbar-inner mobile-only">
@@ -79,21 +93,26 @@ const NavbarMobile = ({
         </div>
 
         {isLoggedIn ? (
-          <button
-            className="profile-button full"
-            ref={profileButtonRef}
-            onClick={() => setProfileOpen((prev) => !prev)}
+          <div
+            className="profile-button-wrapper"
+            onMouseEnter={() => setProfileOpen(true)}
+            onMouseLeave={() => setProfileOpen(false)}
           >
-            <img
-              src={`https://mc-heads.net/avatar/${userData.username}/32`}
-              alt="avatar"
-              className="user-avatar"
-            />
-            <span className="profile-greeting">
-  Hola, <span className={`nombre-colored ${getRangoColorClass()}`}>{userData.username}</span>
-</span>
-            <i className={`fas ${profileOpen ? "fa-chevron-up" : "fa-chevron-down"}`} />
-          </button>
+            <button
+              className="profile-button full"
+              ref={profileButtonRef}
+            >
+              <img
+                src={`https://mc-heads.net/avatar/${userData.username}/32`}
+                alt="avatar"
+                className="user-avatar"
+              />
+              <span className="profile-greeting">
+                Hola, <span className={`nombre-colored ${getRangoColorClass()}`}>{userData.username}</span>
+              </span>
+              <i className={`fas ${profileOpen ? "fa-chevron-up" : "fa-chevron-down"}`} />
+            </button>
+          </div>
         ) : (
           <button className="profile-button full" onClick={() => setLoginModalOpen(true)}>
             <i className="fas fa-sign-in-alt" />
@@ -136,14 +155,14 @@ const NavbarMobile = ({
               </div>
             </div>
 
-            <NavLink to="/dashboard" className="dropdown-link">
+            <NavLink to="/dashboard" className="dropdown-link" onClick={() => setProfileOpen(false)}>
               <i className="fas fa-gift" /> Recompensas
             </NavLink>
-            <NavLink to={`/perfil/${userData.username}`} className="dropdown-link">
+            <NavLink to={`/perfil/${userData.username}`} className="dropdown-link" onClick={() => setProfileOpen(false)}>
               <i className="fas fa-chart-bar" /> Ver estadísticas
             </NavLink>
 
-            <LogoutButton />
+            <LogoutButton onClick={() => setProfileOpen(false)} />
           </div>
         </div>
       )}
@@ -161,8 +180,8 @@ const NavbarMobile = ({
         </div>
 
         <div className="mobile-links">
-          <NavLink to="/"><i className="fas fa-home" /> Inicio</NavLink>
-          <NavLink to="/news"><i className="fas fa-scroll" /> Noticias</NavLink>
+          <NavLink to="/" onClick={() => setMenuOpen(false)}><i className="fas fa-home" /> Inicio</NavLink>
+          <NavLink to="/news" onClick={() => setMenuOpen(false)}><i className="fas fa-scroll" /> Noticias</NavLink>
 
           <div className={`mobile-dropdown ${activeDropdown === 'mundos' ? 'open' : ''}`}>
             <div className="mobile-dropdown-toggle" onClick={() => toggleDropdown('mundos')}>
@@ -170,16 +189,16 @@ const NavbarMobile = ({
               <i className={`fas fa-chevron-down arrow-icon ${activeDropdown === 'mundos' ? 'open' : ''}`} />
             </div>
             <div className="mobile-dropdown-content">
-              <NavLink to="/mundos/survival"><i className="fas fa-tree" /> Survival</NavLink>
-              <NavLink to="/mundos/oneblock"><i className="fas fa-cube" /> OneBlock</NavLink>
-              <NavLink to="/mundos/pokebox"><i className="fas fa-dragon" /> Pokebox</NavLink>
-              <NavLink to="/mundos/anarquico"><i className="fas fa-fire-alt" /> Anárquico</NavLink>
-              <NavLink to="/mundos/creativo"><i className="fas fa-paint-brush" /> Creativo</NavLink>
-              <NavLink to="/mundos/parkour"><i className="fas fa-shoe-prints" /> Parkour</NavLink>
+              <NavLink to="/mundos/survival" onClick={() => setMenuOpen(false)}><i className="fas fa-tree" /> Survival</NavLink>
+              <NavLink to="/mundos/oneblock" onClick={() => setMenuOpen(false)}><i className="fas fa-cube" /> OneBlock</NavLink>
+              <NavLink to="/mundos/pokebox" onClick={() => setMenuOpen(false)}><i className="fas fa-dragon" /> Pokebox</NavLink>
+              <NavLink to="/mundos/anarquico" onClick={() => setMenuOpen(false)}><i className="fas fa-fire-alt" /> Anárquico</NavLink>
+              <NavLink to="/mundos/creativo" onClick={() => setMenuOpen(false)}><i className="fas fa-paint-brush" /> Creativo</NavLink>
+              <NavLink to="/mundos/parkour" onClick={() => setMenuOpen(false)}><i className="fas fa-shoe-prints" /> Parkour</NavLink>
             </div>
           </div>
 
-          <NavLink to="/leaderboards"><i className="fas fa-chart-line" /> Estadísticas</NavLink>
+          <NavLink to="/leaderboards" onClick={() => setMenuOpen(false)}><i className="fas fa-chart-line" /> Estadísticas</NavLink>
 
           <div className={`mobile-dropdown ${activeDropdown === 'mercado' ? 'open' : ''}`}>
             <div className="mobile-dropdown-toggle" onClick={() => toggleDropdown('mercado')}>
@@ -187,12 +206,12 @@ const NavbarMobile = ({
               <i className={`fas fa-chevron-down arrow-icon ${activeDropdown === 'mercado' ? 'open' : ''}`} />
             </div>
             <div className="mobile-dropdown-content">
-              <NavLink to="/tienda"><i className="fas fa-gem" /> Store Servidor</NavLink>
-              <NavLink to="/tienda-merch"><i className="fas fa-shopping-bag" /> Merchandising</NavLink>
+              <NavLink to="/tienda" onClick={() => setMenuOpen(false)}><i className="fas fa-gem" /> Store Servidor</NavLink>
+              <NavLink to="/tienda-merch" onClick={() => setMenuOpen(false)}><i className="fas fa-shopping-bag" /> Merchandising</NavLink>
             </div>
           </div>
 
-          <NavLink to="/tribunal"><i className="fas fa-gavel" /> Tribunal</NavLink>
+          <NavLink to="/tribunal" onClick={() => setMenuOpen(false)}><i className="fas fa-gavel" /> Tribunal</NavLink>
 
           <div className="logo-divider"></div>
           <div className="mobile-social-links">

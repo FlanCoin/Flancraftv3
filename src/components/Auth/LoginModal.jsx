@@ -1,8 +1,28 @@
-import { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
 import ResetPasswordModal from "./ResetPasswordModal";
 import "../../styles/components/Auth/_loginmodal.scss";
+
+const AuthInput = React.forwardRef(
+  ({ type = "text", placeholder, value, onChange, disabled }, ref) => (
+    <input
+      type={type}
+      placeholder={placeholder}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      disabled={disabled}
+      ref={ref}
+      autoComplete="off"
+    />
+  )
+);
+
+const AuthButton = ({ children, onClick, disabled }) => (
+  <button onClick={onClick} disabled={disabled}>
+    {disabled ? "Procesando..." : children}
+  </button>
+);
 
 export default function LoginModal({ onClose }) {
   const [step, setStep] = useState("login");
@@ -16,12 +36,24 @@ export default function LoginModal({ onClose }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
+  const usernameRef = useRef(null);
 
-  const updateForm = (key, value) => {
+  useEffect(() => {
+    setTimeout(() => setModalVisible(true), 50);
+  }, []);
+
+  useEffect(() => {
+    if (step === "login" && usernameRef.current) {
+      setTimeout(() => usernameRef.current.focus(), 100);
+    }
+  }, [step]);
+
+  const updateForm = (key, value) =>
     setForm((prev) => ({ ...prev, [key]: value }));
-  };
 
   const goToDashboard = (uuid, username, rol_admin, extras = {}) => {
     const userData = {
@@ -34,23 +66,27 @@ export default function LoginModal({ onClose }) {
     localStorage.setItem("flan_user", JSON.stringify(userData));
     setUser(userData);
     navigate("/dashboard");
-    if (onClose) onClose();
+    onClose?.();
   };
 
   const handleLogin = async () => {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch("https://flancraftweb-backend.onrender.com/api/vincular/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ uid: form.username, password: form.password }),
-      });
-
+      const res = await fetch(
+        "https://flancraftweb-backend.onrender.com/api/vincular/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ uid: form.username, password: form.password }),
+        }
+      );
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Error al iniciar sesión");
 
-      const usuarioRes = await fetch(`https://flancraftweb-backend.onrender.com/api/usuarios/${data.uuid}`);
+      const usuarioRes = await fetch(
+        `https://flancraftweb-backend.onrender.com/api/usuarios/${data.uuid}`
+      );
       const usuarioData = await usuarioRes.json();
 
       goToDashboard(data.uuid, data.uid, data.rol_admin, {
@@ -71,17 +107,17 @@ export default function LoginModal({ onClose }) {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch("https://flancraftweb-backend.onrender.com/api/vincular/validate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: form.token }),
-      });
-
+      const res = await fetch(
+        "https://flancraftweb-backend.onrender.com/api/vincular/validate",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: form.token }),
+        }
+      );
       const data = await res.json();
-      if (!res.ok) {
-        if (res.status === 409) throw new Error("Este UUID ya está registrado.");
-        throw new Error(data.error || "Token inválido");
-      }
+      if (!res.ok) throw new Error(data.error || "Token inválido");
+      if (res.status === 409) throw new Error("Este UUID ya está registrado.");
 
       updateForm("uuid", data.uuid_jugador);
       updateForm("username", data.username);
@@ -95,35 +131,43 @@ export default function LoginModal({ onClose }) {
 
   const handleRegister = async () => {
     setError(null);
-    if (form.password !== form.confirm) return setError("Las contraseñas no coinciden");
+    if (form.password !== form.confirm)
+      return setError("Las contraseñas no coinciden");
 
     setLoading(true);
     try {
-      const registerRes = await fetch("https://flancraftweb-backend.onrender.com/api/vincular/registrar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          uuid: form.uuid,
-          uid: form.username,
-          password: form.password,
-        }),
-      });
-
+      const registerRes = await fetch(
+        "https://flancraftweb-backend.onrender.com/api/vincular/registrar",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            uuid: form.uuid,
+            uid: form.username,
+            password: form.password,
+          }),
+        }
+      );
       const registerData = await registerRes.json();
-      if (!registerRes.ok) throw new Error(registerData.error || "Error al registrar usuario");
+      if (!registerRes.ok)
+        throw new Error(registerData.error || "Error al registrar usuario");
 
-      const markRes = await fetch("https://flancraftweb-backend.onrender.com/api/vincular/marcar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: form.token }),
-      });
-
+      const markRes = await fetch(
+        "https://flancraftweb-backend.onrender.com/api/vincular/marcar",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: form.token }),
+        }
+      );
       if (!markRes.ok) throw new Error("Error al marcar token como usado");
 
-      const usuarioRes = await fetch(`https://flancraftweb-backend.onrender.com/api/usuarios/${form.uuid}`);
+      const usuarioRes = await fetch(
+        `https://flancraftweb-backend.onrender.com/api/usuarios/${form.uuid}`
+      );
       const usuarioData = await usuarioRes.json();
 
-      goToDashboard(form.uuid, form.username, usuarioData.rol_admin || null, {
+      goToDashboard(form.uuid, form.username, usuarioData.rol_admin, {
         rango_usuario: usuarioData.rango_usuario,
         userLevel: usuarioData.nivel,
         userXP: usuarioData.experiencia,
@@ -137,29 +181,13 @@ export default function LoginModal({ onClose }) {
     }
   };
 
-  const AuthInput = ({ type = "text", placeholder, value, onChange, disabled }) => (
-    <input
-      type={type}
-      placeholder={placeholder}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      disabled={disabled}
-      className="auth-input"
-    />
-  );
-
-  const AuthButton = ({ children, onClick, disabled }) => (
-    <button className="auth-button" onClick={onClick} disabled={disabled}>
-      {disabled ? "Procesando..." : children}
-    </button>
-  );
-
   const renderLoginStep = () => (
     <>
       <AuthInput
         placeholder="Usuario o email"
         value={form.username}
         onChange={(val) => updateForm("username", val)}
+        ref={usernameRef}
       />
       <AuthInput
         type="password"
@@ -167,7 +195,9 @@ export default function LoginModal({ onClose }) {
         value={form.password}
         onChange={(val) => updateForm("password", val)}
       />
-      <AuthButton onClick={handleLogin} disabled={loading}>Iniciar sesión</AuthButton>
+      <AuthButton onClick={handleLogin} disabled={loading}>
+        Iniciar sesión
+      </AuthButton>
 
       <div className="auth-options">
         <p>
@@ -185,7 +215,8 @@ export default function LoginModal({ onClose }) {
   const renderTokenStep = () => (
     <>
       <p>
-        Para vincular tu cuenta, entra al servidor y escribe <code>/vincular</code>. Luego pega el token aquí:
+        Para vincular tu cuenta, entra al servidor y escribe{" "}
+        <code>/vincular</code>. Luego pega el token aquí:
       </p>
       <AuthInput
         placeholder="Token de vinculación"
@@ -201,8 +232,12 @@ export default function LoginModal({ onClose }) {
 
   const renderSetPasswordStep = () => (
     <>
-      <p><strong>Nombre detectado:</strong> {form.username}</p>
-      <p><strong>UUID:</strong> {form.uuid}</p>
+      <p>
+        <strong>Nombre detectado:</strong> {form.username}
+      </p>
+      <p>
+        <strong>UUID:</strong> {form.uuid}
+      </p>
       <AuthInput
         type="password"
         placeholder="Nueva contraseña"
@@ -217,30 +252,37 @@ export default function LoginModal({ onClose }) {
         onChange={(val) => updateForm("confirm", val)}
         disabled={loading}
       />
-      <AuthButton onClick={handleRegister} disabled={loading}>Crear cuenta</AuthButton>
+      <AuthButton onClick={handleRegister} disabled={loading}>
+        Crear cuenta
+      </AuthButton>
     </>
   );
 
   return (
     <div className="login-modal">
-      <div className="overlay" onClick={onClose}></div>
-      <div className="login-box">
-        <button className="close-btn" onClick={onClose}>&times;</button>
-        <h2>
-          {step === "login" && "Inicia sesión en Flancraft"}
-          {step === "token" && "Vincula tu cuenta Minecraft"}
-          {step === "set-password" && "Elige tu contraseña"}
-        </h2>
+      <div className="overlay" onClick={onClose} />
 
-        {step === "login" && renderLoginStep()}
-        {step === "token" && renderTokenStep()}
-        {step === "set-password" && renderSetPasswordStep()}
+      {modalVisible && (
+        <div className="login-box">
+          <button className="close-btn" onClick={onClose}>
+            &times;
+          </button>
+          <h2>
+            {step === "login" && "Inicia sesión en Flancraft"}
+            {step === "token" && "Vincula tu cuenta Minecraft"}
+            {step === "set-password" && "Elige tu contraseña"}
+          </h2>
 
-        {error && <p className="error">{error}</p>}
-        {showResetModal && (
-          <ResetPasswordModal onClose={() => setShowResetModal(false)} />
-        )}
-      </div>
+          {step === "login" && renderLoginStep()}
+          {step === "token" && renderTokenStep()}
+          {step === "set-password" && renderSetPasswordStep()}
+
+          {error && <p className="error">{error}</p>}
+          {showResetModal && (
+            <ResetPasswordModal onClose={() => setShowResetModal(false)} />
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,5 +1,4 @@
-// src/pages/Home.jsx
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import "../styles/pages/_home.scss";
 
 import MapRPG from "../components/MapRPG";
@@ -14,13 +13,15 @@ import Footer from "../components/Footer";
 import LoginModal from "../components/Auth/LoginModal";
 
 import { UserContext } from "../context/UserContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Home = () => {
   const { user, setUser } = useContext(UserContext);
   const [showLogin, setShowLogin] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
+  const gameModesRef = useRef(null);
 
   const handleMainButtonClick = () => {
     if (!user) {
@@ -29,6 +30,17 @@ const Home = () => {
       navigate("/dashboard");
     }
   };
+
+  useEffect(() => {
+    if (location.state?.scrollTo === "game-modes-section") {
+      const target = document.getElementById("game-modes-section");
+      if (target) {
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: "smooth" });
+        }, 200); // delay para asegurar que esté montado
+      }
+    }
+  }, [location]);
 
   return (
     <div className="home">
@@ -42,22 +54,21 @@ const Home = () => {
         <div className="hero-content">
           <h1>Bienvenido a Flancraft</h1>
           <p>
-            Tu aventura empieza aquí. Explora, sube de nivel y deja tu legado en
-            el mundo.
+            Tu aventura empieza aquí. Explora, sube de nivel y deja tu legado en el mundo.
           </p>
 
           <ServerStatus />
 
-<button className="hero-btn" onClick={handleMainButtonClick}>
-  {!user ? (
-    "Conectarse a Flancraft"
-  ) : (
-    <span className="hero-user-wrapper">
-      <span className="greeting-text">Disfruta de tu hogar,</span>
-      <span className="nombre-colored">{user?.name || user?.username || "aventurero"}</span>
-    </span>
-  )}
-</button>
+          <button className="hero-btn" onClick={handleMainButtonClick}>
+            {!user ? (
+              "Conectarse a Flancraft"
+            ) : (
+              <span className="hero-user-wrapper">
+                <span className="greeting-text">Disfruta de tu hogar,</span>
+                <span className="nombre-colored">{user?.name || user?.username || "aventurero"}</span>
+              </span>
+            )}
+          </button>
         </div>
       </header>
 
@@ -87,15 +98,22 @@ const Home = () => {
       <SectionDivider />
       <RitualEko />
       <SectionDivider />
-      <GameModes />
+
+      <div ref={gameModesRef} id="game-modes-section">
+        <GameModes />
+      </div>
+
       <SectionDivider />
+
       <div className="main-content">
         <TeamCarousel />
         <section className="sections"></section>
       </div>
+
       <div className="divider-overlay">
         <SectionDivider2 />
       </div>
+
       <Footer />
     </div>
   );

@@ -1,4 +1,4 @@
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useNavigate, useLocation } from "react-router-dom";
 import { FaBalanceScale } from "react-icons/fa";
 import LogoutButton from "./Auth/LogoutButton";
 import { useEffect, useRef, useState } from "react";
@@ -19,6 +19,10 @@ const NavbarDesktop = ({
   const triggerRef = useRef();
   const dropdownRef = useRef();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Click fuera del dropdown del perfil
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -32,11 +36,10 @@ const NavbarDesktop = ({
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [setProfileOpen]);
 
+  // Obtener datos de rango al loguearse
   useEffect(() => {
     const fetchRangoUsuario = async () => {
       if (isLoggedIn && userData?.uuid) {
@@ -54,6 +57,18 @@ const NavbarDesktop = ({
     };
     fetchRangoUsuario();
   }, [isLoggedIn, userData?.uuid]);
+
+  // Scroll a la sección de mundos si estamos en home
+  const handleMundosClick = () => {
+    if (location.pathname === "/") {
+      const target = document.getElementById("game-modes-section");
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      navigate("/", { state: { scrollTo: "game-modes-section" } });
+    }
+  };
 
   const getRangoColorClass = () => {
     if (!isLoggedIn || !userData?.uuid) return "";
@@ -79,17 +94,9 @@ const NavbarDesktop = ({
           onMouseEnter={() => handleDropdownHover('mundos')}
           onMouseLeave={handleDropdownLeave}
         >
-          <span className="dropdown-toggle">
-            <i className="fas fa-map-marked-alt" /> Mundos <i className="fas fa-chevron-down arrow-icon" />
+          <span className="dropdown-toggle" onClick={handleMundosClick}>
+            <i className="fas fa-map-marked-alt" /> Mundos 
           </span>
-          <div className="dropdown-menu">
-            <NavLink to="/mundos/survival"><i className="fas fa-tree" /> Survival</NavLink>
-            <NavLink to="/mundos/oneblock"><i className="fas fa-cube" /> OneBlock</NavLink>
-            <NavLink to="/mundos/pokebox"><i className="fas fa-dragon" /> Pokebox</NavLink>
-            <NavLink to="/mundos/anarquico"><i className="fas fa-fire-alt" /> Anárquico</NavLink>
-            <NavLink to="/mundos/creativo"><i className="fas fa-paint-brush" /> Creativo</NavLink>
-            <NavLink to="/mundos/parkour"><i className="fas fa-shoe-prints" /> Parkour</NavLink>
-          </div>
         </div>
 
         <NavLink to="/leaderboards"><i className="fas fa-chart-line" /> Estadísticas</NavLink>

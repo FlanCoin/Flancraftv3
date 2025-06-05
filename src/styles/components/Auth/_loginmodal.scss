@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap');
+
 .login-modal {
   position: fixed;
   inset: 0;
@@ -17,36 +19,36 @@
   .login-box {
     position: relative;
     z-index: 10;
-    background: #1b1209;
-    border: 2px solid #7c5a33;
-    border-radius: 14px;
-    padding: 2.5rem;
+    background: linear-gradient(to bottom, #fff6db, #f7e4bd);
+    border: 6px solid #5a3b1d;
+    border-radius: 18px;
+    padding: 2rem 2.2rem;
     width: 100%;
     max-width: 440px;
     font-family: 'IM Fell English SC', serif;
-    color: #fef3d6;
+    color: #3b2f1e;
     text-align: center;
-    box-shadow: 0 0 26px #000000aa;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
     animation: slideUp 0.3s ease;
 
     h2 {
-      font-size: 1.65rem;
-      color: #fdf3c2;
-      margin-bottom: 1.6rem;
-      text-shadow: 0 0 6px #000;
+      font-size: 2.3rem;
+      color: #3e2b1a;
+      margin-bottom: 1.4rem;
+      text-shadow: 0 2px 1px #fdf2d4;
     }
 
     p {
-      font-size: 1rem;
+      font-size: 1.05rem;
       margin: 0.6rem 0;
-      color: #e6d3a8;
+      color: #4a3215;
     }
 
     code {
-      background: #3c2e1c;
+      background: #e8d7b9;
       padding: 0.2rem 0.5rem;
       border-radius: 4px;
-      color: #fff;
+      color: #3b2f1e;
       font-weight: bold;
       font-size: 0.95rem;
     }
@@ -55,80 +57,88 @@
       width: 100%;
       margin: 0.5rem 0;
       padding: 0.75rem 1rem;
-      background: #2c1f14;
-      color: #fef3db;
+      background: #fef8e6;
+      color: #3b2f1e;
       border: 2px solid #a17b48;
-      border-radius: 8px;
+      border-radius: 10px;
       font-family: inherit;
       font-size: 1rem;
-      transition: border-color 0.3s, box-shadow 0.3s;
+      font-weight: bold;
+      box-shadow: inset 0 1px 3px #ffffff80;
+      transition: all 0.3s ease;
 
       &:focus {
         outline: none;
-        border-color: #38bdf8;
-        box-shadow: 0 0 10px #38bdf880;
+        border-color: #facc15;
+        box-shadow: 0 0 10px #facc1580;
       }
     }
 
     button {
       width: 100%;
-      padding: 0.85rem;
+      padding: 0.8rem;
       margin-top: 1rem;
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: bold;
-      border: none;
+      font-family: 'IM Fell English SC', serif;
       border-radius: 10px;
-      cursor: pointer;
-      font-family: inherit;
       transition: all 0.2s ease;
+      border: none;
+
+      &:not(.close-btn):not(:disabled) {
+        background: linear-gradient(to bottom, #f6e8c1, #e2c48f);
+        color: #3b2f1e;
+        border: 2px solid #5a3b1d;
+        box-shadow: inset 0 -2px 0 #dcc38a, 0 5px 9px rgba(0, 0, 0, 0.25);
+
+        &:hover {
+          background: #ffda6a;
+          transform: translateY(-1px);
+          box-shadow:
+            inset 0 -2px 0 #e9cc8c,
+            0 6px 12px rgba(255, 218, 106, 0.4),
+            0 0 10px rgba(255, 220, 120, 0.25);
+        }
+
+        &:active {
+          transform: scale(0.96);
+        }
+      }
 
       &:disabled {
-        background: #444;
+        background: #ccc2a2;
+        color: #8d7a5c;
         cursor: not-allowed;
         opacity: 0.6;
       }
     }
 
-    // Botón principal
-    button:not(.close-btn):not(.auth-link):not(:disabled) {
-      background: linear-gradient(to right, #34d399, #10b981);
-      color: #ffffff;
-      box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.2), 0 0 10px #22c55e66;
-
-      &:hover {
-        background: linear-gradient(to right, #22c55e, #15803d);
-        transform: translateY(-1px);
-        box-shadow: 0 0 12px #22c55eaa;
-      }
-
-      &:active {
-        transform: scale(0.98);
-      }
-    }
-
     .auth-options {
       margin-top: 1.8rem;
-      font-size: 0.9rem;
-      color: #cab99e;
+      font-size: 0.95rem;
+      color: #4a3215;
 
       p {
-        margin: 0.4rem 0;
+        margin: 0.5rem 0;
+        font-size: 1rem;
 
         button {
-          background: none;
-          color: #3ee3ff;
+          background: linear-gradient(to bottom, #fef0d1, #f7e2b4);
+          color: #3b2f1e;
           font-weight: bold;
-          border: none;
-          cursor: pointer;
-          padding: 0;
-          margin-left: 0.3rem;
           font-family: inherit;
-          font-size: inherit;
-          transition: color 0.2s ease;
+          font-size: 1rem;
+          border: 2px solid #a77b43;
+          border-radius: 8px;
+          padding: 0.5rem 1rem;
+          box-shadow: 0 2px 0 #a1703d;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          margin-left: 0.4rem;
 
           &:hover {
-            color: #60f0ff;
-            text-decoration: underline;
+            background: #ffe399;
+            transform: translateX(3px);
           }
         }
       }
@@ -136,22 +146,20 @@
 
     .error {
       margin-top: 1rem;
-      background: #3c1f1f;
-      color: #f87171;
+      background: #4a2c2c;
+      color: #ffbdbd;
       padding: 0.6rem 1rem;
       border-radius: 6px;
-      border: 1px solid #992222;
-      box-shadow: 0 0 6px #ff000030;
+      border: 2px solid #992222;
     }
 
     .success {
       margin-top: 1rem;
-      background: #193d24;
-      color: #4ade80;
+      background: #2e412e;
+      color: #bbf7d0;
       padding: 0.6rem 1rem;
       border-radius: 6px;
-      border: 1px solid #15803d;
-      box-shadow: 0 0 6px #22c55e55;
+      border: 2px solid #15803d;
     }
 
     .close-btn {
@@ -165,18 +173,17 @@
       justify-content: center;
       font-size: 1.4rem;
       font-weight: bold;
-      color: #fef3d6;
-      background: transparent;
-      border: 2px solid transparent;
+      color: #5a3b1d;
+      background: #fef3d6;
+      border: 2px solid #a17b48;
       border-radius: 50%;
       cursor: pointer;
-      transition: color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      transition: all 0.2s ease;
 
       &:hover {
-        color: #facc15;
-        transform: scale(1.05);
+        color: #fff;
+        background: #facc15;
         box-shadow: 0 0 6px #facc1580;
-        border-color: #facc15;
       }
 
       &:focus {
@@ -192,7 +199,6 @@
   }
 }
 
-// Animaciones mágicas ✨
 @keyframes fadeIn {
   from {
     opacity: 0;
