@@ -19,6 +19,25 @@
     position: relative;
     z-index: 1;
   }
+  .invisible {
+  opacity: 0;
+}
+
+.fade-in {
+  animation: aparecerSuave 0.6s ease-in-out forwards;
+}
+
+@keyframes aparecerSuave {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 
 
 .epic-header-dashboard {
@@ -71,7 +90,7 @@
 
 
   .dashboard-epic-body {
-    max-width: 1000px;
+    max-width: 70%;
     margin: -3rem auto 0;
     padding: 2rem;
     display: flex;
@@ -419,5 +438,219 @@
   50% {
     transform: scale(1.15);
     filter: drop-shadow(0 0 10px #00fff7ff);
+  }
+}
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 10, 5, 0.92); // tono oscuro translúcido
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+  animation: aparecerSuave 0.5s ease-out;
+
+  .loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    color: #cfeeff;
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-shadow: 0 0 4px #349fcf;
+
+    .loading-gem {
+      width: 50px;
+      height: 64px;
+      animation: girarGem 1.4s linear infinite;
+      filter: drop-shadow(0 0 10px #00e1ff);
+    }
+
+    .loading-text {
+      font-family: 'IM Fell English SC', serif;
+      animation: parpadeo 1.5s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes girarGem {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes parpadeo {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes aparecerSuave {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.fade-slide-in {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeSlideIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 768px) {
+  .dashboard-epic-body {
+    max-width: 100%;
+    padding: 1rem;
+    margin-top: -2rem;
+  }
+
+  .card-perfil-completo {
+    width: 100%;
+    padding: 1rem;
+    border-width: 6px;
+
+    &::before {
+      inset: 4px;
+    }
+  }
+
+  .perfil-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.2rem;
+  }
+
+  .skin-marco-posada {
+    width: 130px;
+    padding: 0.3rem;
+  }
+
+  .skin-jugador {
+    width: 100%;
+  }
+
+  .premium-crown {
+    width: 50px;
+    height: 38px;
+    margin-top: -1rem;
+  }
+
+  .info-datos {
+    width: 100%;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .info-identidad.etiquetas-superiores {
+    justify-content: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .badge-staff {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.8rem;
+  }
+
+  .etiqueta-rango {
+    height: 30px;
+  }
+
+  .bloque-nombre-monedas {
+    width: 100%;
+    padding: 0;
+    gap: 0.4rem;
+
+    .nombre-texto {
+      font-size: 2.4rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+  }
+
+  .info-monedas {
+    width: 100%;
+
+    .monedas-bloque {
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .monedas-top {
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    .monedas-linea {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .eco-cantidad span {
+      font-size: 1.4rem;
+    }
+
+    .btn-comprar {
+      width: 100%;
+      font-size: 0.95rem;
+    }
+  }
+
+  .info-card {
+    .barra-nivel-header {
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.95rem;
+      gap: 0.4rem;
+    }
+
+    .barra-nivel {
+      height: 16px;
+    }
+  }
+
+  .info-botones {
+    flex-direction: column;
+    gap: 0.6rem;
+    button {
+      width: 100%;
+    }
+  }
+
+  .epic-header-dashboard {
+    height: 320px;
+    padding-top: 6rem;
+    background-position: center top -200px;
+
+    h1 {
+      font-size: 2.2rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+      padding: 0 1rem;
+    }
   }
 }
