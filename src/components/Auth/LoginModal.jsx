@@ -37,6 +37,7 @@ export default function LoginModal({ onClose }) {
   const [error, setError] = useState(null);
   const [showResetModal, setShowResetModal] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [closing, setClosing] = useState(false);
 
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
@@ -67,6 +68,14 @@ export default function LoginModal({ onClose }) {
     setUser(userData);
     navigate("/dashboard");
     onClose?.();
+  };
+
+  const handleClose = () => {
+    setClosing(true);
+    setTimeout(() => {
+      setClosing(false);
+      onClose?.();
+    }, 600); // misma duración que la animación inversa
   };
 
   const handleLogin = async () => {
@@ -200,14 +209,10 @@ export default function LoginModal({ onClose }) {
       </AuthButton>
 
       <div className="auth-options">
-        <p>
-          ¿No tienes cuenta?
+        <div className="auth-buttons-row">
           <button onClick={() => setStep("token")}>Regístrate aquí</button>
-        </p>
-        <p>
-          ¿Olvidaste tu contraseña?
           <button onClick={() => setShowResetModal(true)}>Restablecer</button>
-        </p>
+        </div>
       </div>
     </>
   );
@@ -259,28 +264,35 @@ export default function LoginModal({ onClose }) {
   );
 
   return (
-    <div className="login-modal">
-      <div className="overlay" onClick={onClose} />
-
+    <div className={`login-modal ${closing ? "fade-out-up" : ""}`}>
+      <div className="overlay" onClick={handleClose} />
       {modalVisible && (
-        <div className="login-box">
-          <button className="close-btn" onClick={onClose}>
-            &times;
-          </button>
-          <h2>
-            {step === "login" && "Inicia sesión en Flancraft"}
-            {step === "token" && "Vincula tu cuenta Minecraft"}
-            {step === "set-password" && "Elige tu contraseña"}
-          </h2>
+        <div className="hanging-login">
+          <div className="frame-wrapper">
+            <img
+              src="/assets/hanging-frame.png"
+              alt="Marco colgante"
+              className="hanging-frame"
+            />
+            <div className="login-inside">
+              <div className="login-box">
+                <h2>
+                  {step === "login" && "Inicia sesión en Flancraft"}
+                  {step === "token" && "Vincula tu cuenta Minecraft"}
+                  {step === "set-password" && "Elige tu contraseña"}
+                </h2>
 
-          {step === "login" && renderLoginStep()}
-          {step === "token" && renderTokenStep()}
-          {step === "set-password" && renderSetPasswordStep()}
+                {step === "login" && renderLoginStep()}
+                {step === "token" && renderTokenStep()}
+                {step === "set-password" && renderSetPasswordStep()}
 
-          {error && <p className="error">{error}</p>}
-          {showResetModal && (
-            <ResetPasswordModal onClose={() => setShowResetModal(false)} />
-          )}
+                {error && <p className="error">{error}</p>}
+                {showResetModal && (
+                  <ResetPasswordModal onClose={() => setShowResetModal(false)} />
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
