@@ -281,3 +281,17 @@
     overflow-x: hidden; // seguridad extra para no romper nada lateralmente
   }
 }
+.hero-logo {
+  max-width: 500px;
+  width: 100%;
+  margin: 0rem auto;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.6));
+
+  background-image: url("/assets/flancraftlogo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+}

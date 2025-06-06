@@ -37,7 +37,7 @@ const Home = () => {
       if (target) {
         setTimeout(() => {
           target.scrollIntoView({ behavior: "smooth" });
-        }, 200); // delay para asegurar que esté montado
+        }, 200);
       }
     }
   }, [location]);
@@ -52,7 +52,7 @@ const Home = () => {
         <div className="hero-overlay" />
 
         <div className="hero-content">
-          <h1>Bienvenido a Flancraft</h1>
+<div className="hero-logo" role="img" aria-label="Flancraft logo" />
           <p>
             Tu aventura empieza aquí. Explora, sube de nivel y deja tu legado en el mundo.
           </p>

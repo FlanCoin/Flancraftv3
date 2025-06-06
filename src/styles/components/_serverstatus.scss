@@ -2,7 +2,7 @@
 @use 'sass:color';
 
 .server-status-bar {
-  background: rgba(18, 16, 12, 0.9);
+  background: #2E1D0F;
   color: #fdf6dd;
   border: 2px solid $color-pixel-border;
   padding: 0.8rem 1.2rem;
@@ -68,7 +68,7 @@
   }
 
   &.online {
-    border-color: #61d377;
+    border-color: #5A3B1D;
 
     .status-indicator {
       color: #61d377;
