@@ -51,25 +51,32 @@ const Home = () => {
 
         <div className="hero-overlay" />
 
-        <div className="hero-content">
-<div className="hero-logo" role="img" aria-label="Flancraft logo" />
-          <p>
-            Tu aventura empieza aquí. Explora, sube de nivel y deja tu legado en el mundo.
-          </p>
+<div className="hero-content">
+  <div className="hero-logo flotando" role="img" aria-label="Flancraft logo" />
 
-          <ServerStatus />
+<h1 className="titulo-epico-flancraft">
+  {"flancraft".split("").map((letra, i) => (
+    <span key={i}>{letra}</span>
+  ))}
+</h1>
+  <p>
+    Tu aventura empieza aquí. Explora, sube de nivel y deja tu legado en el mundo.
+  </p>
 
-          <button className="hero-btn" onClick={handleMainButtonClick}>
-            {!user ? (
-              "Conectarse a Flancraft"
-            ) : (
-              <span className="hero-user-wrapper">
-                <span className="greeting-text">Disfruta de tu hogar,</span>
-                <span className="nombre-colored">{user?.name || user?.username || "aventurero"}</span>
-              </span>
-            )}
-          </button>
-        </div>
+  <ServerStatus />
+
+  <button className="hero-btn" onClick={handleMainButtonClick}>
+    {!user ? (
+      "Conectarse a Flancraft"
+    ) : (
+      <span className="hero-user-wrapper">
+        <span className="greeting-text">Disfruta de tu hogar,</span>
+        <span className="nombre-colored">{user?.name || user?.username || "aventurero"}</span>
+      </span>
+    )}
+  </button>
+</div>
+
       </header>
 
       {showLogin && (

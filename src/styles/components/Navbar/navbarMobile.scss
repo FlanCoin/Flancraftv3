@@ -62,7 +62,7 @@
       align-items: center;
 
       .logo-img {
-        height: 36px;
+        height: 25px !important;
         transition: transform 0.3s ease;
         filter: brightness(1);
 
@@ -70,7 +70,12 @@
           transform: scale(1.05);
           filter: brightness(1.6) drop-shadow(0 0 8px rgba(255, 224, 150, 0.6));
         }
+
       }
+              .logo-img.logo-activo {
+  filter: brightness(1.6) drop-shadow(0 0 8px rgba(255, 224, 150, 0.6));
+  transform: scale(1.05);
+}
     }
   }
 
@@ -292,7 +297,7 @@
     }
 
     .blockhorn-logo { max-width: 7rem; margin-top: 1rem; }
-    .flancraft-logo { max-width: 13rem; margin-top: 0.5rem; }
+    .flancraft-logo { max-width: 10rem; margin-top: 0.5rem; }
 
     .logo-divider {
       width: 80%;

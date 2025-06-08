@@ -21,6 +21,7 @@ const NavbarDesktop = ({
 
   const navigate = useNavigate();
   const location = useLocation();
+  const isHome = location.pathname === "/"; // 🔥 Detectar si estamos en Home
 
   // Click fuera del dropdown del perfil
   useEffect(() => {
@@ -81,7 +82,11 @@ const NavbarDesktop = ({
     <div className="navbar-content desktop-only">
       <div className="nav-left">
         <Link to="/" className="logo">
-          <img src="/assets/logonav.png" alt="Flancraft logo" className="logo-img" />
+          <img
+            src="/assets/logonav.png"
+            alt="Flancraft logo"
+            className={`logo-img ${isHome ? "logo-activo" : ""}`} // ✅ Activar clase en home
+          />
         </Link>
       </div>
 

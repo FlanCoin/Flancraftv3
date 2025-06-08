@@ -25,7 +25,7 @@
       align-items: center;
 
       .logo-img {
-        height: 48px;
+        height: 35px;
         filter: drop-shadow(0 0 2px #000);
         transition: transform 0.3s ease;
 
@@ -33,6 +33,11 @@
           transform: scale(1.2);
         }
       }
+      .logo-img.logo-activo {
+  filter: brightness(1.6) drop-shadow(0 0 8px rgba(255, 224, 150, 0.6));
+  transform: scale(1.05);
+}
+
     }
   }
 

@@ -1,5 +1,11 @@
 @use '../base/variables' as *;
 
+@font-face {
+  font-family: 'Botsmatic';
+  src: url('/fonts/botsmatic.ttf') format('truetype');
+  font-display: swap;
+}
+
 .home {
   background-color: #1e1b17;
   color: #fdf6dd;
@@ -45,39 +51,49 @@
       color: #fdf6dd;
       max-width: 800px;
 
-      h1 {
-        font-family: 'VT323', monospace;
-        font-size: 4.2rem;
+      .hero-logo {
+        max-width: 300px;
+        width: 100%;
+        margin: 0 auto 1rem auto;
+        aspect-ratio: 16 / 9;
+        position: relative;
+        filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.742));
+        background-image: url("/assets/flancraftlogo.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        animation: levitar 5s ease-in-out infinite;
+      }
+
+      .titulo-epico-flancraft {
+        font-family: 'Botsmatic', sans-serif;
+        font-size: 4rem;
         text-align: center;
-        letter-spacing: 1px;
-        display: inline-block;
-        padding: 0.5rem 1.2rem;
+        display: flex;
+        justify-content: center;
+        gap: 0.25rem;
+        margin-bottom: 1rem;
 
-        color: transparent;
-        background-image: linear-gradient(to bottom, #fdf6dd 0%, #bfa96a 100%);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-
-        border: 3px solid $color-pixel-border;
-        border-radius: 6px;
-        background-color: #3a2d18;
-
-        box-shadow:
-          inset 2px 2px 0 #8b6a3e,
-          4px 4px 0 rgba(0, 0, 0, 0.3),
-          1px 1px 8px rgba(255, 230, 180, 0.1);
-
-        transform: rotate(-1deg);
-        transition: all 0.3s ease;
-
-        &:hover {
-          transform: rotate(0deg) scale(1.03);
-          box-shadow:
-            inset 2px 2px 0 #8b6a3e,
-            5px 5px 0 rgba(0, 0, 0, 0.35),
-            0 0 12px rgba(255, 210, 140, 0.4);
+        span {
+          display: inline-block;
+          color: #F6E8C1;
+          text-shadow:
+            -3px -3px 0 #5A3B1D,
+             3px -3px 0 #5A3B1D,
+            -3px  3px 0 #5A3B1D,
+             3px  3px 0 #5A3B1D;
+          animation: wavePixel 3s infinite 2s;
         }
+
+        span:nth-child(1) { animation-delay: 0s; }
+        span:nth-child(2) { animation-delay: 0.1s; }
+        span:nth-child(3) { animation-delay: 0.2s; }
+        span:nth-child(4) { animation-delay: 0.3s; }
+        span:nth-child(5) { animation-delay: 0.4s; }
+        span:nth-child(6) { animation-delay: 0.5s; }
+        span:nth-child(7) { animation-delay: 0.6s; }
+        span:nth-child(8) { animation-delay: 0.7s; }
+        span:nth-child(9) { animation-delay: 0.8s; }
       }
 
       p {
@@ -90,70 +106,55 @@
       }
 
       .hero-btn {
-  margin-top: 2rem;
-  font-size: 1.1rem;
-  padding: 0.75rem 2rem;
-  background: linear-gradient(145deg, #dfb65b, #a97f33);
-  border: 2px solid #4e391d;
-  box-shadow: 0 0 10px rgba(255, 200, 100, 0.4);
-  color: #1d1407;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-  animation: floatBtn 4s ease-in-out infinite;
-  transform-origin: center;
+        margin-top: 2rem;
+        font-size: 1.1rem;
+        padding: 0.75rem 2rem;
+        background: linear-gradient(145deg, #dfb65b, #a97f33);
+        border: 2px solid #4e391d;
+        box-shadow: 0 0 10px rgba(255, 200, 100, 0.4);
+        color: #1d1407;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+        animation: floatBtn 4s ease-in-out infinite;
+        transform-origin: center;
 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  white-space: nowrap;
-  text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        white-space: nowrap;
+        text-align: center;
 
-  .hero-user-wrapper {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-weight: bold;
-  }
+        .hero-user-wrapper {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.3rem;
+          font-weight: bold;
+        }
 
-  .greeting-text {
-    color: #1d1407;
-    font-weight: bold;
-  }
+        .greeting-text {
+          color: #1d1407;
+          font-weight: bold;
+        }
 
-  .nombre-colored {
-    font-weight: bold;
-    text-shadow: 0 0 3px rgba(0, 0, 0, 0.3), 0 1px 1px rgba(0, 0, 0, 0.25);
-    transition: filter 0.2s ease;
+        .nombre-colored {
+          font-weight: bold;
+          text-shadow: 0 0 3px rgba(0, 0, 0, 0.3), 0 1px 1px rgba(0, 0, 0, 0.25);
+          transition: filter 0.2s ease;
 
-    &:hover {
-      filter: brightness(1.05);
+          &:hover {
+            filter: brightness(1.05);
+          }
+        }
+
+        &:hover {
+          background: linear-gradient(145deg, #f0c769, #b6863f);
+          box-shadow: 0 0 15px rgba(255, 210, 120, 0.6);
+        }
+      }
     }
-  }
-
-  &:hover {
-    background: linear-gradient(145deg, #f0c769, #b6863f);
-    box-shadow: 0 0 15px rgba(255, 210, 120, 0.6);
-  }
-}
-
-    }
-  }
-
-  @keyframes pulse {
-    0%, 100% {
-      opacity: 0.9;
-    }
-    50% {
-      opacity: 0.6;
-    }
-  }
-
-  @keyframes floatBtn {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
   }
 
   .main-content {
@@ -169,7 +170,6 @@
     width: 100%;
     overflow: hidden;
 
-    // Fondo difuminado detrás del contenido
     &::after {
       content: "";
       position: absolute;
@@ -178,7 +178,7 @@
       transform: translateX(-50%);
       width: 100%;
       height: 100%;
-      background-image: url('/assets/backmeet.png'); // <- AJUSTA tu ruta aquí
+      background-image: url('/assets/backmeet.png');
       background-size: cover;
       background-position: center;
       filter: blur(2px) brightness(1);
@@ -187,7 +187,6 @@
       pointer-events: none;
     }
 
-    // Borde superior estilo pixel
     &::before {
       content: '';
       position: absolute;
@@ -202,7 +201,6 @@
       z-index: 1;
       pointer-events: none;
     }
-
 
     .sections {
       flex: 1;
@@ -233,34 +231,54 @@
     }
   }
 
+  .divider-overlay {
+    position: relative;
+    height: 0;
+    z-index: 100;
 
+    .section-divider2 {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      background: url('/assets/dividerbattle.png') center bottom no-repeat;
+      background-size: cover;
+      z-index: 10000;
+      pointer-events: none;
+    }
+  }
 
-.divider-overlay {
-  position: relative;
-  height: 0; // Important: we don’t want it to push anything down
-  z-index: 100;
+  @keyframes pulse {
+    0%, 100% { opacity: 0.9; }
+    50% { opacity: 0.6; }
+  }
 
-  .section-divider2 {
-    position: absolute;
+  @keyframes floatBtn {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
 
-    left: 0;
-    width: 100%;
+  @keyframes levitar {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
 
-    background: url('/assets/dividerbattle.png') center bottom no-repeat;
-    background-size: cover;
-    z-index: 10000; // Higher than anything else
-    pointer-events: none;
+  @keyframes wavePixel {
+    0%, 10%   { transform: translateY(0); }
+    20%       { transform: translateY(-4px); }
+    40%       { transform: translateY(2px); }
+    60%       { transform: translateY(-1px); }
+    80%       { transform: translateY(0); }
+    100%      { transform: translateY(0); }
   }
 }
-}
+
 @media (max-width: 768px) {
   .hero-flancraft {
     padding: 2rem 1rem;
 
     .hero-content {
-      h1 {
-        font-size: 2.8rem;
-        padding: 0.4rem 1rem;
+      .titulo-epico-flancraft {
+        font-size: 2.5rem;
       }
 
       p {
@@ -278,20 +296,6 @@
   }
 
   .home {
-    overflow-x: hidden; // seguridad extra para no romper nada lateralmente
+    overflow-x: hidden;
   }
-}
-.hero-logo {
-  max-width: 500px;
-  width: 100%;
-  margin: 0rem auto;
-  aspect-ratio: 16 / 9;
-  position: relative;
-  filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.6));
-
-  background-image: url("/assets/flancraftlogo.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-
 }

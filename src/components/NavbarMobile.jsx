@@ -1,4 +1,4 @@
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import LogoutButton from "./Auth/LogoutButton";
 import LoginModal from "./Auth/LoginModal";
@@ -15,6 +15,8 @@ const NavbarMobile = ({
 }) => {
   const wrapperRef = useRef();
   const profileButtonRef = useRef();
+  const location = useLocation();
+  const isHome = location.pathname === "/";
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [rangoDatos, setRangoDatos] = useState(null);
 
@@ -88,7 +90,11 @@ const NavbarMobile = ({
           </button>
 
           <Link to="/" className="logo-inline">
-            <img src="/assets/logonav.png" alt="Flancraft logo" className="logo-img" />
+            <img
+              src="/assets/logonav.png"
+              alt="Flancraft logo"
+              className={`logo-img ${isHome ? "logo-activo" : ""}`}
+            />
           </Link>
         </div>
 
