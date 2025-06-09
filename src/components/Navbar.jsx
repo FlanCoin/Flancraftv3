@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState, useRef } from "react";
 import { UserContext } from "../context/UserContext";
+import { useCallback } from "react";
 import { supabase } from "@lib/supabaseClient";
 import NavbarMobile from "./NavbarMobile";
 import NavbarDesktop from "./NavbarDesktop";
@@ -13,7 +14,14 @@ const Navbar = ({ onLoginClick }) => {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const [profileOpen, setProfileOpen] = useState(false);
+  const [profileOpen, _setProfileOpen] = useState(false);
+  const setProfileOpen = useCallback((value) => {
+  if (typeof value === 'function') {
+    _setProfileOpen(prev => value(prev));
+  } else {
+    _setProfileOpen(value);
+  }
+}, []);
   const dropdownTimeout = useRef(null);
   const profileTimeout = useRef(null);
 

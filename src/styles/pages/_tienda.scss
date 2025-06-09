@@ -1,11 +1,33 @@
-.tienda-container {
-  width: 100%;
-  height: calc(100vh - 80px); // Ajusta según la altura del navbar
-  padding-top: 0rem;
+.tienda-redirect-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  text-align: center;
+  color: #3a210e;
+  font-family: 'IM Fell English SC', serif;
 
-  .tienda-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
+  .tienda-frame-fake {
+    padding: 2rem 3rem;
+    background: #fffbe6;
+    border: 3px double #c5a86d;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .loader-circulo {
+    margin: 2rem auto 0;
+    width: 36px;
+    height: 36px;
+    border: 4px solid #c5a86d;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }

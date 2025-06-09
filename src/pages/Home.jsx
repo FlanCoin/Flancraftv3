@@ -42,6 +42,8 @@ const Home = () => {
     }
   }, [location]);
 
+  
+
   useEffect(() => {
     const handleLoad = () => {
       setTimeout(() => setIsLoaded(true), 300); // añade un pequeño delay visual
@@ -66,9 +68,17 @@ const Home = () => {
 
       <div className={`home ${isLoaded ? "visible" : "invisible"}`}>
         <header className="hero-flancraft">
-          <video autoPlay muted loop playsInline className="hero-video">
-            <source src="/videos/background.mp4" type="video/mp4" />
-          </video>
+          <video
+  className="hero-video"
+  autoPlay
+  muted
+  loop
+  playsInline
+  preload="auto"
+>
+  <source src="/videos/background.mp4" type="video/mp4" />
+  Tu navegador no admite video HTML5.
+</video>
 
           <div className="hero-overlay" />
 

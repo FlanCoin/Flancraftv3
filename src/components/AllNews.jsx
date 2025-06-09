@@ -7,6 +7,21 @@ import '../styles/components/_allnews.scss';
 const AllNews = () => {
   const [newsData, setNewsData] = useState([]);
   const [visibleCount, setVisibleCount] = useState(6);
+  const [loading, setLoading] = useState(true);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+
+  // Animación escalonada
+  const listItemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        delay: i * 0.1,
+      },
+    }),
+  };
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -19,12 +34,28 @@ const AllNews = () => {
           content
         }`);
         setNewsData(data);
+        preloadImages(data.map((n) => n.imageUrl));
       } catch (error) {
         console.error('Error al obtener noticias:', error);
       }
     };
     fetchNews();
   }, []);
+
+  const preloadImages = (urls) => {
+    let loaded = 0;
+    urls.forEach((url) => {
+      const img = new Image();
+      img.src = url;
+      img.onload = () => {
+        loaded++;
+        if (loaded === urls.length) {
+          setImagesLoaded(true);
+          setTimeout(() => setLoading(false), 300);
+        }
+      };
+    });
+  };
 
   const formatDaysAgo = (dateStr) => {
     const today = new Date();
@@ -57,40 +88,40 @@ const AllNews = () => {
   return (
     <section className="all-news-section">
       <div className="news-header-bg">
-  <Motion.h2
-    className="main-title"
-    initial={{ opacity: 0, y: -20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, delay: 0.1 }}
-  >
-    Noticias
-  </Motion.h2>
+        <Motion.h2
+          className="main-title"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          Noticias
+        </Motion.h2>
 
-  <Motion.div
-    className="featured-news-grid"
-    initial={{ opacity: 0, scale: 0.96 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.6, delay: 0.3 }}
-  >
-    {featured.map((item) => (
-      <Link key={item._id} to={`/news/${item._id}`} className="featured-news-card">
-        <div className="img-wrapper">
-          <img src={item.imageUrl} alt={item.title} loading="lazy" />
-        </div>
-        <div className="info">
-          <h3>{item.title}</h3>
-          <span>{formatDaysAgo(item.date)}</span>
-        </div>
-      </Link>
-    ))}
-  </Motion.div>
-</div>
+        <Motion.div
+          className="featured-news-grid"
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          {featured.map((item) => (
+            <Link key={item._id} to={`/news/${item._id}`} className="featured-news-card">
+              <div className="img-wrapper">
+                <img src={item.imageUrl} alt={item.title} loading="lazy" />
+              </div>
+              <div className="info">
+                <h3>{item.title}</h3>
+                <span>{formatDaysAgo(item.date)}</span>
+              </div>
+            </Link>
+          ))}
+        </Motion.div>
+      </div>
 
       <div className="news-scroll-bg">
         <div className="news-scroll-top-decor">
-  <img src="/assets/topborder.png" alt="" className="border-main" />
-  <img src="/assets/borde2.png" alt="" className="border-corner" />
-</div>
+          <img src="/assets/topborder.png" alt="" className="border-main" />
+          <img src="/assets/borde2.png" alt="" className="border-corner" />
+        </div>
 
         <h3 className="scroll-title">Últimos artículos</h3>
         <div className="floating-news-hero">
@@ -99,28 +130,44 @@ const AllNews = () => {
         <hr className="news-section-divider" />
 
         <div className="news-list">
-          {rest.map((item) => (
-            <Motion.div
-              key={item._id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <Link to={`/news/${item._id}`} className="news-list-item">
-                <div className="hover-wrapper">
-                  <img src={item.imageUrl} alt={item.title} loading="lazy" />
-                  <div className="text">
-                    <h4>{item.title}</h4>
-                    <p>{truncate(extractPlainText(item.content))}</p>
-                    <div className="date">{formatDaysAgo(item.date)}</div>
+          {!imagesLoaded || loading ? (
+  Array.from({ length: 6 }).map((_, i) => (
+    <div key={i} className="news-list-item loading-skeleton">
+      <div className="hover-wrapper">
+        <div className="skeleton-image" />
+        <div className="text">
+          <div className="skeleton-title" />
+          <div className="skeleton-paragraph" />
+          <div className="skeleton-date" />
+        </div>
+      </div>
+    </div>
+  ))
+) : (
+            rest.map((item, index) => (
+              <Motion.div
+                key={item._id}
+                custom={index}
+                variants={listItemVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                <Link to={`/news/${item._id}`} className="news-list-item">
+                  <div className="hover-wrapper">
+                    <img src={item.imageUrl} alt={item.title} loading="lazy" />
+                    <div className="text">
+                      <h4>{item.title}</h4>
+                      <p>{truncate(extractPlainText(item.content))}</p>
+                      <div className="date">{formatDaysAgo(item.date)}</div>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            </Motion.div>
-          ))}
+                </Link>
+              </Motion.div>
+            ))
+          )}
         </div>
 
-        {newsData.length > visibleCount + 1 && (
+        {newsData.length > visibleCount + 1 && !loading && (
           <div className="load-more">
             <button onClick={showMore}>Mostrar más</button>
           </div>

@@ -5,6 +5,7 @@ import {
   FaTelegramPlane, FaFacebook, FaTwitter, FaReddit,
   FaDiscord, FaClipboard, FaShareAlt
 } from 'react-icons/fa';
+import { motion as Motion } from 'framer-motion';
 import client, { urlFor } from '../sanityClient';
 import '../styles/components/_newsdetail.scss';
 
@@ -16,7 +17,6 @@ const NewsDetail = () => {
   const [visibleNews, setVisibleNews] = useState(4);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [copied, setCopied] = useState(false);
-
   const pageUrl = window.location.href;
 
   useEffect(() => {
@@ -33,7 +33,9 @@ const NewsDetail = () => {
           { slug }
         );
         if (data) {
-          setNews(data);
+          setTimeout(() => {
+            setNews(data);
+          }, 300); // transición suave
         } else {
           const fallback = await client.fetch(
             `*[_type == "news" && _id == $slug][0]{
@@ -103,76 +105,83 @@ const NewsDetail = () => {
     }
   };
 
-  if (!news) return <div className="news-detail">Cargando...</div>;
-
   return (
-    <section className="news-detail">
-      <div className="news-layout">
-        <div className="news-container">
-          <header className="news-header">
-            <div className="share">
-              <FaShareAlt onClick={() => setShowShareMenu(!showShareMenu)} />
-              {showShareMenu && (
-                <div className="share-menu">
-                  <p>Compartir</p>
-                  <a href={`https://twitter.com/share?url=${pageUrl}&text=${news.title}`} target="_blank" rel="noreferrer"><FaTwitter /> Twitter</a>
-                  <a href={`https://www.reddit.com/submit?url=${pageUrl}&title=${news.title}`} target="_blank" rel="noreferrer"><FaReddit /> Reddit</a>
-                  <a href={`https://t.me/share/url?url=${pageUrl}&text=${news.title}`} target="_blank" rel="noreferrer"><FaTelegramPlane /> Telegram</a>
-                  <a href={`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`} target="_blank" rel="noreferrer"><FaFacebook /> Facebook</a>
-                  <a href="https://discord.com/channels/@me" target="_blank" rel="noreferrer"><FaDiscord /> Discord</a>
-                  <div className="copy-link">
-                    <input type="text" value={pageUrl} readOnly />
-                    <button onClick={handleCopy}><FaClipboard /></button>
+    <section className={`news-detail ${news ? 'loaded' : 'loading'}`}>
+      {news ? (
+        <div className="news-layout">
+          <div className="news-container">
+            <header className="news-header">
+              <div className="share">
+                <FaShareAlt onClick={() => setShowShareMenu(!showShareMenu)} />
+                {showShareMenu && (
+                  <div className="share-menu">
+                    <p>Compartir</p>
+                    <a href={`https://twitter.com/share?url=${pageUrl}&text=${news.title}`} target="_blank" rel="noreferrer"><FaTwitter /> Twitter</a>
+                    <a href={`https://www.reddit.com/submit?url=${pageUrl}&title=${news.title}`} target="_blank" rel="noreferrer"><FaReddit /> Reddit</a>
+                    <a href={`https://t.me/share/url?url=${pageUrl}&text=${news.title}`} target="_blank" rel="noreferrer"><FaTelegramPlane /> Telegram</a>
+                    <a href={`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`} target="_blank" rel="noreferrer"><FaFacebook /> Facebook</a>
+                    <a href="https://discord.com/channels/@me" target="_blank" rel="noreferrer"><FaDiscord /> Discord</a>
+                    <div className="copy-link">
+                      <input type="text" value={pageUrl} readOnly />
+                      <button onClick={handleCopy}><FaClipboard /></button>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          </header>
+                )}
+              </div>
+            </header>
 
-          <h1 className="title">{news.title}</h1>
-          <p className="date">{new Date(news.date).toLocaleDateString()}</p>
+            <h1 className="title">{news.title}</h1>
+            <p className="date">{new Date(news.date).toLocaleDateString()}</p>
 
-          {news.imageUrl && (
-            <img className="featured-img" src={news.imageUrl} alt={news.title} />
-          )}
+            {news.imageUrl && (
+              <img className="featured-img" src={news.imageUrl} alt={news.title} />
+            )}
 
-          <article className="content">
-            <PortableText value={news.content} components={portableTextComponents} />
-          </article>
+            <article className="content">
+              <PortableText value={news.content} components={portableTextComponents} />
+            </article>
 
-<button className="back-btn" onClick={() => navigate('/news')}>← Volver</button>
+            <button className="back-btn" onClick={() => navigate('/news')}>← Volver</button>
 
-          {copied && <div className="copied">Link copiado al portapapeles</div>}
+            {copied && <div className="copied">Link copiado al portapapeles</div>}
+          </div>
+
+          <aside className="news-sidebar">
+            <h3>Últimas noticias</h3>
+            <ul className="sidebar-news-list">
+              {latestNews.slice(0, visibleNews).map((item) => {
+                const isActive = item.slug.current === slug;
+                return (
+                  <li
+                    key={item.slug.current}
+                    className={isActive ? 'active' : ''}
+                    onClick={() => navigate(`/news/${item.slug.current}`)}
+                  >
+                    <img src={item.imageUrl} alt={item.title} />
+                    <div>
+                      <h4>{item.title}</h4>
+                      <p>{new Date(item.date).toLocaleDateString()}</p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+
+            {visibleNews < latestNews.length && (
+              <div className="load-more-news">
+                <button onClick={loadMore}>Ver más</button>
+              </div>
+            )}
+          </aside>
         </div>
-
-        <aside className="news-sidebar">
-          <h3>Últimas noticias</h3>
-          <ul className="sidebar-news-list">
-            {latestNews.slice(0, visibleNews).map((item) => {
-              const isActive = item.slug.current === slug;
-              return (
-                <li
-                  key={item.slug.current}
-                  className={isActive ? 'active' : ''}
-                  onClick={() => navigate(`/news/${item.slug.current}`)}
-                >
-                  <img src={item.imageUrl} alt={item.title} />
-                  <div>
-                    <h4>{item.title}</h4>
-                    <p>{new Date(item.date).toLocaleDateString()}</p>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-
-          {visibleNews < latestNews.length && (
-            <div className="load-more-news">
-              <button onClick={loadMore}>Ver más</button>
-            </div>
-          )}
-        </aside>
-      </div>
+      ) : (
+        <div className="loading-placeholder">
+          <div className="glow-bar" />
+          <div className="glow-bar short" />
+          <div className="glow-img" />
+          <div className="glow-paragraph" />
+        </div>
+      )}
     </section>
   );
 };
