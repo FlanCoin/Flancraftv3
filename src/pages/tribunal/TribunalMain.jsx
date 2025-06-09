@@ -6,6 +6,7 @@ import {
   PersonSimpleRun, Globe, WarningCircle, CheckCircle, HourglassMedium
 } from 'phosphor-react';
 
+import useIsMobile from '../../hooks/useIsMobile';
 import '../../styles/pages/_tribunalmain.scss';
 
 const supabase = createClient(
@@ -18,6 +19,7 @@ export default function Sanciones() {
   const [filtroJugador, setFiltroJugador] = useState('');
   const [jugadoresBaneados, setJugadoresBaneados] = useState([]);
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     async function fetchData() {
@@ -25,22 +27,21 @@ export default function Sanciones() {
         .from('jails')
         .select('*')
         .order('timestamp', { ascending: false });
-      setSanciones(data);
+      setSanciones(data || []);
 
       const baneados = data
-        .filter(s => s.estado === 'baneado')
+        ?.filter(s => s.estado === 'baneado')
         .map(s => s.name.toLowerCase());
       setJugadoresBaneados([...new Set(baneados)]);
     }
     fetchData();
   }, []);
 
-  const contarStrikes = (jugador, tipo) => {
-    return sanciones.filter((s) => s.name === jugador && s.type === tipo).length;
-  };
+  const contarStrikes = (jugador, tipo) =>
+    sanciones.filter((s) => s.name === jugador && s.type === tipo).length;
 
   const obtenerNombreServidor = (raw) => {
-    const mapaServidores = {
+    const mapa = {
       survival: 'Survival',
       anarquico: 'Anárquico',
       creativo: 'Creativo',
@@ -50,237 +51,199 @@ export default function Sanciones() {
       parkour: 'Parkour',
       'play.flancraft.com': 'Lobby',
     };
-    return mapaServidores[raw?.toLowerCase()] || 'Servidor desconocido';
+    return mapa[raw?.toLowerCase()] || 'Lobby';
   };
 
   const obtenerIconoServidor = (server) => {
-    const baseProps = { size: 16, weight: 'bold', style: { marginRight: '6px' } };
-    const iconMap = {
-      survival: <Tree {...baseProps} />,
-      anarquico: <Fire {...baseProps} />,
-      creativo: <PaintBrush {...baseProps} />,
-      oneblock: <Cube {...baseProps} />,
-      kingdoms: <CrownSimple {...baseProps} />,
-      boxpvp: <Sword {...baseProps} />,
-      parkour: <PersonSimpleRun {...baseProps} />,
-      'play.flancraft.com': <Globe {...baseProps} />,
+    const base = { size: 16, weight: 'bold', style: { marginRight: '6px' } };
+    const iconos = {
+      survival: <Tree {...base} />,
+      anarquico: <Fire {...base} />,
+      creativo: <PaintBrush {...base} />,
+      oneblock: <Cube {...base} />,
+      kingdoms: <CrownSimple {...base} />,
+      boxpvp: <Sword {...base} />,
+      parkour: <PersonSimpleRun {...base} />,
+      'play.flancraft.com': <Globe {...base} />,
     };
-    return iconMap[server?.toLowerCase()] || <Globe {...baseProps} />;
+    return iconos[server?.toLowerCase()] || <Globe {...base} />;
   };
 
   const obtenerIconoEstado = (estado) => {
-    const iconProps = { size: 16, weight: 'duotone', style: { marginRight: '6px' } };
+    const props = { size: 16, weight: 'duotone', style: { marginRight: '6px' } };
     switch (estado) {
-      case 'baneado': return <WarningCircle color="#e74c3c" {...iconProps} />;
-      case 'revisado': return <CheckCircle color="#2ecc71" {...iconProps} />;
-      case 'pendiente':
-      default: return <HourglassMedium color="#f39c12" {...iconProps} />;
+      case 'baneado': return <WarningCircle color="#e74c3c" {...props} />;
+      case 'revisado': return <CheckCircle color="#2ecc71" {...props} />;
+      default: return <HourglassMedium color="#f39c12" {...props} />;
     }
   };
 
-  const formatearDuracion = (duracionRaw) => {
-    if (!duracionRaw) return 'Desconocida';
-    const match = duracionRaw.toLowerCase().match(/(\d+)([smhd])/);
-    if (!match) return duracionRaw;
-    const valor = parseInt(match[1], 10);
-    const unidad = match[2];
-    switch (unidad) {
-      case 's': return `${valor} segundo${valor > 1 ? 's' : ''}`;
-      case 'm': return `${valor} minuto${valor > 1 ? 's' : ''}`;
-      case 'h': return `${valor} hora${valor > 1 ? 's' : ''}`;
-      case 'd': return `${valor} día${valor > 1 ? 's' : ''}`;
-      default: return duracionRaw;
-    }
+  const formatearDuracion = (raw) => {
+    if (!raw) return 'Desconocida';
+    const match = raw.toLowerCase().match(/(\d+)([smhd])/);
+    if (!match) return raw;
+    const val = parseInt(match[1], 10);
+    const unit = match[2];
+    const map = { s: 'segundo', m: 'minuto', h: 'hora', d: 'día' };
+    return `${val} ${map[unit]}${val > 1 ? 's' : ''}`;
   };
 
-  const obtenerFechaFin = (timestamp, duracionRaw) => {
-    const match = duracionRaw?.toLowerCase().match(/(\d+)([smhd])/);
+  const obtenerFechaFin = (timestamp, raw) => {
+    const match = raw?.toLowerCase().match(/(\d+)([smhd])/);
     if (!match) return null;
-    const valor = parseInt(match[1], 10);
-    const unidad = match[2];
-    let ms = 0;
-    switch (unidad) {
-      case 's': ms = valor * 1000; break;
-      case 'm': ms = valor * 60 * 1000; break;
-      case 'h': ms = valor * 60 * 60 * 1000; break;
-      case 'd': ms = valor * 24 * 60 * 60 * 1000; break;
-      default: return null;
-    }
-    const fechaFin = new Date(parseInt(timestamp) + ms);
-    return fechaFin.toLocaleString('es-ES');
+    const val = parseInt(match[1], 10);
+    const unit = match[2];
+    const ms = { s: 1000, m: 60000, h: 3600000, d: 86400000 }[unit] * val;
+    return new Date(parseInt(timestamp) + ms).toLocaleString('es-ES');
   };
 
   return (
-    <div className="sanciones-wrapper">
-      <div className="top-panel">
-        <h1 className="sanciones-title">Tribunal de Sanciones</h1>
+    <section className="tribunal-epic">
+      <div className="epic-header">
+        <h1>Tribunal de Sanciones</h1>
+        <p>Consulta y revisa el historial de infracciones de los jugadores de FlanCraft. ¡La justicia no duerme!</p>
+      </div>
 
-        <div className="buscador">
-          <input
-            type="text"
-            placeholder="Buscar jugador..."
-            value={filtroJugador}
-            onChange={(e) => setFiltroJugador(e.target.value)}
-            className="filtro-input"
-          />
-        </div>
+      <div className="selector-panel">
+        <input
+          type="text"
+          placeholder="Buscar jugador..."
+          value={filtroJugador}
+          onChange={(e) => setFiltroJugador(e.target.value)}
+          className="filtro-input"
+        />
 
-        <div className="leyenda-container">
-          <input type="checkbox" id="toggle-leyenda" className="leyenda-toggle" />
-          <label htmlFor="toggle-leyenda" className="leyenda-btn"> Leyenda</label>
-
-          <div className="leyenda-modal">
-            <div className="leyenda-content">
-              <label htmlFor="toggle-leyenda" className="close-btn">✖</label>
-              <h2>Tabla de Sanciones</h2>
-              <table className="leyenda-table">
-                <thead>
-                  <tr>
-                    <th>Motivo</th><th>1º vez</th><th>2º vez</th><th>3º vez</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr><td>Hacks</td><td>Jail 12h</td><td>Jail 5 días</td><td>Ban perm.</td></tr>
-                  <tr><td>Fly</td><td>Jail 6h</td><td>Jail 3 días</td><td>Ban perm.</td></tr>
-                  <tr><td>Minar en Survival</td><td>Avisar</td><td>Jail 15 min</td><td>Jail 24h</td></tr>
-                  <tr><td>Insultos</td><td>Jail 30 min</td><td>Jail 5h</td><td>Ban perm.</td></tr>
-                  <tr><td>TPAKill</td><td>Jail 6h</td><td>Jail 5 días</td><td>Ban perm.</td></tr>
-                  <tr><td>Granja de Lag</td><td>Avisar</td><td>Jail 15 min</td><td>Jail 24h</td></tr>
-                  <tr><td>Grief</td><td>Jail 2h</td><td>Jail 8h</td><td>Jail 5 días</td></tr>
-                  <tr><td>Spam de server</td><td>Jail 1 día</td><td>Jail 10 días</td><td>Ban perm.</td></tr>
-                  <tr><td>Flood</td><td>Avisar</td><td>Jail 15 min</td><td>Jail 2h</td></tr>
-                  <tr><td>Usar bugs</td><td>Jail 2h, 6h, 12h</td><td>Jail 12h, 24h, 2d</td><td>Ban perm.</td></tr>
-                  <tr><td>Estafas</td><td>Jail 2h, 6h, 12h</td><td>Jail 12h, 24h, 2d</td><td>Ban perm.</td></tr>
-                </tbody>
-              </table>
-            </div>
+        <label htmlFor="toggle-leyenda" className="leyenda-btn">📜 Leyenda</label>
+        <input type="checkbox" id="toggle-leyenda" className="leyenda-toggle" />
+        <div className="leyenda-modal">
+          <div className="leyenda-content">
+            <label htmlFor="toggle-leyenda" className="close-btn">✖</label>
+            <h2>Tabla de Sanciones</h2>
+            <table className="leyenda-table">
+              <thead>
+                <tr><th>Motivo</th><th>1º vez</th><th>2º vez</th><th>3º vez</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Hacks</td><td>Jail 12h</td><td>Jail 5d</td><td>Ban perm.</td></tr>
+                <tr><td>Fly</td><td>Jail 6h</td><td>Jail 3d</td><td>Ban perm.</td></tr>
+                <tr><td>Insultos</td><td>Jail 30m</td><td>Jail 5h</td><td>Ban perm.</td></tr>
+                <tr><td>TPAKill</td><td>Jail 6h</td><td>Jail 5d</td><td>Ban perm.</td></tr>
+                <tr><td>Grief</td><td>Jail 2h</td><td>Jail 8h</td><td>Jail 5d</td></tr>
+                <tr><td>Spam</td><td>Jail 1d</td><td>Jail 10d</td><td>Ban perm.</td></tr>
+                <tr><td>Flood</td><td>Avisar</td><td>Jail 15m</td><td>Jail 2h</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
 
-      {/* 🖥️ Vista de Tabla (Desktop) */}
-      <div className="tabla-scroll-wrapper">
-        <table className="sanciones-table">
-          <thead>
-            <tr>
-              <th>Jugador</th>
-              <th>Moderador</th>
-              <th>Motivo</th>
-              <th>Duración</th>
-              <th>Fecha</th>
-              <th>Servidor</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sanciones
-              .filter((s) => s.name.toLowerCase().includes(filtroJugador.toLowerCase()))
-              .map((s, index) => {
-                const strikes = contarStrikes(s.name, s.type);
-                const fechaFin = obtenerFechaFin(s.timestamp, s.duration);
-                return (
-                  <tr key={index} className="clickable-row">
-                    <td>
-                      <div className="player-cell">
-                        <img src={`https://mc-heads.net/avatar/${s.name}/40`} alt={s.name} className="avatar" />
-                        <span className="player-name">
-                          <span className="player-link" onClick={() => navigate(`/perfil/${s.name}`)}>
+      {/* 📱 Tarjetas Mobile / Tablet */}
+      {isMobile && (
+        <div className="sanciones-cards">
+          {sanciones
+            .filter((s) => s.name.toLowerCase().includes(filtroJugador.toLowerCase()))
+            .map((s, index) => {
+              const strikes = contarStrikes(s.name, s.type);
+              const fechaFin = obtenerFechaFin(s.timestamp, s.duration);
+
+              return (
+                <div className="sancion-card" key={index}>
+                  <div className="header">
+                    <img src={`https://mc-heads.net/avatar/${s.name}/40`} alt={s.name} />
+                    <div className="player-info">
+                      <strong onClick={() => navigate(`/perfil/${s.name}`)}>{s.name}</strong>
+                      {jugadoresBaneados.includes(s.name.toLowerCase()) && (
+                        <span className="permaban-badge">PERMABAN</span>
+                      )}
+                      {s.banType && (
+                        <span className="baneado-badge">{s.banType.toUpperCase()}</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="info">
+                    <div><strong>Moderador:</strong> {s.moderator}</div>
+                    <div><strong>Motivo:</strong> {s.type}</div>
+                    <div><strong>Duración:</strong> {formatearDuracion(s.duration)}</div>
+                    {fechaFin && (
+                      <div><strong>Finaliza:</strong> {fechaFin}</div>
+                    )}
+                    <div><strong>Fecha:</strong> {new Date(parseInt(s.timestamp)).toLocaleString('es-ES')}</div>
+                    <div className={`server ${s.server?.toLowerCase() || 'desconocido'}`}>
+                      {obtenerIconoServidor(s.server)} {obtenerNombreServidor(s.server)}
+                    </div>
+
+                    <div className={`strikes ${strikes >= 3 ? 'permaban' : ''}`}>
+                      <WarningCircle size={14} weight="duotone" /> Strikes: {strikes}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+      )}
+
+      {/* 🖥️ Tabla Desktop */}
+      {!isMobile && (
+        <div className="tabla-scroll-wrapper">
+          <table className="sanciones-table tabla-epica">
+            <thead>
+              <tr>
+                <th>Jugador</th>
+                <th>Moderador</th>
+                <th>Motivo</th>
+                <th>Duración</th>
+                <th>Fecha</th>
+                <th>Servidor</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              {sanciones
+                .filter((s) => s.name.toLowerCase().includes(filtroJugador.toLowerCase()))
+                .map((s, index) => {
+                  const strikes = contarStrikes(s.name, s.type);
+                  const fechaFin = obtenerFechaFin(s.timestamp, s.duration);
+                  return (
+                    <tr key={index}>
+                      <td>
+                        <div className="jugador-info">
+                          <img src={`https://mc-heads.net/avatar/${s.name}/32`} className="avatar-head" alt={s.name} />
+                          <span onClick={() => navigate(`/perfil/${s.name}`)} style={{ cursor: 'pointer' }}>
                             {s.name}
                           </span>
-                        </span>
-                        {s.banType === 'perma' || s.banType === 'temp' ? (
-                          <span className="baneado-badge">BANEADO</span>
-                        ) : null}
-                        {jugadoresBaneados.includes(s.name.toLowerCase()) && (
-                          <span className="permaban-badge">PERMABAN</span>
-                        )}
-                      </div>
-                    </td>
-                    <td><strong>{s.moderator}</strong></td>
-                    <td>
-                      <span className={`tipo ${s.type?.toLowerCase().replace(/\s/g, '-') || 'desconocido'}`}>
-                        {s.type ? s.type.charAt(0).toUpperCase() + s.type.slice(1) : 'Sin clasificar'}
-                      </span>
-                      <br />
-                      <span className={`strikes ${strikes >= 3 ? 'permaban' : ''}`}>
-                        <WarningCircle size={14} weight="duotone" style={{ marginRight: '4px' }} />
-                        Strikes: {strikes}
-                        {strikes >= 3 && <strong> (Permaban)</strong>}
-                      </span>
-                    </td>
-                    <td>
-                      <div>{formatearDuracion(s.duration)}</div>
-                      {fechaFin && (
-                        <div style={{ fontSize: '0.75rem', color: '#888' }}>
-                          Finaliza: {fechaFin}
+                          {jugadoresBaneados.includes(s.name.toLowerCase()) && (
+                            <span className="permaban-badge">PERMABAN</span>
+                          )}
                         </div>
-                      )}
-                    </td>
-                    <td>{new Date(parseInt(s.timestamp)).toLocaleString('es-ES')}</td>
-                    <td>
-                      <span className={`server-badge ${s.server?.toLowerCase() || 'desconocido'}`}>
-                        {obtenerIconoServidor(s.server)}
-                        {obtenerNombreServidor(s.server)}
-                      </span>
-                    </td>
-                    <td>
-                      <span className={`estado ${s.estado || 'pendiente'}`}>
-                        {obtenerIconoEstado(s.estado)}
-                        {s.estado || 'pendiente'}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
-      </div>
+                      </td>
+                      <td><strong>{s.moderator}</strong></td>
+                      <td>
+                        <span className="tipo">{s.type}</span>
+                        <span className={`strikes ${strikes >= 3 ? 'permaban' : ''}`}>
+                          <WarningCircle size={14} weight="duotone" /> Strikes: {strikes}
+                          {strikes >= 3 && <strong> (Permaban)</strong>}
+                        </span>
+                      </td>
+                      <td>
+                        <div>{formatearDuracion(s.duration)}</div>
+                        {fechaFin && <div className="duracion-extra">Finaliza: {fechaFin}</div>}
+                      </td>
+                      <td>{new Date(parseInt(s.timestamp)).toLocaleString('es-ES')}</td>
+                      <td>
+                        <span className={`server-badge ${s.server?.toLowerCase() || 'desconocido'}`}>
+                          {obtenerIconoServidor(s.server)}
+                          {obtenerNombreServidor(s.server)}
+                        </span>
+                      </td>
 
-      {/* 📱 Vista de Tarjetas (Mobile) */}
-      <div className="sanciones-cards">
-        {sanciones
-          .filter((s) => s.name.toLowerCase().includes(filtroJugador.toLowerCase()))
-          .map((s, index) => {
-            const strikes = contarStrikes(s.name, s.type);
-            const fechaFin = obtenerFechaFin(s.timestamp, s.duration);
-
-            return (
-              <div className="sancion-card" key={index}>
-                <div className="header">
-                  <img src={`https://mc-heads.net/avatar/${s.name}/40`} alt={s.name} />
-                  <div className="player-info">
-                    <strong onClick={() => navigate(`/perfil/${s.name}`)}>{s.name}</strong>
-                    {jugadoresBaneados.includes(s.name.toLowerCase()) && (
-                      <span className="permaban-badge">PERMABAN</span>
-                    )}
-                    {s.banType && (
-                      <span className="baneado-badge">{s.banType.toUpperCase()}</span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="info">
-                  <div><strong>Moderador:</strong> {s.moderator}</div>
-                  <div><strong>Motivo:</strong> {s.type}</div>
-                  <div><strong>Duración:</strong> {formatearDuracion(s.duration)}</div>
-                  {fechaFin && (
-                    <div><strong>Finaliza:</strong> {fechaFin}</div>
-                  )}
-                  <div><strong>Fecha:</strong> {new Date(parseInt(s.timestamp)).toLocaleString('es-ES')}</div>
-                  <div className={`server ${s.server?.toLowerCase() || 'desconocido'}`}>
-  {obtenerIconoServidor(s.server)} {obtenerNombreServidor(s.server)}
-</div>
-                  <div className={`estado-badge ${s.estado || 'pendiente'}`}>
-                    {obtenerIconoEstado(s.estado)} {s.estado || 'pendiente'}
-                  </div>
-                  <div className={`strikes ${strikes >= 3 ? 'permaban' : ''}`}>
-                    <WarningCircle size={14} weight="duotone" /> Strikes: {strikes}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-      </div>
-    </div>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
   );
 }

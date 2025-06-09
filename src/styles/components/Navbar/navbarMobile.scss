@@ -1,4 +1,4 @@
-@use '../../base/variables' as *;
+@use '../../base/variables' as vars;
 
 // --- Animaciones globales utilizadas ---
 @keyframes shimmer {
@@ -28,7 +28,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.6rem 1.2rem;
-  background-color: #1b1815;
+  background-color: #2E1D0F;
 
   @media (min-width: 769px) {
     display: none;
@@ -428,7 +428,7 @@
 
           &:hover {
             background: rgba(255, 224, 120, 0.1);
-            color: $color-oro-brillo;
+            color: vars.$color-oro-brillo;
             transform: translateX(2px);
           }
         }
@@ -482,7 +482,7 @@
 
         &:hover {
           background: linear-gradient(to bottom, #6b4a2e, #3e2a1a);
-          color: $color-oro-brillo;
+          color: vars.$color-oro-brillo;
           transform: scale(1.1);
           box-shadow: 0 0 10px rgba(255, 215, 85, 0.3);
         }
@@ -726,4 +726,45 @@
   50% {
     text-shadow: 0 0 8px #ff4b2b, 0 0 12px #ff8000;
   }
+}
+@media only screen and (min-width: vars.$break-tablet-min) and (max-width: vars.$break-tablet-max) {
+  .mobile-only {
+    padding: 0.8rem 1.4rem;
+
+    .logo-img {
+      height: 27px !important;
+    }
+
+    .profile-button.full {
+      padding: 0.75rem 1.3rem;
+
+      .user-avatar {
+        width: 26px;
+        height: 26px;
+      }
+
+      .profile-greeting {
+        font-size: 0.95rem;
+      }
+    }
+  }
+
+  .mobile-menu {
+    width: 280px;
+    padding: 0.8rem;
+
+    .mobile-links a {
+      font-size: 1.05rem;
+    }
+  }
+}
+// Navbar visibility control (reacts to useIsMobile @ 1025px)
+@media (min-width: 1025px) {
+  .mobile-only { display: none !important; }
+  .desktop-only { display: flex !important; }
+}
+
+@media (max-width: 1024px) {
+  .desktop-only { display: none !important; }
+  .mobile-only { display: flex !important; }
 }
