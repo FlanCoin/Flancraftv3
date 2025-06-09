@@ -126,7 +126,7 @@ const MapRPG = () => {
           {zones.map((zone, index) => (
             <Motion.div
               key={index}
-              className={`zone-card ${zone.className}`}
+              className={`zone-card ${zone.className} delay-${index}`}
               variants={cardVariants}
               onClick={() => handleClick(zone.route, index)}
             >

@@ -105,7 +105,7 @@
         border-image-slice: 30;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
         cursor: pointer;
-        animation: fadeSlideUp 0.6s ease both;
+        animation: fadeSlideUpEpic 0.8s cubic-bezier(0.25, 1, 0.5, 1) both;
         transition: transform 0.3s ease;
 
         &:hover {
@@ -271,10 +271,22 @@
   }
 }
 
-// 🔮 Animaciones mágicas
-@keyframes fadeSlideUp {
-  0%   { opacity: 0; transform: translateY(20px) scale(0.96); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes fadeSlideUpEpic {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Genera delays para hasta 10 tarjetas (ajusta si necesitas más)
+@for $i from 0 through 10 {
+  .delay-#{$i} {
+    animation-delay: #{$i * 0.15}s;
+  }
 }
 
 @keyframes vibrate {
