@@ -1,10 +1,9 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion as MotionDiv } from 'framer-motion'
+import { motion as Motion } from 'framer-motion'
 import { Howl } from 'howler'
 import clickSoundFile from '/assets/sounds/vibration.wav'
 import {
-  MapPin,
   ScrollText,
   ShieldCheck,
   BarChart3,
@@ -71,6 +70,20 @@ const clickSound = new Howl({
   volume: 0.4,
 })
 
+const containerVariants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+}
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+}
+
 const MapRPG = () => {
   const navigate = useNavigate()
 
@@ -80,7 +93,9 @@ const MapRPG = () => {
     const el = document.querySelectorAll('.zone-card')[index]
     if (el) {
       el.classList.add('vibrate')
-      setTimeout(() => el.classList.remove('vibrate'), 200)
+      requestAnimationFrame(() => {
+        setTimeout(() => el.classList.remove('vibrate'), 200)
+      })
     }
 
     navigate(route)
@@ -90,51 +105,49 @@ const MapRPG = () => {
     <section className="map-rpg-wrapper">
       <div className="map-rpg-background" />
 
-
       <section className="map-rpg">
-      <h2 className="map-title">
-  <DoorOpen size={24} className="icon" />
-  Portales Mágicos
-  <span className="firefly-container">
-    {[...Array(10)].map((_, i) => (
-      <span key={i} className="firefly" />
-    ))}
-  </span>
-</h2>
+        <h2 className="map-title">
+          <DoorOpen size={24} className="icon" />
+          Portales Mágicos
+          <span className="firefly-container">
+            {[...Array(10)].map((_, i) => (
+              <span key={i} className="firefly" />
+            ))}
+          </span>
+        </h2>
 
-        <div className="zones-grid">
+        <Motion.div
+          className="zones-grid"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+        >
           {zones.map((zone, index) => (
-            <MotionDiv.div
-            key={index}
-            className={`zone-card ${zone.className}`}
-            onClick={() => handleClick(zone.route, index)}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            viewport={{ once: true }}
-          >
-            {zone.image && (
-              <>
-                <img src={zone.image} alt={zone.title} className="zone-bg" />
-                <div className="zone-overlay" />
-              </>
-            )}
-          
-            {/* 🌟 Mover el POPUP fuera del contenido */}
-            <div className="description-popup">
-              {zone.description}
-            </div>
-          
-            <div className="zone-content">
-              <div className="zone-icon">
-                <div className="conjure-orb">{zone.icon}</div>
+            <Motion.div
+              key={index}
+              className={`zone-card ${zone.className}`}
+              variants={cardVariants}
+              onClick={() => handleClick(zone.route, index)}
+            >
+              {zone.image && (
+                <>
+                  <img src={zone.image} alt={zone.title} className="zone-bg" />
+                  <div className="zone-overlay" />
+                </>
+              )}
+
+              <div className="description-popup">{zone.description}</div>
+
+              <div className="zone-content">
+                <div className="zone-icon">
+                  <div className="conjure-orb">{zone.icon}</div>
+                </div>
+                <h3>{zone.title}</h3>
               </div>
-              <h3>{zone.title}</h3>
-            </div>
-          </MotionDiv.div>
-          
+            </Motion.div>
           ))}
-        </div>
+        </Motion.div>
       </section>
     </section>
   )
