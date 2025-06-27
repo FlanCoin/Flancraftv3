@@ -1,0 +1,365 @@
+.rango-banner-hero {
+  width: 100%;
+  height: 520px;
+  background-image: url('/assets/header-forja.webp');
+  background-size: cover;
+  background-position: center -350px;
+  background-repeat: no-repeat;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+
+}
+
+.banner-overlay {
+  background: rgba(0, 0, 0, 0.4); // fondo oscuro translúcido
+  padding: 2rem;
+  margin: 0 auto;
+  max-width: 720px;
+  border-radius: 5px;
+  backdrop-filter: blur(3px);
+  box-shadow: 0 0 20px #00000066;
+  text-align: center;
+  animation: aparecerSuave 0.8s ease-out;
+
+  h1 {
+    font-size: 3.6rem;
+    color: #ffe7ad;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.4rem;
+    color: #fefae0;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+    line-height: 1.6;
+  }
+}
+
+.rango-banner-textura {
+  width: 100%;
+  background: url("/assets/madera.jpeg") repeat-x center;
+  background-size: cover;
+  padding: 0.5rem;
+  text-align: center;
+  font-family: "IM Fell English SC", serif;
+  border-top: 4px solid #3b2f1e;
+  border-bottom: 4px solid #3b2f1e;
+
+  h1 {
+    font-size: 3.2rem;
+    margin-bottom: 0.6rem;
+    color: #fefae0;
+    text-shadow: 2px 2px 5px #000;
+  }
+
+  p {
+    font-size: 1.25rem;
+    color: #fefae0;
+    max-width: 850px;
+    margin: 0 auto;
+    text-shadow: 1px 1px 3px #000;
+  }
+}
+
+@keyframes aparecerSuave {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.rango-selector-epico {
+  position: relative;
+  background-color: #1c1916;
+  color: #f8f4e6;
+  font-family: "IM Fell English SC", serif;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("/assets/papertexture1.jpeg") center/cover no-repeat;
+    filter: sepia(1) hue-rotate(90deg) brightness(1) contrast(1.1) saturate(1.2);
+    z-index: 0;
+    opacity: 0.25;
+    pointer-events: none;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .tabla-rangos {
+    padding: 2rem 2rem 4rem;
+    overflow-x: auto;
+
+    .tabla-header {
+      display: grid;
+      grid-template-columns: 1fr repeat(3, 1fr);
+      gap: 1rem;
+      align-items: start;
+      margin-bottom: 1rem;
+
+      .columna-rango {
+        background: #282421;
+        padding: 1rem;
+        border: 2px solid #533928;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 0 10px #0005;
+        transition: transform 0.3s ease;
+
+        .imagen-rango {
+          max-width: 100%;
+          height: 120px;
+          object-fit: contain;
+          margin-bottom: 0.5rem;
+          transition: transform 0.3s ease;
+
+          &:hover {
+            transform: scale(1.2);
+          }
+        }
+
+        .nombre-rango {
+          font-size: 1.5rem;
+          color: #ffe7ad;
+          margin-bottom: 1rem;
+        }
+
+        .botones-compra {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+
+          .boton-compra {
+            background: #9e6b26;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px #0004;
+            transform: scale(1);
+
+            &:hover {
+              background: #c4863c;
+              transform: scale(1.03);
+            }
+
+            &.btn-30 {
+              background: #3b82f6;
+
+              &:hover {
+                background: #60a5fa;
+              }
+            }
+
+            &.btn-perma {
+              background: #2fb861;
+
+              &:hover {
+                background: #25c982;
+              }
+            }
+          }
+        }
+      }
+
+      .columna-rango:last-child {
+        box-shadow: inset 0 0 15px #ffd70055;
+        background-color: rgba(255, 255, 255, 0.015);
+        border: 2px solid #cfa74d;
+      }
+    }
+
+    .tabla-body {
+      display: grid;
+      grid-template-columns: 1fr repeat(3, 1fr);
+      gap: 1rem;
+
+      .fila-beneficio {
+        display: contents;
+
+        .beneficio-label {
+          background: linear-gradient(to right, #2b1f14, #3b2b1b);
+          border-left: 5px solid #d3a153;
+          border-right: 1px solid #4b3825;
+          padding: 1rem 1.25rem;
+          font-size: 1.15rem;
+          color: #ffe7ad;
+          text-shadow: 1px 1px 3px #000;
+          font-variant: small-caps;
+          box-shadow: inset 0 0 5px #00000055;
+
+          &:hover {
+            background: linear-gradient(to right, #3b2b1b, #2b1f14);
+            color: #fff3c2;
+          }
+        }
+
+        .beneficio-celda {
+          background: rgba(255, 255, 255, 0.025);
+          border: 1px solid #3a2f25;
+          padding: 0.85rem;
+          text-align: center;
+          font-size: 1rem;
+          color: #f5deb3;
+          font-weight: 500;
+
+          &:nth-child(odd) {
+            background-color: rgba(255, 255, 255, 0.02);
+          }
+
+          .icono-check {
+            width: 20px;
+            height: 20px;
+            filter: drop-shadow(1px 1px 2px #000);
+          }
+
+          .no-disponible {
+            color: #773c3c;
+            font-weight: bold;
+            font-size: 1.1rem;
+            opacity: 0.4;
+          }
+
+          .valor-num {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            font-weight: bold;
+
+            &.verde-economico {
+              color: #a8e05f;
+              text-shadow: 0 0 4px #4b682c;
+            }
+
+            &.azul-ecos {
+              color: #4fc3f7;
+              text-shadow: 0 0 4px #135d89;
+            }
+
+            &.amarillo-beneficio {
+              color: #fcd34d;
+              text-shadow: 0 0 4px #7c5b14;
+            }
+
+            &.violeta-keys {
+              color: #c084fc;
+              text-shadow: 0 0 4px #5a359c;
+            }
+
+            &.dorado-kit {
+              color: #f3d29c;
+              text-shadow: 0 0 4px #8a6f3d;
+            }
+          }
+
+          .kit-con-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-direction: row-reverse;
+
+            .kit-icono {
+              width: 22px;
+              height: 22px;
+              image-rendering: pixelated;
+              filter: drop-shadow(1px 1px 2px #0008);
+              transition: transform 0.3s ease;
+
+              &:hover {
+                transform: scale(1.15);
+              }
+            }
+          }
+        }
+      }
+
+      .fila-beneficio:not(:last-child) {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .beneficio-celda:last-child {
+        box-shadow: inset 0 0 10px #ffd95c33;
+        border: 1px solid #cfa74d;
+      }
+    }
+  }
+
+  // Animación monedas
+  @keyframes subirBajar {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-4px);
+    }
+  }
+
+  .eco-icono {
+    width: 18px;
+    height: 22px;
+    vertical-align: middle;
+    animation: subirBajar 1.6s ease-in-out infinite;
+    filter: drop-shadow(1px 1px 2px #0008);
+    transition: transform 0.2s ease-in-out;
+
+    &.derecha {
+      margin-left: 0.4rem;
+    }
+  }
+.eco-mini {
+  width: 18px;
+  height: 22px;
+  margin: 0 0.3rem;
+  vertical-align: middle;
+  image-rendering: pixelated;
+  filter: drop-shadow(1px 1px 1px #0006);
+  transform: translateY(-1px); // Ajuste fino para alinear mejor con texto
+  animation: subirBajar 1.6s ease-in-out infinite;
+  
+}
+
+  // Responsive
+  @media (max-width: 768px) {
+    .tabla-header,
+    .tabla-body {
+      grid-template-columns: 1fr;
+    }
+
+    .columna-rango {
+      margin-bottom: 2rem;
+    }
+
+    .fila-beneficio {
+      display: block;
+
+      .beneficio-label {
+        margin-top: 1rem;
+        text-align: center;
+      }
+
+      .beneficio-celda {
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+}

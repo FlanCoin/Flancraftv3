@@ -332,7 +332,62 @@
 
 }
 
+}.monedas-linea {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap; // importante para móviles
+  gap: 1rem;
+  margin-top: 0.5rem;
+
+  .eco-cantidad {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #ffe7ad;
+
+    img.icono-eco {
+      width: 24px;
+      height: 24px;
+      animation: pulse 1.5s infinite;
+    }
+  }
+
+  .botones-compras {
+    display: flex;
+    gap: 0.6rem;
+
+    a.btn-comprar {
+      background: #ffe7ad;
+      color: #4b2e12;
+      padding: 0.4rem 0.9rem;
+      font-weight: bold;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      box-shadow: 0 0 4px #00000055;
+      transition: transform 0.2s, box-shadow 0.2s;
+
+      &:hover {
+        transform: scale(1.03);
+        box-shadow: 0 0 8px #00000088;
+      }
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      width: 100%;
+
+      a.btn-comprar {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  }
 }
+
 
   .info-card {
     background: none;

@@ -56,15 +56,42 @@ const Home = () => {
       return () => window.removeEventListener("load", handleLoad);
     }
   }, []);
+    const mensajes = [
+    "Cargando el mundo de Flancraft..",
+    "Cargando aldeanos...",
+    "Encendiendo antorchas...",
+    "Reuniendo aventureros...",
+    "Forjando espadas legendarias...",
+    "Preparando cofres de recompensas...",
+    "Abriendo portales interdimensionales...",
+    "Generando chunks...",
+    "Asignando misiones secundarias...",
+    "Revisando magia antigua..."
+  ];
+  
+  const [mensajeCarga, setMensajeCarga] = useState(mensajes[0]);
+
+  useEffect(() => {
+    if (!isLoaded) {
+      let index = 1;
+      const interval = setInterval(() => {
+        setMensajeCarga(mensajes[index % mensajes.length]);
+        index++;
+      }, 2200); // cambia cada 2.2 segundos
+
+      return () => clearInterval(interval);
+    }
+  }, [isLoaded]);
+
 
   return (
     <>
       {!isLoaded && (
-        <div className="pantalla-carga">
-          <div className="loader-gema" />
-          <p>Cargando el mundo de Flancraft...</p>
-        </div>
-      )}
+  <div className="pantalla-carga">
+    <div className="loader-gema" />
+    <p>{mensajeCarga}</p>
+  </div>
+)}
 
       <div className={`home ${isLoaded ? "visible" : "invisible"}`}>
         <header className="hero-flancraft">

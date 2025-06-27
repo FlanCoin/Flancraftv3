@@ -106,19 +106,8 @@ const NavbarDesktop = ({
 
         <NavLink to="/leaderboards"><i className="fas fa-chart-line" /> Estadísticas</NavLink>
 
-        <div
-          className={`dropdown ${activeDropdown === 'mercado' ? 'show-dropdown' : ''}`}
-          onMouseEnter={() => handleDropdownHover('mercado')}
-          onMouseLeave={handleDropdownLeave}
-        >
-          <span className="dropdown-toggle">
-            <i className="fas fa-store" /> Mercado <i className="fas fa-chevron-down arrow-icon" />
-          </span>
-          <div className="dropdown-menu">
-            <NavLink to="/tienda"><i className="fas fa-gem" /> Store Servidor</NavLink>
-            <NavLink to="/tienda-merch"><i className="fas fa-shopping-bag" /> Merchandising</NavLink>
-          </div>
-        </div>
+<NavLink to="/tienda"><i className="fas fa-store" /> Mercado</NavLink>
+<NavLink to="/rangos"><i className="fas fa-medal" /> Rangos</NavLink>
 
         <NavLink to="/tribunal"><FaBalanceScale /> Tribunal</NavLink>
       </div>

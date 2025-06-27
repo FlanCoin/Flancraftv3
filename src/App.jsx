@@ -10,7 +10,7 @@ import AllNews from "./components/AllNews";
 import NewsDetail from "./components/NewsDetail";
 import DashboardPage from "./components/DashboardPage";
 import Tienda from './components/Tienda';
-
+import RangoSelectorAnimado from "./components/RangoSelectorAnimado";
 // Tribunal System
 import TribunalMain from "./pages/tribunal/TribunalMain";
 import TribunalAdmin from "./pages/tribunal/TribunalAdmin";
@@ -34,6 +34,7 @@ const App = () => {
         <Route path="/news" element={<AllNews />} />
         <Route path="/news/:slug" element={<NewsDetail />} />
         <Route path="/tienda" element={<Tienda />} />
+        <Route path="/rangos" element={<RangoSelectorAnimado />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/leaderboards" element={<LeaderboardsPage />} />
         <Route path="/admin" element={<GestionStaff />} />

@@ -64,6 +64,8 @@
       box-shadow: inset 0 -2px 0 #dcc38a, 0 5px 9px rgba(0, 0, 0, 0.25);
       transition: all 0.2s ease;
       text-decoration: none;
+      cursor: pointer !important;
+  user-select: none;
 
       i {
         font-size: 1rem;

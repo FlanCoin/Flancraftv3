@@ -121,25 +121,31 @@ export default function DashboardPage() {
                     <div className="monedas-bloque">
                       <p className="monedas-top">Saldo de FlanCraft</p>
                       <div className="monedas-linea">
-                        <div className="eco-cantidad">
-                          <span ref={ecosRef} id="contador-ecos">
-                            {user.monedas?.ecos || 0}
-                          </span>
-                          <img
-                            src="/assets/eco.png"
-                            alt="Eco"
-                            className="icono-eco pulse"
-                          />
-                        </div>
-                        <a
-                          href="https://store.flancraft.com/category/ecos"
-                          target="_blank"
-                          rel="noreferrer"
-                          className="btn-comprar"
-                        >
-                          Comprar ECOS
-                        </a>
-                      </div>
+  <div className="eco-cantidad">
+    <span ref={ecosRef} id="contador-ecos">
+      {user.monedas?.ecos || 0}
+    </span>
+    <img
+      src="/assets/eco.png"
+      alt="Eco"
+      className="icono-eco pulse"
+    />
+  </div>
+
+  <div className="botones-compras">
+    <a href="/rangos" className="btn-comprar">Comprar Rangos</a>
+    <a
+      href="https://store.flancraft.com/category/ecos"
+      target="_blank"
+      rel="noreferrer"
+      className="btn-comprar"
+    >
+      Comprar ECOS
+    </a>
+  </div>
+</div>
+
+
                     </div>
                   </div>
                 </div>
