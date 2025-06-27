@@ -40,14 +40,14 @@ const codexData = [
       "En un templo más allá del Nether, donde las leyes físicas lloran y las texturas respiran, Flan halló el Eco. Era una energía pura, viva, impaciente. No podía contenerse. No podía romperse. Solo resonar. Y él… resonó con ella.",
   },
     {
-    title: "El EKO Desatado",
+    title: "El ECO Desatado",
     subtitle: "Forma Suprema del Eco",
     badge: "Energía Absoluta",
     badgeColor: "#00ffff",
     bg: "/assets/comic/panel5.webp",
     thumb: "/assets/comic/panel5.webp",
     description:
-      "El Eco no se deja dominar. Pero si se estabiliza, si se purifica... cristaliza. Y de esa cristalización nace el EKO. Un núcleo de realidad, una fuente inagotable de creación. Con él, Flan reconstruyó el orden, y otros... comenzaron a desearlo.",
+      "El Eco no se deja dominar. Pero si se estabiliza, si se purifica... cristaliza. Y de esa cristalización nace el ECO. Un núcleo de realidad, una fuente inagotable de creación. Con él, Flan reconstruyó el orden, y otros... comenzaron a desearlo.",
   },
   {
     title: "El Mercado Interdimensional",
@@ -60,14 +60,14 @@ const codexData = [
       "En los registros ocultos del End, Flan descubrió el Mercado Interdimensional: un lugar fuera del tiempo donde todo tiene precio. Armaduras imposibles, portales extintos, poderes de dioses caídos. ¿La única moneda aceptada? Eco puro. Lo invisible hecho materia.",
   },
   {
-    title: "La Era del EKO",
+    title: "La Era del Eco",
     subtitle: "El Poder Tiene Precio",
     badge: "Moneda Suprema",
     badgeColor: "#00d2ff",
     bg: "/assets/comic/panel7.webp",
     thumb: "/assets/comic/panel7.webp",
     description:
-      "Hoy, el EKO es codiciado por todos. Quien lo posee, reescribe las normas del mundo. Es moneda, es magia, es llave. El que lo entienda, lo tendrá. Y solo a través del ritual, solo quienes recorren este camino... podrán reclamarlo.",
+      "Hoy, el ECO es codiciado por todos. Quien lo posee, reescribe las normas del mundo. Es moneda, es magia, es llave. El que lo entienda, lo tendrá. Y solo a través del ritual, solo quienes recorren este camino... podrán reclamarlo.",
   },
 ];
 

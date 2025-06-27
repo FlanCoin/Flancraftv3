@@ -1,4 +1,4 @@
-@use '../base/variables' as *;
+@use '../base/_variables' as *;
 
 .map-rpg-wrapper {
   width: 100%;
@@ -30,7 +30,7 @@
       font-size: 4rem;
       margin-bottom: 2.5rem;
       color: #fff8e1;
-      font-family: $font-minecraft;
+      font-family: $font-epic;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -98,7 +98,7 @@
         width: 280px;
         height: 500px;
         border-radius: 20px;
-        font-family: $font-minecraft;
+        font-family: $font-epic;
         background: #1a1008;
         border: 8px solid transparent;
         border-image: url('/assets/ui/border-frame-gold.png') 30 stretch;
@@ -159,7 +159,7 @@
           border-radius: 12px;
           font-size: 1rem;
           font-weight: 700;
-          font-family: $font-minecraft;
+          font-family: $font-epic;
           color: #fff2cc;
           line-height: 1.5;
           opacity: 0;
@@ -197,7 +197,7 @@
           }
 
           h3 {
-            font-size: 1.4rem;
+            font-size: 1rem;
             color: #ffffff;
             font-weight: bold;
             margin: 0;

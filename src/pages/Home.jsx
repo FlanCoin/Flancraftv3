@@ -113,11 +113,11 @@ const Home = () => {
             <div className="hero-logo flotando" role="img" aria-label="Flancraft logo" />
 
             <h1 className="titulo-epico-flancraft">
-              {"flancraft".split("").map((letra, i) => (
+              {"FLANCRAFT".split("").map((letra, i) => (
                 <span key={i}>{letra}</span>
               ))}
             </h1>
-            <p>Tu aventura empieza aquí. Explora, sube de nivel y deja tu legado en el mundo.</p>
+            <p>Tu aventura empieza aquí. Sube de nivel y deja tu legado en el mundo.</p>
 
             <ServerStatus />
 

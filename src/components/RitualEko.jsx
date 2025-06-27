@@ -158,7 +158,7 @@ useEffect(() => {
 
             <div className="eko-liquid-text">
               <HiBolt className="bolt-icon" />
-              {allViewed ? "Obtener EKO" : "Descubre el poder..."}
+              {allViewed ? "Obtener Eco" : "Descubre el poder..."}
             </div>
           </button>
         </div>

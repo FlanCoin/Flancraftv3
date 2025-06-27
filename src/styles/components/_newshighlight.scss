@@ -1,4 +1,4 @@
-@use "../base/variables" as *;
+@use "../base/_variables" as *;
 
 .news-inner {
   width: 100%;
@@ -6,14 +6,14 @@
   margin: 0 auto;
   padding: 0 0 2rem;
   text-align: center;
-  font-family: 'IM Fell English SC', serif;
+  font-family: $font-epic;
 
   .news-header {
     margin-bottom: 2.5rem;
 
     .news-title {
       font-size: 4rem;
-      font-family: $font-minecraft;
+      font-family: $font-epic;
       color: #2c1b0b;
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
