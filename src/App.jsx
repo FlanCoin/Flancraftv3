@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import LoginModal from "./components/Auth/LoginModal";
-
+import { Toaster } from "react-hot-toast";
 // Páginas públicas
 import Home from "./pages/Home";
 import AllNews from "./components/AllNews";
@@ -26,6 +26,7 @@ const App = () => {
   return (
     <>
       <Navbar onLoginClick={() => setShowLogin(true)} />
+        <Toaster position="top-center" reverseOrder={false} />
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
 
       <Routes>
