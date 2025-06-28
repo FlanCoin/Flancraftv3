@@ -165,7 +165,7 @@ export default function RangoSelectorAnimado() {
   const [modo, setModo] = useState("perma");
   const [rangoSeleccionado, setRangoSeleccionado] = useState(null);
   const [confirmando, setConfirmando] = useState(false);
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   const handleComprar = (rango, tipo) => {
     const precio = tipo === "30d" ? rango.precio30d : rango.precioPerma;
@@ -182,34 +182,42 @@ export default function RangoSelectorAnimado() {
   };
 
   const confirmarCompra = async () => {
-    if (!rangoSeleccionado) return;
-    const { rango, tipo, precio } = rangoSeleccionado;
+  if (!rangoSeleccionado) return;
+  const { rango, tipo, precio } = rangoSeleccionado;
 
-    try {
-      const res = await fetch("/api/comprar-rango", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify({
-          uuid: user.uuid,
-          rango: rango.id,
-          tipo,
-          precio,
-        }),
-      });
+  try {
+    const res = await fetch("https://flancraftweb-backend.onrender.com/api/rangos/comprar-rango", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: JSON.stringify({
+        uuid: user.uuid,
+        rango: rango.id,
+        tipo,
+        precio,
+      }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error || "Error al comprar el rango");
 
-      if (!res.ok) throw new Error(data?.error || "Error al comprar el rango");
+    toast.success(`¡Has comprado el rango ${rango.nombre} (${tipo})!`);
+    setConfirmando(false);
 
-      toast.success(`¡Has comprado el rango ${rango.nombre} (${tipo})!`);
-      setConfirmando(false);
-    } catch (err) {
-      toast.error("Hubo un problema al procesar la compra.");
-    }
-  };
+    // ✅ Actualiza los ECOS visualmente sin recargar
+    setUser({
+      ...user,
+      ecos: user.ecos - precio,
+    });
+  } catch (err) {
+    console.error("Error en la compra:", err);
+    toast.error("Hubo un problema al procesar la compra.");
+  }
+};
+
+
 
   return (
     <section className="rango-selector-epico">

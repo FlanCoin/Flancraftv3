@@ -369,6 +369,100 @@
   }
 }
 
+.modal-compra {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeInModal 0.3s ease-out;
+
+  .modal-contenido {
+    background: linear-gradient(135deg, #2e1e0f, #3d2c1c);
+    border: 3px solid #c8a96b;
+    border-radius: 12px;
+    padding: 2rem 2.5rem;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    font-family: "IM Fell English SC", serif;
+    color: #ffeac2;
+    box-shadow: 0 0 25px #00000088;
+    animation: scaleUp 0.4s ease;
+
+    h3 {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      color: #ffe599;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 1.8rem;
+      line-height: 1.5;
+    }
+
+    .btn-confirmar,
+    .btn-cancelar {
+      font-family: inherit;
+      padding: 0.6rem 1.4rem;
+      margin: 0 0.4rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 10px #00000055;
+    }
+
+    .btn-confirmar {
+      background-color: #3bbf5e;
+      color: #fff;
+
+      &:hover {
+        background-color: #33a654;
+        transform: scale(1.05);
+      }
+    }
+
+    .btn-cancelar {
+      background-color: #bf3b3b;
+      color: #fff;
+
+      &:hover {
+        background-color: #a63333;
+        transform: scale(1.05);
+      }
+    }
+  }
+}
+
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.92);
+    opacity: 0.5;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 
 
 
