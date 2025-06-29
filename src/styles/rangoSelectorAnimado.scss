@@ -783,3 +783,136 @@
     }
   }
 }
+@media (max-width: 380px) {
+  .rango-selector-epico {
+
+    max-width: 100vw;
+    overflow-x: hidden !important;
+  }
+
+  .rango-banner-hero {
+    background-position: center -40px;
+
+  }
+
+  .banner-overlay {
+    padding: 0.8rem;
+    max-width: 100%;
+    margin: 0;
+
+    h1 {
+      font-size: 1.4rem;
+      line-height: 1.1;
+    }
+
+    p {
+      font-size: 0.85rem;
+      line-height: 1.25;
+    }
+  }
+
+  .modo-toggle {
+    flex-direction: column;
+    gap: 0.6rem;
+
+    button {
+      width: 100%;
+      font-size: 0.95rem;
+      padding: 0.35rem 0.6rem;
+    }
+  }
+
+  .tabla-rangos {
+    padding: 0 !important;
+
+    .tabla-header {
+      margin-bottom: 0rem !important; 
+
+      .columna-rango {
+        padding: 0.8rem !important;
+        margin: 0.6rem 0;
+        .imagen-rango {
+          max-width: 52px;
+        }
+
+        .nombre-rango {
+          font-size: 0.9rem !important;
+        }
+
+        .botones-compra {
+          .boton-compra {
+            font-size: 0.85rem !important;
+            padding: 0.3rem 0.5rem;
+          }
+        }
+      }
+    }
+
+    .tabla-body {
+      .fila-beneficio {
+        .beneficio-label {
+          font-size: 0.85rem !important;
+          padding: 0.4rem !important;
+        }
+
+        .beneficio-celda-group {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 0.25rem;
+          padding: 0 0.1rem;
+
+          .beneficio-celda {
+            font-size: 0.75rem !important;
+            line-height: 1.2 !important;
+
+            .valor-num {
+              font-size: 0.85rem !important;
+            }
+
+            .kit-icono {
+              width: 16px !important;
+              height: 16px !important;
+            }
+          }
+        }
+      }
+
+      .fila-comida {
+        .beneficio-celda-group {
+          .beneficio-celda {
+            font-size: 0.65rem !important;
+          }
+        }
+      }
+    }
+  }
+
+  .etiqueta-popular {
+    top: 3rem;
+    right: -0.8rem;
+    width: 6rem;
+    font-size: 0.45rem;
+    padding: 0.3rem 0;
+  }
+
+  .modal-compra {
+    .modal-contenido {
+      padding: 0.8rem;
+      max-width: 95%;
+      font-size: 0.85rem;
+
+      h3 {
+        font-size: 1.2rem;
+      }
+
+      p {
+        font-size: 0.85rem;
+      }
+
+      .btn-confirmar,
+      .btn-cancelar {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.6rem;
+      }
+    }
+  }
+}
