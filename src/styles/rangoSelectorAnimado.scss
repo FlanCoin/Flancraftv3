@@ -118,6 +118,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
+      position: relative;
+      overflow: hidden;
 
       .imagen-rango {
         width: 100%;
@@ -575,6 +577,28 @@
     opacity: 0.3;
   }
 }
+.etiqueta-popular {
+  position: absolute;
+  top: 5rem;
+  right: -2rem;
+  width: 10rem;
+  text-align: center;
+  background-color: #d4af37; // dorado
+  color: #1c1409;
+  font-weight: bold;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  padding: 0.5rem 0;
+  transform: rotate(45deg);
+  transform-origin: top right;
+  z-index: 10;
+  box-shadow: 0 0 5px #0006;
+  border-radius: 4px;
+  pointer-events: none;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 
 @media (max-width: 480px) {
   .rango-selector-epico {
@@ -729,7 +753,14 @@
       }
     }
   }
-
+.etiqueta-popular {
+  top: 4rem;
+  right: -1rem;
+  width: 7rem;
+  font-size: 0.5rem;
+  padding: 0.35rem 0;
+  transform: rotate(45deg);
+}
   .modal-compra {
     .modal-contenido {
       padding: 1rem;

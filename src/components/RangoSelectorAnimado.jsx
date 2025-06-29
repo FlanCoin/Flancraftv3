@@ -240,11 +240,14 @@ export default function RangoSelectorAnimado() {
     const rango = RANGOS.find(r => r.id === id);
     return (
       <div
-        key={rango.id}
-        className={`columna-rango ${rango.id === "inmortal" ? "resaltado" : ""}`}
-      >
-        <img src={rango.imagen} alt={`Rango ${rango.nombre}`} className="imagen-rango" />
-        <h2 className="nombre-rango">{rango.nombre}</h2>
+  key={rango.id}
+  className={`columna-rango ${rango.id === "inmortal" ? "resaltado" : ""}`}
+>
+  {rango.id === "inmortal" && (
+    <span className="etiqueta-popular">MÁS COMPRADO</span>
+  )}
+  <img src={rango.imagen} alt={`Rango ${rango.nombre}`} className="imagen-rango" />
+  <h2 className="nombre-rango">{rango.nombre}</h2>
         <div className="botones-compra">
           {modo === "30d" ? (
             <button className="boton-compra btn-30" onClick={() => handleComprar(rango, "30d")}>
