@@ -141,6 +141,8 @@ const RANGOS = [
   }
 ];
 
+const RANGOS_ORDENADOS = ["nova", "alpha", "inmortal"];
+
 const FILAS = [
   { clave: "prefijo", label: "Prefijo personalizado en chat y TAB" },
   { clave: "acceso_lleno", label: "Acceso cuando el servidor está lleno" },
@@ -166,6 +168,7 @@ export default function RangoSelectorAnimado() {
   const [rangoSeleccionado, setRangoSeleccionado] = useState(null);
   const [confirmando, setConfirmando] = useState(false);
   const { user, setUser } = useContext(UserContext);
+  const [comprando, setComprando] = useState(false);
 
   const handleComprar = (rango, tipo) => {
     const precio = tipo === "30d" ? rango.precio30d : rango.precioPerma;
@@ -182,42 +185,37 @@ export default function RangoSelectorAnimado() {
   };
 
   const confirmarCompra = async () => {
-  if (!rangoSeleccionado) return;
-  const { rango, tipo, precio } = rangoSeleccionado;
+    if (!rangoSeleccionado) return;
+    const { rango, tipo, precio } = rangoSeleccionado;
+    setComprando(true);
+    try {
+      const res = await fetch("https://flancraftweb-backend.onrender.com/api/rangos/comprar-rango", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({
+          uuid: user.uuid,
+          rango: rango.id,
+          tipo,
+          precio,
+        }),
+      });
 
-  try {
-    const res = await fetch("https://flancraftweb-backend.onrender.com/api/rangos/comprar-rango", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`,
-      },
-      body: JSON.stringify({
-        uuid: user.uuid,
-        rango: rango.id,
-        tipo,
-        precio,
-      }),
-    });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Error al comprar el rango");
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data?.error || "Error al comprar el rango");
-
-    toast.success(`¡Has comprado el rango ${rango.nombre} (${tipo})!`);
-    setConfirmando(false);
-
-    // ✅ Actualiza los ECOS visualmente sin recargar
-    setUser({
-      ...user,
-      ecos: user.ecos - precio,
-    });
-  } catch (err) {
-    console.error("Error en la compra:", err);
-    toast.error("Hubo un problema al procesar la compra.");
-  }
-};
-
-
+      toast.success(`¡Has comprado el rango ${rango.nombre} (${tipo})!`);
+      setConfirmando(false);
+      setUser({ ...user, ecos: user.ecos - precio });
+    } catch (err) {
+      console.error("Error en la compra:", err);
+      toast.error("Hubo un problema al procesar la compra.");
+    } finally {
+      setComprando(false);
+    }
+  };
 
   return (
     <section className="rango-selector-epico">
@@ -237,88 +235,101 @@ export default function RangoSelectorAnimado() {
 
       <div className="tabla-rangos">
         <div className="tabla-header">
-          <div className="columna-beneficios"></div>
-          {RANGOS.map((rango) => (
-            <div key={rango.id} className="columna-rango">
-              <img src={rango.imagen} alt={`Rango ${rango.nombre}`} className="imagen-rango" />
-              <h2 className="nombre-rango">{rango.nombre}</h2>
-              <div className="botones-compra">
-                {modo === "30d" ? (
-                  <button className="boton-compra btn-30" onClick={() => handleComprar(rango, "30d")}>
-                    {rango.precio30d}
-                    <img src="/assets/eco.png" alt="eco" className="eco-mini" /> 30 Días
-                  </button>
-                ) : (
-                  <button className="boton-compra btn-perma" onClick={() => handleComprar(rango, "perma")}>
-                    {rango.precioPerma}
-                    <img src="/assets/eco.png" alt="eco" className="eco-mini" /> Permanente
-                  </button>
-                )}
-              </div>
-            </div>
-          ))}
+  <div className="beneficio-label encabezado"></div>
+  {RANGOS_ORDENADOS.map((id) => {
+    const rango = RANGOS.find(r => r.id === id);
+    return (
+      <div
+        key={rango.id}
+        className={`columna-rango ${rango.id === "inmortal" ? "resaltado" : ""}`}
+      >
+        <img src={rango.imagen} alt={`Rango ${rango.nombre}`} className="imagen-rango" />
+        <h2 className="nombre-rango">{rango.nombre}</h2>
+        <div className="botones-compra">
+          {modo === "30d" ? (
+            <button className="boton-compra btn-30" onClick={() => handleComprar(rango, "30d")}>
+              {rango.precio30d} <img src="/assets/eco.png" alt="eco" className="eco-mini" /> 30 Días
+            </button>
+          ) : (
+            <button className="boton-compra btn-perma" onClick={() => handleComprar(rango, "perma")}>
+              {rango.precioPerma} <img src="/assets/eco.png" alt="eco" className="eco-mini" /> Permanente
+            </button>
+          )}
         </div>
+      </div>
+    );
+  })}
+</div>
+
 
         <div className="tabla-body">
           {FILAS.map((fila) => (
-            <div key={fila.clave} className="fila-beneficio">
+            <div
+  key={fila.clave}
+  className={`fila-beneficio ${fila.clave === "comida" ? "fila-comida" : ""}`}
+>
               <div className="beneficio-label">{fila.label}</div>
-              {RANGOS.map((rango) => {
-                const valor = rango[`beneficios_${modo}`][fila.clave];
-                const claseColor = fila.clave === "dinero"
-                  ? "verde-economico"
-                  : fila.clave === "ecos"
-                    ? "azul-ecos"
-                    : ["sethomes", "subastas", "warps", "tiendas"].includes(fila.clave)
-                      ? "amarillo-beneficio"
-                      : ["keys_survival", "keys_oneblock"].includes(fila.clave)
-                        ? "violeta-keys"
-                        : ["kit", "comida"].includes(fila.clave)
-                          ? "dorado-kit"
-                          : "";
+              <div className="beneficio-celda-group">
+                {RANGOS_ORDENADOS.map((id) => {
+                  const rango = RANGOS.find(r => r.id === id);
+                  const valor = rango[`beneficios_${modo}`][fila.clave];
+                  const claseColor = fila.clave === "dinero"
+                    ? "verde-economico"
+                    : fila.clave === "ecos"
+                      ? "azul-ecos"
+                      : ["sethomes", "subastas", "warps", "tiendas"].includes(fila.clave)
+                        ? "amarillo-beneficio"
+                        : ["keys_survival", "keys_oneblock"].includes(fila.clave)
+                          ? "violeta-keys"
+                          : ["kit", "comida"].includes(fila.clave)
+                            ? "dorado-kit"
+                            : "";
 
-                const claseCheck = fila.clave.includes("avanzados")
-                  ? "check-avanzado"
-                  : fila.clave.includes("extra")
-                    ? "check-extra"
-                    : "check-basico";
+                  const claseCheck = fila.clave.includes("avanzados")
+                    ? "check-avanzado"
+                    : fila.clave.includes("extra")
+                      ? "check-extra"
+                      : "check-basico";
 
-                return (
-                  <div key={rango.id + fila.clave} className="beneficio-celda">
-                    {typeof valor === "boolean" ? (
-                      valor ? (
-                        <img src="/assets/check.png" alt="Sí" className={`icono-check ${claseCheck}`} />
+                  return (
+                    <div key={rango.id + fila.clave} className="beneficio-celda">
+                      {typeof valor === "boolean" ? (
+                        valor ? (
+                          <img src="/assets/check.png" alt="Sí" className={`icono-check ${claseCheck}`} />
+                        ) : (
+                          <span className="no-disponible">X</span>
+                        )
+                      ) : fila.clave === "ecos" ? (
+                        <span className={`valor-num ${claseColor}`}>
+                          {valor}
+                          {Array.from({
+                            length: rango.id === "inmortal" ? 3 : rango.id === "alpha" ? 2 : 1,
+                          }).map((_, i) => (
+                            <img key={i} src="/assets/eco.png" alt="ECOS" className="eco-icono derecha" />
+                          ))}
+                        </span>
+                      ) : fila.clave === "kit" ? (
+                        <div className="kit-con-icono">
+                          <img
+                            src={
+                              valor.toLowerCase().includes("op")
+                                ? "/assets/netheritafull.png"
+                                : valor.toLowerCase().includes("netherita")
+                                  ? "/assets/netherita.png"
+                                  : "/assets/diamante.png"
+                            }
+                            alt="Kit Icon"
+                            className="kit-icono"
+                          />
+                          <span className={`valor-num ${claseColor}`}>{valor}</span>
+                        </div>
                       ) : (
-                        <span className="no-disponible">X</span>
-                      )
-                    ) : fila.clave === "ecos" ? (
-                      <span className={`valor-num ${claseColor}`}>
-                        {valor}
-                        {Array.from({ length: rango.id === "inmortal" ? 3 : rango.id === "alpha" ? 2 : 1 }).map((_, i) => (
-                          <img key={i} src="/assets/eco.png" alt="ECOS" className="eco-icono derecha" />
-                        ))}
-                      </span>
-                    ) : fila.clave === "kit" ? (
-                      <div className="kit-con-icono">
-                        <img
-                          src={
-                            valor.toLowerCase().includes("op")
-                              ? "/assets/netheritafull.png"
-                              : valor.toLowerCase().includes("netherita")
-                                ? "/assets/netherita.png"
-                                : "/assets/diamante.png"
-                          }
-                          alt="Kit Icon"
-                          className="kit-icono"
-                        />
                         <span className={`valor-num ${claseColor}`}>{valor}</span>
-                      </div>
-                    ) : (
-                      <span className={`valor-num ${claseColor}`}>{valor}</span>
-                    )}
-                  </div>
-                );
-              })}
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           ))}
         </div>
@@ -326,17 +337,30 @@ export default function RangoSelectorAnimado() {
 
       {confirmando && rangoSeleccionado && (
         <div className="modal-compra">
-          <div className="modal-contenido">
+          <div className={`modal-contenido ${comprando ? "cargando" : ""}`}>
             <h3>¿Confirmar compra?</h3>
             <p>
-              Vas a comprar el rango{" "}
-              <strong>{rangoSeleccionado.rango.nombre}</strong> (
-              {rangoSeleccionado.tipo}) por{" "}
-              <strong>{rangoSeleccionado.precio} ECOS</strong>
+              Vas a comprar el rango <strong>{rangoSeleccionado.rango.nombre}</strong> (
+              {rangoSeleccionado.tipo}) por <strong>{rangoSeleccionado.precio} ECOS</strong>
             </p>
-            <button className="btn-confirmar" onClick={confirmarCompra}>Confirmar</button>
+            <button
+              className={`btn-confirmar ${comprando ? "deshabilitado" : ""}`}
+              onClick={confirmarCompra}
+              disabled={comprando}
+            >
+              {comprando ? "Procesando..." : "Confirmar"}
+            </button>
             <button className="btn-cancelar" onClick={() => setConfirmando(false)}>Cancelar</button>
           </div>
+        </div>
+      )}
+
+      {comprando && (
+        <div className="overlay-conjuro">
+          <div className="circulo-magico" />
+          <div className="chispa chispa1" />
+          <div className="chispa chispa2" />
+          <div className="chispa chispa3" />
         </div>
       )}
     </section>
