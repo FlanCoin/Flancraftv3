@@ -45,7 +45,18 @@ const RANGOS = [
       materiales: true,
       kit: "Diamante encantado",
       comida: "16 Zanahorias doradas"
-    }
+    },
+    kit_detallado: [
+      "Casco de Diamante (Respiración 3, Protección 3, Irrompibilidad 3, Reparación 1)",
+      "Pechera de Diamante (Protección 3, Irrompibilidad 3, Reparación 1)",
+      "Pantalones de Diamante (Protección 3, Irrompibilidad 3, Reparación 1)",
+      "Botas de Diamante (Protección 3, Irrompibilidad 3, Reparación 1)",
+      "Espada de Diamante (Filo 3, Botín 3, Irrompibilidad 3, Reparación 1)",
+      "Pico de Diamante (Eficiencia 2, Fortuna 2, Irrompibilidad 2, Reparación 2)",
+      "Hacha de Diamante (Eficiencia 2, Irrompibilidad 2, Reparación 1)",
+      "Pala de Diamante (Eficiencia 2, Irrompibilidad 2, Reparación 1)",
+      "Azada de Diamante (Eficiencia 2, Irrompibilidad 2, Reparación 1)"
+    ]
   },
   {
     id: "alpha",
@@ -88,7 +99,19 @@ const RANGOS = [
       materiales: true,
       kit: "Netherita full",
       comida: "64 Manzanas doradas"
-    }
+    },
+    kit_detallado: [
+      "Casco de Netherita (Respiración 5, Protección 5, Irrompibilidad 5, Reparación 1, Espinas 3)",
+      "Pechera de Netherita (Protección 5, Irrompibilidad 5, Reparación 1, Espinas 3)",
+      "Pantalones de Netherita (Protección 5, Irrompibilidad 5, Reparación 1, Espinas 3)",
+      "Botas de Netherita (Protección 5, Irrompibilidad 5, Reparación 1, Espinas 3)",
+      "Espada de Netherita (Filo 5, Barrido 2, Aspecto Ígneo 2, Botín 5, Irrompibilidad 5, Reparación 1)",
+      "Pico de Netherita (Eficiencia 5, Fortuna 5, Irrompibilidad 5, Reparación 1)",
+      "Pico de Netherita (Eficiencia 5, Toque de Seda 1, Irrompibilidad 5, Reparación 1)",
+      "Hacha de Netherita (Eficiencia 5, Irrompibilidad 5, Reparación 1)",
+      "Pala de Netherita (Eficiencia 5, Irrompibilidad 5, Reparación 1)",
+      "Azada de Netherita (Eficiencia 5, Irrompibilidad 5, Reparación 1)"
+    ]
   },
   {
     id: "inmortal",
@@ -131,7 +154,19 @@ const RANGOS = [
       materiales: true,
       kit: "Netherita OP",
       comida: "16 Manzanas encantadas"
-    }
+    },
+    kit_detallado: [
+      "Casco de Netherita (Respiración 6, Protección 6, Irrompibilidad 6, Reparación 1, Espinas 6)",
+      "Pechera de Netherita (Protección 6, Irrompibilidad 6, Reparación 1, Espinas 6)",
+      "Pantalones de Netherita (Protección 6, Irrompibilidad 6, Reparación 1, Espinas 6)",
+      "Botas de Netherita (Protección 6, Irrompibilidad 6, Reparación 1, Espinas 6)",
+      "Espada de Netherita (Filo 6, Barrido 3, Aspecto Ígneo 3, Botín 6, Irrompibilidad 6, Reparación 1)",
+      "Pico de Netherita (Eficiencia 6, Fortuna 6, Irrompibilidad 6, Reparación 1)",
+      "Pico de Netherita (Eficiencia 6, Toque de Seda 1, Irrompibilidad 6, Reparación 1)",
+      "Hacha de Netherita (Eficiencia 6, Irrompibilidad 6, Reparación 1)",
+      "Pala de Netherita (Eficiencia 6, Irrompibilidad 6, Reparación 1)",
+      "Azada de Netherita (Eficiencia 6, Irrompibilidad 6, Reparación 1)"
+    ]
   }
 ];
 
@@ -157,14 +192,15 @@ const FILAS = [
   { clave: "comandos_avanzados", label: "Comandos avanzados (/fly, /repairall...)" }
 ];
 
-export default function RangoSelectorAnimado() {
+function RangoSelectorAnimado() {
   const [modo, setModo] = useState("perma");
   const [precios, setPrecios] = useState({});
   const [rangoSeleccionado, setRangoSeleccionado] = useState(null);
   const [confirmando, setConfirmando] = useState(false);
   const [comprando, setComprando] = useState(false);
   const { user, setUser } = useContext(UserContext);
-
+  const [kitDesplegado, setKitDesplegado] = useState(null);
+  
     useEffect(() => {
     const fetchPrecios = async () => {
       try {
@@ -223,15 +259,21 @@ export default function RangoSelectorAnimado() {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Error al comprar el rango");
 
-      toast.custom((t) => (
-  <div className={`toast-rango-compra ${t.visible ? "mostrar" : ""}`}>
-    <img src={rango.imagen} alt={rango.nombre} className="toast-rango-imagen" />
-    <div className="toast-rango-texto">
-      <strong>¡Has desbloqueado el rango {rango.nombre}!</strong>
-      <span>{tipo === "perma" ? "Permanente" : "30 días"} por {precios[rango.id][tipo]} <img src="/assets/eco.png" alt="ECOS" className="eco-mini-inline" /></span>
+     toast.custom((t) => {
+  return (
+    <div className={`toast-rango-compra ${t.visible ? "mostrar" : ""}`}>
+      <img src={rango.imagen} alt={rango.nombre} className="toast-rango-imagen" />
+      <div className="toast-rango-texto">
+        <strong>¡Has desbloqueado el rango {rango.nombre}!</strong>
+        <span>
+          {tipo === "perma" ? "Permanente" : "30 días"} por {precios[rango.id][tipo]}{" "}
+          <img src="/assets/eco.png" alt="ECOS" className="eco-mini-inline" />
+        </span>
+      </div>
     </div>
-  </div>
-));
+  );
+});
+
       setConfirmando(false);
       if (data.nuevoSaldo !== undefined) {
         setUser({ ...user, ecos: data.nuevoSaldo });
@@ -243,8 +285,7 @@ export default function RangoSelectorAnimado() {
       setComprando(false);
     }
   };
-
-  return (
+ return (
     <section className="rango-selector-epico">
       <div className="rango-banner-hero">
         <div className="banner-overlay">
@@ -291,123 +332,155 @@ export default function RangoSelectorAnimado() {
           })}
         </div>
 
-
         <div className="tabla-body">
-          {FILAS.map((fila) => (
-            <div
-  key={fila.clave}
-  className={`fila-beneficio ${fila.clave === "comida" ? "fila-comida" : ""}`}
->
-              <div className="beneficio-label">{fila.label}</div>
-              <div className="beneficio-celda-group">
-                {RANGOS_ORDENADOS.map((id) => {
-                  const rango = RANGOS.find(r => r.id === id);
-                  const valor = rango[`beneficios_${modo}`][fila.clave];
-                  const claseColor = fila.clave === "dinero"
-                    ? "verde-economico"
-                    : fila.clave === "ecos"
-                      ? "azul-ecos"
-                      : ["sethomes", "subastas", "warps", "tiendas"].includes(fila.clave)
-                        ? "amarillo-beneficio"
-                        : ["keys_survival", "keys_oneblock"].includes(fila.clave)
-                          ? "violeta-keys"
-                          : ["kit", "comida"].includes(fila.clave)
-                            ? "dorado-kit"
-                            : "";
+          {FILAS.map((fila) => {
+            const esFilaKit = fila.clave === "kit";
+            return (
+              <div key={fila.clave}>
+                <div className={`fila-beneficio ${fila.clave === "comida" ? "fila-comida" : ""}`}>
+                  <div className="beneficio-label">{fila.label}</div>
+                  <div className="beneficio-celda-group">
+                    {RANGOS_ORDENADOS.map((id) => {
+                      const rango = RANGOS.find(r => r.id === id);
+                      const valor = rango[`beneficios_${modo}`][fila.clave];
+                      const claseColor = fila.clave === "dinero"
+                        ? "verde-economico"
+                        : fila.clave === "ecos"
+                          ? "azul-ecos"
+                          : ["sethomes", "subastas", "warps", "tiendas"].includes(fila.clave)
+                            ? "amarillo-beneficio"
+                            : ["keys_survival", "keys_oneblock"].includes(fila.clave)
+                              ? "violeta-keys"
+                              : ["kit", "comida"].includes(fila.clave)
+                                ? "dorado-kit"
+                                : "";
 
-                  const claseCheck = fila.clave.includes("avanzados")
-                    ? "check-avanzado"
-                    : fila.clave.includes("extra")
-                      ? "check-extra"
-                      : "check-basico";
+                      const claseCheck = fila.clave.includes("avanzados")
+                        ? "check-avanzado"
+                        : fila.clave.includes("extra")
+                          ? "check-extra"
+                          : "check-basico";
 
-                  return (
-                    <div key={rango.id + fila.clave} className="beneficio-celda">
-                      {typeof valor === "boolean" ? (
-                        valor ? (
-                          <img src="/assets/check.png" alt="Sí" className={`icono-check ${claseCheck}`} />
-                        ) : (
-                          <span className="no-disponible">X</span>
-                        )
-                      ) : fila.clave === "ecos" ? (
-                        <span className={`valor-num ${claseColor}`}>
-                          {valor}
-                          {Array.from({
-                            length: rango.id === "inmortal" ? 3 : rango.id === "alpha" ? 2 : 1,
-                          }).map((_, i) => (
-                            <img key={i} src="/assets/eco.png" alt="ECOS" className="eco-icono derecha" />
-                          ))}
-                        </span>
-                      ) : fila.clave === "kit" ? (
-                        <div className="kit-con-icono">
-                          <img
-                            src={
-                              valor.toLowerCase().includes("op")
-                                ? "/assets/netheritafull.png"
-                                : valor.toLowerCase().includes("netherita")
-                                  ? "/assets/netherita.png"
-                                  : "/assets/diamante.png"
-                            }
-                            alt="Kit Icon"
-                            className="kit-icono"
-                          />
-                          <span className={`valor-num ${claseColor}`}>{valor}</span>
+                      return (
+                        <div key={rango.id + fila.clave} className="beneficio-celda">
+                          {typeof valor === "boolean" ? (
+                            valor ? (
+                              <img src="/assets/check.png" alt="Sí" className={`icono-check ${claseCheck}`} />
+                            ) : (
+                              <span className="no-disponible">X</span>
+                            )
+                          ) : fila.clave === "ecos" ? (
+                            <span className={`valor-num ${claseColor}`}>
+                              {valor}
+                              {Array.from({ length: rango.id === "inmortal" ? 3 : rango.id === "alpha" ? 2 : 1 }).map((_, i) => (
+                                <img key={i} src="/assets/eco.png" alt="ECOS" className="eco-icono derecha" />
+                              ))}
+                            </span>
+                          ) : fila.clave === "kit" ? (
+                            <div className="kit-con-icono">
+                              <img
+                                src={
+                                  valor.toLowerCase().includes("op")
+                                    ? "/assets/netheritafull.png"
+                                    : valor.toLowerCase().includes("netherita")
+                                      ? "/assets/netherita.png"
+                                      : "/assets/diamante.png"
+                                }
+                                alt="Kit Icon"
+                                className="kit-icono"
+                              />
+                              <span
+                                className={`valor-num ${claseColor} kit-desplegable-toggle`}
+                                onClick={() => setKitDesplegado(kitDesplegado ? null : "todos")}
+
+                                style={{ cursor: "pointer" }}
+                              >
+                                {valor} ▼
+                              </span>
+                            </div>
+                          ) : (
+                            <span className={`valor-num ${claseColor}`}>{valor}</span>
+                          )}
                         </div>
-                      ) : (
-                        <span className={`valor-num ${claseColor}`}>{valor}</span>
-                      )}
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {esFilaKit && kitDesplegado && (
+                  <div className="fila-kit-detallado">
+                    <div className="beneficio-label"></div>
+                    <div className="beneficio-celda-group">
+                      {RANGOS_ORDENADOS.map((id) => {
+                        const rango = RANGOS.find(r => r.id === id);
+                        return (
+                          <div key={id + "_kitdetalle"} className="beneficio-celda">
+                            {kitDesplegado ? (
+                              <ul className="kit-detalle-lista">
+                                {rango.kit_detallado?.map((item, index) => (
+                                  <li key={index}>{item}</li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <span className="kit-detalle-vacio">—</span>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
-                  );
-                })}
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
-    {confirmando && rangoSeleccionado && (
-          <div className="modal-compra">
-            <div className={`modal-contenido ${comprando ? "cargando" : ""}`}>
-              <h3 className="modal-titulo">Compra de rango</h3>
-              <div className="modal-desglose">
-                <p className="modal-texto">Vas a desbloquear el rango</p>
-                <div className="modal-rango-linea">
-                  <img src={rangoSeleccionado.rango.imagen} alt={rangoSeleccionado.rango.nombre} className="modal-rango-icono" />
-                  <span className="modal-rango-nombre">{rangoSeleccionado.rango.nombre}</span>
-                  <span className="modal-rango-tipo">
-                    ({rangoSeleccionado.tipo === "perma" ? "Permanente" : "30 días"})
-                  </span>
-                </div>
-                {precios?.[rangoSeleccionado.rango.id]?.[rangoSeleccionado.tipo] !== undefined && (
-                  <p className="modal-texto">
-                    por <span className="modal-ecos">{precios[rangoSeleccionado.rango.id][rangoSeleccionado.tipo]}</span>{" "}
-                    <img src="/assets/eco.png" alt="ECOS" className="eco-mini" />
-                  </p>
-                )}
+      {confirmando && rangoSeleccionado && (
+        <div className="modal-compra">
+          <div className={`modal-contenido ${comprando ? "cargando" : ""}`}>
+            <h3 className="modal-titulo">Compra de rango</h3>
+            <div className="modal-desglose">
+              <p className="modal-texto">Vas a desbloquear el rango</p>
+              <div className="modal-rango-linea">
+                <img src={rangoSeleccionado.rango.imagen} alt={rangoSeleccionado.rango.nombre} className="modal-rango-icono" />
+                <span className="modal-rango-nombre">{rangoSeleccionado.rango.nombre}</span>
+                <span className="modal-rango-tipo">
+                  ({rangoSeleccionado.tipo === "perma" ? "Permanente" : "30 días"})
+                </span>
               </div>
+              {precios?.[rangoSeleccionado.rango.id]?.[rangoSeleccionado.tipo] !== undefined && (
+                <p className="modal-texto">
+                  por <span className="modal-ecos">{precios[rangoSeleccionado.rango.id][rangoSeleccionado.tipo]}</span>{" "}
+                  <img src="/assets/eco.png" alt="ECOS" className="eco-mini" />
+                </p>
+              )}
+            </div>
 
-              <div className="modal-botones">
-                <button
-                  className={`btn-confirmar ${comprando ? "deshabilitado" : ""}`}
-                  onClick={confirmarCompra}
-                  disabled={comprando}
-                >
-                  {comprando ? "Procesando..." : "Confirmar compra"}
-                </button>
-                <button className="btn-cancelar" onClick={() => setConfirmando(false)}>Cancelar</button>
-              </div>
+            <div className="modal-botones">
+              <button
+                className={`btn-confirmar ${comprando ? "deshabilitado" : ""}`}
+                onClick={confirmarCompra}
+                disabled={comprando}
+              >
+                {comprando ? "Procesando..." : "Confirmar compra"}
+              </button>
+              <button className="btn-cancelar" onClick={() => setConfirmando(false)}>Cancelar</button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {comprando && (
-          <div className="overlay-conjuro">
-            <div className="circulo-magico" />
-            <div className="chispa chispa1" />
-            <div className="chispa chispa2" />
-            <div className="chispa chispa3" />
-          </div>
-        )}
+      {comprando && (
+        <div className="overlay-conjuro">
+          <div className="circulo-magico" />
+          <div className="chispa chispa1" />
+          <div className="chispa chispa2" />
+          <div className="chispa chispa3" />
+        </div>
+      )}
     </section>
   );
 }
+
+export default RangoSelectorAnimado;

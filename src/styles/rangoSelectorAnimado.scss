@@ -678,6 +678,57 @@
     transform: translateY(0);
   }
 }
+.fila-kit-detallado {
+
+  flex-direction: row;
+  align-items: flex-start;
+  background-color: #1b140d;
+  border-top: 1px solid #5c4320;
+  padding: 1rem 0;
+  position: relative;
+  z-index: 1;
+
+  .beneficio-label {
+    width: 100px;
+    flex-shrink: 0;
+  }
+
+  .beneficio-celda-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); // 3 columnas por rango
+    gap: 1rem;
+    width: 100%;
+    padding: 0 0.5rem;
+
+    .beneficio-celda {
+      background: #0f0b08;
+      border: 1px solid #b8924c;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      color: #f5e5b8;
+      font-family: "IM Fell English SC", serif;
+      font-size: 0.95rem;
+      line-height: 1.4;
+
+      ul.kit-detalle-lista {
+        margin: 0;
+        padding-left: 1.2rem;
+        list-style-type: disc;
+
+        li {
+          margin-bottom: 0.3rem;
+          text-shadow: 1px 1px 2px black;
+        }
+      }
+
+      .kit-detalle-vacio {
+        opacity: 0.4;
+        font-style: italic;
+        text-align: center;
+      }
+    }
+  }
+}
 
 
 @media (max-width: 480px) {
