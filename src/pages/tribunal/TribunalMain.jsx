@@ -69,14 +69,6 @@ export default function Sanciones() {
     return iconos[server?.toLowerCase()] || <Globe {...base} />;
   };
 
-  const obtenerIconoEstado = (estado) => {
-    const props = { size: 16, weight: 'duotone', style: { marginRight: '6px' } };
-    switch (estado) {
-      case 'baneado': return <WarningCircle color="#e74c3c" {...props} />;
-      case 'revisado': return <CheckCircle color="#2ecc71" {...props} />;
-      default: return <HourglassMedium color="#f39c12" {...props} />;
-    }
-  };
 
   const formatearDuracion = (raw) => {
     if (!raw) return 'Desconocida';

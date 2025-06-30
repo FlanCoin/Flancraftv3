@@ -17,6 +17,7 @@
     "@supabase/supabase-js": "^2.49.4",
     "animejs": "^4.0.2",
     "chart.js": "^4.4.9",
+    "classnames": "^2.5.1",
     "clipboardy": "^4.0.0",
     "clsx": "^2.1.1",
     "color-thief-browser": "^2.0.2",

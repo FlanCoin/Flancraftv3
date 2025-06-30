@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getLeaderboards } from "../api/getLeaderboards";
+import classNames from "classnames";
 import "../styles/pages/_leaderboards.scss";
 
 const SERVIDORES = [
@@ -39,7 +40,6 @@ const TOOLTIP_DESCRIPCIONES = {
 
 export default function Leaderboards() {
   const [servidor, setServidor] = useState("survival");
-
   const [datosVisibles, setDatosVisibles] = useState([]);
   const [orden, setOrden] = useState("tiempo_jugado");
   const [ordenAscendente, setOrdenAscendente] = useState(false);
@@ -48,20 +48,21 @@ export default function Leaderboards() {
   const [animacion, setAnimacion] = useState("");
   const [usuariosVinculados, setUsuariosVinculados] = useState({});
   const limit = 10;
+  const paginasTotales = 10;
 
   useEffect(() => {
     fetch("https://flancraftweb-backend.onrender.com/api/usuarios")
       .then((res) => res.json())
       .then((usuarios) => {
-        const mapa = {};
-        usuarios.forEach((u) => {
+        const mapa = usuarios.reduce((acc, u) => {
           if (u.uuid) {
-            mapa[u.uuid] = {
+            acc[u.uuid] = {
               rango: u.rango_usuario?.toLowerCase() || null,
-              premium: u.es_premium === true
+              premium: u.es_premium === true,
             };
           }
-        });
+          return acc;
+        }, {});
         setUsuariosVinculados(mapa);
       })
       .catch((err) => console.error("Error al obtener usuarios:", err));
@@ -108,18 +109,25 @@ export default function Leaderboards() {
     return `${horas}h ${minutos}m`;
   };
 
-  const formatValue = (key, value) =>
-    key === "tiempo_jugado"
-      ? formatearTiempo(value || 0)
-      : (value || 0).toLocaleString("es-ES");
+  const formatValue = useCallback((key, value) => {
+    if (key === "tiempo_jugado") return formatearTiempo(value || 0);
+    return (value || 0).toLocaleString("es-ES");
+  }, []);
 
-  const cambiarOrden = (stat) => {
-    if (stat === orden) {
-      setOrdenAscendente(!ordenAscendente);
-    } else {
-      setOrden(stat);
-      setOrdenAscendente(false);
-    }
+  const cambiarOrden = useCallback((stat) => {
+    setOrden((prev) => {
+      if (prev === stat) {
+        setOrdenAscendente((asc) => !asc);
+        return prev;
+      } else {
+        setOrdenAscendente(false);
+        return stat;
+      }
+    });
+  }, []);
+
+  const cambiarPagina = (nuevaPagina) => {
+    setOffset(nuevaPagina * limit);
   };
 
   return (
@@ -135,7 +143,7 @@ export default function Leaderboards() {
         {SERVIDORES.map((s) => (
           <button
             key={s.id}
-            className={`selector-button ${servidor === s.id ? "active" : ""}`}
+            className={classNames("selector-button", { active: servidor === s.id })}
             onClick={() => {
               setServidor(s.id);
               setOffset(0);
@@ -149,21 +157,21 @@ export default function Leaderboards() {
 
       <div className="table-container">
         <div className="tabla-titulo">
-          Top {limit} - {LABELS[orden]} <span className="flecha-orden">{ordenAscendente ? "▲" : "▼"}</span>
+          Top {limit} - {LABELS[orden]}{" "}
+          <span className="flecha-orden">{ordenAscendente ? "▲" : "▼"}</span>
         </div>
 
         <table className="tabla-epica">
           <thead>
             <tr>
-              <th scope="col">Rango</th>
-              <th scope="col">Jugador</th>
+              <th>Rango</th>
+              <th>Jugador</th>
               {STATS.map((s) => (
                 <th
                   key={s}
-                  className={`ordenable ${orden === s ? "activo" : ""}`}
+                  className={classNames("ordenable", { activo: orden === s })}
                   onClick={() => cambiarOrden(s)}
                   title={`${LABELS[s]} — ${TOOLTIP_DESCRIPCIONES[s]}`}
-                  scope="col"
                 >
                   {LABELS[s]}
                   {orden === s && (
@@ -174,95 +182,90 @@ export default function Leaderboards() {
             </tr>
           </thead>
 
-          <tbody className={
-            animacion === "fade-out"
-              ? "tbody-animado-salida"
-              : animacion === "fade-in"
-              ? "tbody-animado-entrada"
-              : ""
-          }>
-            {datosVisibles.map((player, i) => {
-              const posicionGlobal = offset + i;
-              const filaClase = `fila fila-${posicionGlobal + 1}${filaSeleccionada === player.uuid ? " seleccionada" : ""}`;
-              const medallaSrc =
-                posicionGlobal === 0
-                  ? "/assets/oro.png"
-                  : posicionGlobal === 1
-                  ? "/assets/plata.png"
-                  : posicionGlobal === 2
-                  ? "/assets/bronce.png"
-                  : null;
-              const datosUsuario = usuariosVinculados[player.uuid];
-              const rango = datosUsuario?.rango;
-              const esPremium = datosUsuario?.premium;
+          <tbody className={classNames({
+  "tbody-animado-salida": animacion === "fade-out",
+  "tbody-animado-entrada": animacion === "fade-in"
+})}>
+  {datosVisibles.map((player, i) => {
+    const posicion = offset + i;
+    const esSeleccionado = filaSeleccionada === player.uuid;
+    const datosUsuario = usuariosVinculados[player.uuid] || {};
+    const medalla =
+      posicion === 0 ? "/assets/oro.png" :
+      posicion === 1 ? "/assets/plata.png" :
+      posicion === 2 ? "/assets/bronce.png" :
+      null;
 
-              return (
-                <tr
-                  key={`${player.uuid}-${orden}-${offset}`}
-                  className={`${filaClase} anim-row`}
-                  onClick={() =>
-                    setFilaSeleccionada((prev) => (prev === player.uuid ? null : player.uuid))
-                  }
-                  style={{ animationDelay: `${i * 120}ms` }}
-                >
-                  <td>
-                    {medallaSrc ? (
-                      <img src={medallaSrc} alt={`Top ${posicionGlobal + 1}`} className="medalla" />
-                    ) : (
-                      <span className="numero-rango">{posicionGlobal + 1}</span>
-                    )}
-                  </td>
-                  <td>
-                    <div className="jugador-info">
-                      <img
-                        src={`https://mc-heads.net/avatar/${player.nombre_minecraft || "Steve"}/32`}
-                        onError={(e) => (e.currentTarget.src = "/assets/default-head.png")}
-                        alt={`Avatar de ${player.nombre_minecraft || "Desconocido"}`}
-                        className="avatar-head"
-                      />
-                      <span
-                        className={rango ? `nombre-colored rango-${rango}` : ""}
-                        style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem" }}
-                      >
-                        {player.nombre_minecraft || "Desconocido"}
-                        {esPremium && (
-                          <img
-                            src="/assets/premium.png"
-                            alt="Premium"
-                            className="icono-premium"
-                          />
-                        )}
-                      </span>
-                    </div>
-                  </td>
-                  {STATS.map((stat) => (
-                    <td key={stat}>{formatValue(stat, player[stat])}</td>
-                  ))}
-                </tr>
-              );
-            })}
-          </tbody>
+    return (
+      <tr
+        key={`${player.uuid}-${orden}-${offset}`}
+        className={classNames(`fila fila-${posicion + 1} anim-row`, {
+          seleccionada: esSeleccionado
+        })}
+        onClick={() =>
+          setFilaSeleccionada((prev) => (prev === player.uuid ? null : player.uuid))
+        }
+        style={{ animationDelay: `${i * 120}ms` }}
+      >
+        <td data-label="Rango">
+          {medalla ? (
+            <img src={medalla} alt={`Top ${posicion + 1}`} className="medalla" />
+          ) : (
+            <span className="numero-rango">{posicion + 1}</span>
+          )}
+        </td>
+        <td data-label="Jugador">
+          <div className="jugador-info">
+            <img
+              src={`https://mc-heads.net/avatar/${player.nombre_minecraft || "Steve"}/32`}
+              onError={(e) => (e.currentTarget.src = "/assets/default-head.png")}
+              alt={`Avatar de ${player.nombre_minecraft || "Desconocido"}`}
+              className="avatar-head"
+            />
+            <span
+              className={datosUsuario.rango ? `nombre-colored rango-${datosUsuario.rango}` : ""}
+              style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem" }}
+            >
+              {player.nombre_minecraft || "Desconocido"}
+              {datosUsuario.premium && (
+                <img
+                  src="/assets/premium.png"
+                  alt="Premium"
+                  className="icono-premium"
+                />
+              )}
+            </span>
+          </div>
+        </td>
+        {STATS.map((stat) => (
+          <td key={stat} data-label={LABELS[stat]}>
+            {formatValue(stat, player[stat])}
+          </td>
+        ))}
+      </tr>
+    );
+  })}
+</tbody>
+
         </table>
       </div>
 
       <div className="epic-pagination paginador-numerico">
-        <button onClick={() => setOffset(0)} disabled={offset === 0} aria-label="Primera página">«</button>
-        <button onClick={() => setOffset(Math.max(0, offset - limit))} disabled={offset === 0} aria-label="Anterior">‹</button>
-        {[...Array(10)].map((_, index) => {
-          const pageIndex = index * limit;
-          const pageNumber = index + 1;
-          return (
-            <button
-              key={index}
-              className={offset === pageIndex ? "activo" : ""}
-              onClick={() => setOffset(pageIndex)}
-            >
-              {pageNumber}
-            </button>
-          );
-        })}
-        <button onClick={() => setOffset(offset + limit)} disabled={offset + limit >= 10 * limit} aria-label="Siguiente">›</button>
-        <button onClick={() => setOffset((10 - 1) * limit)} disabled={offset + limit >= 10 * limit} aria-label="Última página">»</button>
+        <button onClick={() => cambiarPagina(0)} disabled={offset === 0} aria-label="Primera página">«</button>
+        <button onClick={() => cambiarPagina(Math.max(0, Math.floor(offset / limit) - 1))} disabled={offset === 0} aria-label="Anterior">‹</button>
+
+        {[...Array(paginasTotales)].map((_, index) => (
+          <button
+            key={index}
+            className={offset === index * limit ? "activo" : ""}
+            onClick={() => cambiarPagina(index)}
+          >
+            {index + 1}
+          </button>
+        ))}
+
+        <button onClick={() => cambiarPagina(Math.floor(offset / limit) + 1)} disabled={offset + limit >= paginasTotales * limit} aria-label="Siguiente">›</button>
+        <button onClick={() => cambiarPagina(paginasTotales - 1)} disabled={offset + limit >= paginasTotales * limit} aria-label="Última página">»</button>
       </div>
     </section>
   );

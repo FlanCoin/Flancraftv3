@@ -75,7 +75,7 @@ export default function DashboardPage() {
   return (
     <section className="dashboard-epic">
       <div className="epic-header-dashboard">
-        <h1>La Posada</h1>
+        <h1>Tu Posada</h1>
         <p>Explora tu progreso, logros y riquezas acumuladas en el mundo de FlanCraft.</p>
       </div>
 

@@ -371,3 +371,315 @@
   opacity: 1;
   transition: opacity 0.6s ease;
 }
+@media (max-width: 480px) {
+  .home {
+    overflow-x: hidden !important;
+
+    .hero-flancraft {
+      padding: 1.5rem 1rem !important;
+      min-height: 75vh !important;
+
+      .hero-video {
+        filter: brightness(0.75) !important;
+      }
+
+      .hero-content {
+        max-width: 90vw !important;
+        text-align: center !important;
+
+        .hero-logo {
+          max-width: 220px !important;
+          margin-bottom: 1rem !important;
+        }
+
+        .titulo-epico-flancraft {
+          font-size: 2.2rem !important;
+          letter-spacing: 1px !important;
+          gap: 0.2rem !important;
+          margin-bottom: 0.8rem !important;
+
+          span {
+            font-size: 2.1rem !important;
+          }
+        }
+
+        p {
+          font-size: 0.95rem !important;
+          padding: 0 0.5rem !important;
+          margin-top: 0.6rem !important;
+        }
+
+        .hero-btn {
+          font-size: 0.95rem !important;
+          padding: 0.6rem 1.4rem !important;
+          margin-top: 1.2rem !important;
+          gap: 0.3rem !important;
+
+          .hero-user-wrapper {
+            gap: 0.2rem !important;
+            font-size: 0.95rem !important;
+          }
+
+          .greeting-text {
+            font-size: 0.95rem !important;
+          }
+
+          .nombre-colored {
+            font-size: 0.95rem !important;
+          }
+        }
+      }
+    }
+
+    .main-content {
+      padding: 2.5rem 1rem !important;
+
+      .sections {
+        grid-template-columns: 1fr !important;
+        gap: 1.2rem !important;
+
+        .zone {
+          padding: 1.2rem !important;
+
+          h2 {
+            font-size: 1.2rem !important;
+          }
+
+          p {
+            font-size: 0.95rem !important;
+          }
+        }
+      }
+    }
+
+    .divider-overlay {
+      .section-divider2 {
+        background-size: contain !important;
+        height: 50px !important;
+      }
+    }
+  }
+
+  .pantalla-carga {
+    padding: 1rem !important;
+
+    .loader-gema {
+      width: 48px !important;
+      height: 48px !important;
+      border-width: 3px !important;
+      margin-bottom: 1rem !important;
+    }
+
+    p {
+      font-size: 1.1rem !important;
+    }
+  }
+}
+@media (max-width: 395px) {
+  .home {
+    overflow-x: hidden !important;
+
+    .hero-flancraft {
+      padding: 1.2rem 0.8rem !important;
+      min-height: 70vh !important;
+
+      .hero-video {
+        filter: brightness(0.7) !important;
+      }
+
+      .hero-content {
+        max-width: 92vw !important;
+        text-align: center !important;
+
+        .hero-logo {
+          max-width: 180px !important;
+          margin-bottom: 0.8rem !important;
+        }
+
+        .titulo-epico-flancraft {
+          font-size: 1.9rem !important;
+          letter-spacing: 0.5px !important;
+          gap: 0.15rem !important;
+          margin-bottom: 0.6rem !important;
+
+          span {
+            font-size: 1.85rem !important;
+          }
+        }
+
+        p {
+          font-size: 0.9rem !important;
+          padding: 0 0.4rem !important;
+          margin-top: 0.5rem !important;
+        }
+
+        .hero-btn {
+          font-size: 0.9rem !important;
+          padding: 0.5rem 1.2rem !important;
+          margin-top: 1rem !important;
+          gap: 0.25rem !important;
+
+          .hero-user-wrapper {
+            gap: 0.2rem !important;
+            font-size: 0.9rem !important;
+          }
+
+          .greeting-text {
+            font-size: 0.9rem !important;
+          }
+
+          .nombre-colored {
+            font-size: 0.9rem !important;
+          }
+        }
+      }
+    }
+
+    .main-content {
+      padding: 2rem 0.8rem !important;
+
+      .sections {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+
+        .zone {
+          padding: 1rem !important;
+
+          h2 {
+            font-size: 1.1rem !important;
+          }
+
+          p {
+            font-size: 0.9rem !important;
+          }
+        }
+      }
+    }
+
+    .divider-overlay {
+      .section-divider2 {
+        background-size: contain !important;
+        height: 40px !important;
+      }
+    }
+  }
+
+  .pantalla-carga {
+    padding: 0.8rem !important;
+
+    .loader-gema {
+      width: 42px !important;
+      height: 42px !important;
+      border-width: 3px !important;
+      margin-bottom: 0.8rem !important;
+    }
+
+    p {
+      font-size: 1rem !important;
+    }
+  }
+}
+@media (min-width: 481px) and (max-width: 900px) {
+  .home {
+    overflow-x: hidden !important;
+
+    .hero-flancraft {
+      padding: 2rem 1.2rem !important;
+      min-height: 75vh !important;
+
+      .hero-video {
+        filter: brightness(0.8) !important;
+      }
+
+      .hero-content {
+        max-width: 90vw !important;
+        text-align: center !important;
+
+        .hero-logo {
+          max-width: 260px !important;
+          margin-bottom: 1rem !important;
+        }
+
+        .titulo-epico-flancraft {
+          font-size: 3rem !important;
+          letter-spacing: 1.5px !important;
+          gap: 0.2rem !important;
+          margin-bottom: 1rem !important;
+
+          span {
+            font-size: 2.9rem !important;
+          }
+        }
+
+        p {
+          font-size: 1.05rem !important;
+          padding: 0 1rem !important;
+          margin-top: 0.7rem !important;
+        }
+
+        .hero-btn {
+          font-size: 1rem !important;
+          padding: 0.7rem 1.8rem !important;
+          margin-top: 1.5rem !important;
+          gap: 0.35rem !important;
+
+          .hero-user-wrapper {
+            gap: 0.25rem !important;
+            font-size: 1rem !important;
+          }
+
+          .greeting-text {
+            font-size: 1rem !important;
+          }
+
+          .nombre-colored {
+            font-size: 1rem !important;
+          }
+        }
+      }
+    }
+
+    .main-content {
+      padding: 3rem 1.5rem !important;
+
+      .sections {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+        gap: 1.2rem !important;
+
+        .zone {
+          padding: 1.3rem !important;
+
+          h2 {
+            font-size: 1.4rem !important;
+          }
+
+          p {
+            font-size: 1rem !important;
+          }
+        }
+      }
+    }
+
+    .divider-overlay {
+      .section-divider2 {
+        background-size: cover !important;
+        height: 60px !important;
+      }
+    }
+  }
+
+  .pantalla-carga {
+    padding: 1.2rem !important;
+
+    .loader-gema {
+      width: 56px !important;
+      height: 56px !important;
+      border-width: 3.5px !important;
+      margin-bottom: 1rem !important;
+    }
+
+    p {
+      font-size: 1.2rem !important;
+    }
+  }
+}
