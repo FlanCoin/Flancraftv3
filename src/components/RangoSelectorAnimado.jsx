@@ -1,4 +1,4 @@
-import  { useState, useContext } from "react";
+import  { useState, useEffect, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import toast from "react-hot-toast";
 import "../styles/rangoSelectorAnimado.scss";
@@ -8,8 +8,6 @@ const RANGOS = [
     id: "nova",
     nombre: "NOVA",
     imagen: "/assets/rangos/nova.webp",
-    precio30d: 300,
-    precioPerma: 1800,
     beneficios_30d: {
       acceso_lleno: true,
       prefijo: true,
@@ -53,8 +51,6 @@ const RANGOS = [
     id: "alpha",
     nombre: "ALPHA",
     imagen: "/assets/rangos/alpha.webp",
-    precio30d: 600,
-    precioPerma: 2700,
     beneficios_30d: {
       acceso_lleno: true,
       prefijo: true,
@@ -98,8 +94,6 @@ const RANGOS = [
     id: "inmortal",
     nombre: "INMORTAL",
     imagen: "/assets/rangos/inmortal.webp",
-    precio30d: 900,
-    precioPerma: 3400,
     beneficios_30d: {
       acceso_lleno: true,
       prefijo: true,
@@ -165,10 +159,34 @@ const FILAS = [
 
 export default function RangoSelectorAnimado() {
   const [modo, setModo] = useState("perma");
+  const [precios, setPrecios] = useState({});
   const [rangoSeleccionado, setRangoSeleccionado] = useState(null);
   const [confirmando, setConfirmando] = useState(false);
-  const { user, setUser } = useContext(UserContext);
   const [comprando, setComprando] = useState(false);
+  const { user, setUser } = useContext(UserContext);
+
+    useEffect(() => {
+    const fetchPrecios = async () => {
+      try {
+        const res = await fetch("https://flancraftweb-backend.onrender.com/api/rangos/lista");
+        const data = await res.json();
+        if (res.ok) {
+          const mapa = {};
+          data.forEach(({ rango, tipo, precio }) => {
+            if (!mapa[rango]) mapa[rango] = {};
+            mapa[rango][tipo] = precio;
+          });
+          setPrecios(mapa);
+        } else {
+          toast.error("No se pudieron cargar los precios.");
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Error al obtener los precios.");
+      }
+    };
+    fetchPrecios();
+  }, []);
 
   const handleComprar = (rango, tipo) => {
     const precio = tipo === "30d" ? rango.precio30d : rango.precioPerma;
@@ -186,7 +204,7 @@ export default function RangoSelectorAnimado() {
 
   const confirmarCompra = async () => {
     if (!rangoSeleccionado) return;
-    const { rango, tipo, precio } = rangoSeleccionado;
+    const { rango, tipo } = rangoSeleccionado;
     setComprando(true);
     try {
       const res = await fetch("https://flancraftweb-backend.onrender.com/api/rangos/comprar-rango", {
@@ -199,16 +217,25 @@ export default function RangoSelectorAnimado() {
           uuid: user.uuid,
           rango: rango.id,
           tipo,
-          precio,
         }),
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Error al comprar el rango");
 
-      toast.success(`¡Has comprado el rango ${rango.nombre} (${tipo})!`);
+      toast.custom((t) => (
+  <div className={`toast-rango-compra ${t.visible ? "mostrar" : ""}`}>
+    <img src={rango.imagen} alt={rango.nombre} className="toast-rango-imagen" />
+    <div className="toast-rango-texto">
+      <strong>¡Has desbloqueado el rango {rango.nombre}!</strong>
+      <span>{tipo === "perma" ? "Permanente" : "30 días"} por {precios[rango.id][tipo]} <img src="/assets/eco.png" alt="ECOS" className="eco-mini-inline" /></span>
+    </div>
+  </div>
+));
       setConfirmando(false);
-      setUser({ ...user, ecos: user.ecos - precio });
+      if (data.nuevoSaldo !== undefined) {
+        setUser({ ...user, ecos: data.nuevoSaldo });
+      }
     } catch (err) {
       console.error("Error en la compra:", err);
       toast.error("Hubo un problema al procesar la compra.");
@@ -235,34 +262,34 @@ export default function RangoSelectorAnimado() {
 
       <div className="tabla-rangos">
         <div className="tabla-header">
-  <div className="beneficio-label encabezado"></div>
-  {RANGOS_ORDENADOS.map((id) => {
-    const rango = RANGOS.find(r => r.id === id);
-    return (
-      <div
-  key={rango.id}
-  className={`columna-rango ${rango.id === "inmortal" ? "resaltado" : ""}`}
->
-  {rango.id === "inmortal" && (
-    <span className="etiqueta-popular">MÁS COMPRADO</span>
-  )}
-  <img src={rango.imagen} alt={`Rango ${rango.nombre}`} className="imagen-rango" />
-  <h2 className="nombre-rango">{rango.nombre}</h2>
-        <div className="botones-compra">
-          {modo === "30d" ? (
-            <button className="boton-compra btn-30" onClick={() => handleComprar(rango, "30d")}>
-              {rango.precio30d} <img src="/assets/eco.png" alt="eco" className="eco-mini" /> 30 Días
-            </button>
-          ) : (
-            <button className="boton-compra btn-perma" onClick={() => handleComprar(rango, "perma")}>
-              {rango.precioPerma} <img src="/assets/eco.png" alt="eco" className="eco-mini" /> Permanente
-            </button>
-          )}
+          <div className="beneficio-label encabezado"></div>
+          {RANGOS_ORDENADOS.map((id) => {
+            const rango = RANGOS.find(r => r.id === id);
+            const precio = precios?.[rango.id]?.[modo];
+            return (
+              <div key={rango.id} className={`columna-rango ${rango.id === "inmortal" ? "resaltado" : ""}`}>
+                {rango.id === "inmortal" && <span className="etiqueta-popular">MÁS COMPRADO</span>}
+                <img src={rango.imagen} alt={`Rango ${rango.nombre}`} className="imagen-rango" />
+                <h2 className="nombre-rango">{rango.nombre}</h2>
+                <div className="botones-compra">
+                  <button
+                    className={`boton-compra ${modo === "perma" ? "btn-perma" : "btn-30"}`}
+                    onClick={() => handleComprar(rango, modo)}
+                    disabled={precio === undefined}
+                  >
+                    {precio !== undefined ? (
+                      <>
+                        {precio} <img src="/assets/eco.png" alt="eco" className="eco-mini" /> {modo === "perma" ? "Permanente" : "30 Días"}
+                      </>
+                    ) : (
+                      "Cargando..."
+                    )}
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
-      </div>
-    );
-  })}
-</div>
 
 
         <div className="tabla-body">
@@ -338,34 +365,49 @@ export default function RangoSelectorAnimado() {
         </div>
       </div>
 
-      {confirmando && rangoSeleccionado && (
-        <div className="modal-compra">
-          <div className={`modal-contenido ${comprando ? "cargando" : ""}`}>
-            <h3>¿Confirmar compra?</h3>
-            <p>
-              Vas a comprar el rango <strong>{rangoSeleccionado.rango.nombre}</strong> (
-              {rangoSeleccionado.tipo}) por <strong>{rangoSeleccionado.precio} ECOS</strong>
-            </p>
-            <button
-              className={`btn-confirmar ${comprando ? "deshabilitado" : ""}`}
-              onClick={confirmarCompra}
-              disabled={comprando}
-            >
-              {comprando ? "Procesando..." : "Confirmar"}
-            </button>
-            <button className="btn-cancelar" onClick={() => setConfirmando(false)}>Cancelar</button>
-          </div>
-        </div>
-      )}
+    {confirmando && rangoSeleccionado && (
+          <div className="modal-compra">
+            <div className={`modal-contenido ${comprando ? "cargando" : ""}`}>
+              <h3 className="modal-titulo">Compra de rango</h3>
+              <div className="modal-desglose">
+                <p className="modal-texto">Vas a desbloquear el rango</p>
+                <div className="modal-rango-linea">
+                  <img src={rangoSeleccionado.rango.imagen} alt={rangoSeleccionado.rango.nombre} className="modal-rango-icono" />
+                  <span className="modal-rango-nombre">{rangoSeleccionado.rango.nombre}</span>
+                  <span className="modal-rango-tipo">
+                    ({rangoSeleccionado.tipo === "perma" ? "Permanente" : "30 días"})
+                  </span>
+                </div>
+                {precios?.[rangoSeleccionado.rango.id]?.[rangoSeleccionado.tipo] !== undefined && (
+                  <p className="modal-texto">
+                    por <span className="modal-ecos">{precios[rangoSeleccionado.rango.id][rangoSeleccionado.tipo]}</span>{" "}
+                    <img src="/assets/eco.png" alt="ECOS" className="eco-mini" />
+                  </p>
+                )}
+              </div>
 
-      {comprando && (
-        <div className="overlay-conjuro">
-          <div className="circulo-magico" />
-          <div className="chispa chispa1" />
-          <div className="chispa chispa2" />
-          <div className="chispa chispa3" />
-        </div>
-      )}
+              <div className="modal-botones">
+                <button
+                  className={`btn-confirmar ${comprando ? "deshabilitado" : ""}`}
+                  onClick={confirmarCompra}
+                  disabled={comprando}
+                >
+                  {comprando ? "Procesando..." : "Confirmar compra"}
+                </button>
+                <button className="btn-cancelar" onClick={() => setConfirmando(false)}>Cancelar</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {comprando && (
+          <div className="overlay-conjuro">
+            <div className="circulo-magico" />
+            <div className="chispa chispa1" />
+            <div className="chispa chispa2" />
+            <div className="chispa chispa3" />
+          </div>
+        )}
     </section>
   );
 }

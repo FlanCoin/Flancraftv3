@@ -398,7 +398,7 @@
   .modal-contenido {
     background: linear-gradient(135deg, #2e1e0f, #3d2c1c);
     border: 3px solid #c8a96b;
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 2rem 2.5rem;
     max-width: 420px;
     width: 90%;
@@ -407,100 +407,137 @@
     color: #ffeac2;
     box-shadow: 0 0 25px #00000088;
     animation: scaleUp 0.4s ease;
+    position: relative;
+    overflow: hidden;
 
-    h3 {
-      font-size: 2.2rem;
-      margin-bottom: 1rem;
+    // Título principal
+    .modal-titulo {
+      font-size: 2rem;
+      font-weight: bold;
       color: #ffe599;
       text-shadow: 1px 1px 3px #000;
+      margin-bottom: 1.2rem;
     }
 
-    p {
-      font-size: 1.2rem;
+    // Descripción de lo que vas a comprar
+    .modal-desglose {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #f3eacb;
       margin-bottom: 1.8rem;
-      line-height: 1.5;
-    }
 
-    .btn-confirmar,
-    .btn-cancelar {
-      font-family: inherit;
-      padding: 0.6rem 1.4rem;
-      margin: 0 0.4rem;
-      font-size: 1rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: 0 0 10px #00000055;
-    }
+      .modal-texto {
+        margin-bottom: 0.5rem;
+      }
 
-    .btn-confirmar {
-      background-color: #3bbf5e;
-      color: #fff;
+      .modal-rango-linea {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        font-size: 1.4rem;
+        margin: 0.6rem 0;
 
-      &:hover {
-        background-color: #33a654;
-        transform: scale(1.05);
+        .modal-rango-icono {
+          width: 36px;
+          height: 36px;
+          image-rendering: pixelated;
+          filter: drop-shadow(1px 1px 2px #0008);
+        }
+
+        .modal-rango-nombre {
+          color: #ffeac2;
+          font-weight: bold;
+          text-shadow: 1px 1px 2px #000;
+        }
+
+        .modal-rango-tipo {
+          color: #c8a96b;
+          font-size: 1.1rem;
+          font-style: italic;
+        }
+      }
+
+      .modal-ecos {
+        font-weight: bold;
+        font-size: 1.3rem;
+        color: #4fc3f7;
+        text-shadow: 0 0 4px #135d89;
+      }
+
+      .eco-mini {
+        width: 20px;
+        height: 22px;
+        margin-left: 0.3rem;
+        image-rendering: pixelated;
+        vertical-align: middle;
+        filter: drop-shadow(1px 1px 2px #0006);
       }
     }
 
-    .btn-cancelar {
-      background-color: #bf3b3b;
-      color: #fff;
+    // Botones
+    .modal-botones {
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
 
-      &:hover {
-        background-color: #a63333;
-        transform: scale(1.05);
+      .btn-confirmar,
+      .btn-cancelar {
+        font-family: inherit;
+        min-width: 140px;
+        padding: 0.6rem 1.4rem;
+        font-size: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        box-shadow: 0 0 10px #00000055;
+      }
+
+      .btn-confirmar {
+        background-color: #3bbf5e;
+        color: #fff;
+
+        &:hover {
+          background-color: #33a654;
+          transform: scale(1.05);
+        }
+
+        &.deshabilitado {
+          opacity: 0.6;
+          pointer-events: none;
+          position: relative;
+
+          &::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: -30px;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: girar 1s linear infinite;
+            transform: translateY(-50%);
+          }
+        }
+      }
+
+      .btn-cancelar {
+        background-color: #bf3b3b;
+        color: #fff;
+
+        &:hover {
+          background-color: #a63333;
+          transform: scale(1.05);
+        }
       }
     }
   }
 }
 
-@keyframes fadeInModal {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes scaleUp {
-  from {
-    transform: scale(0.92);
-    opacity: 0.5;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.btn-confirmar.deshabilitado {
-  opacity: 0.6;
-  pointer-events: none;
-  position: relative;
-}
-
-.btn-confirmar.deshabilitado::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: -30px;
-  width: 16px;
-  height: 16px;
-  border: 2px solid #fff;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: girar 1s linear infinite;
-  transform: translateY(-50%);
-}
-
-@keyframes girar {
-  to {
-    transform: rotate(360deg);
-  }
-}
+// ✨ Efectos mágicos de fondo al confirmar compra
 .overlay-conjuro {
   position: fixed;
   top: 0;
@@ -540,43 +577,32 @@
     opacity: 0.8;
     filter: blur(2px);
 
-    &.chispa1 {
-      top: 40%;
-      left: 30%;
-      animation-delay: 0s;
-    }
-    &.chispa2 {
-      top: 60%;
-      left: 70%;
-      animation-delay: 0.3s;
-    }
-    &.chispa3 {
-      top: 50%;
-      left: 50%;
-      animation-delay: 0.6s;
-    }
+    &.chispa1 { top: 40%; left: 30%; animation-delay: 0s; }
+    &.chispa2 { top: 60%; left: 70%; animation-delay: 0.3s; }
+    &.chispa3 { top: 50%; left: 50%; animation-delay: 0.6s; }
   }
+}
+
+// 🎬 Animaciones
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.92); opacity: 0.5; }
+  to { transform: scale(1); opacity: 1; }
 }
 
 @keyframes girar {
-  0% {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  100% {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 @keyframes flotar {
-  0% {
-    transform: translateY(0px) scale(1);
-    opacity: 0.8;
-  }
-  100% {
-    transform: translateY(-20px) scale(1.3);
-    opacity: 0.3;
-  }
+  0%   { transform: translateY(0px) scale(1);   opacity: 0.8; }
+  100% { transform: translateY(-20px) scale(1.3); opacity: 0.3; }
 }
+
 .etiqueta-popular {
   position: absolute;
   top: 5rem;
@@ -597,6 +623,60 @@
   pointer-events: none;
   overflow: hidden;
   white-space: nowrap;
+}
+.toast-rango-compra {
+  background: #20160f;
+  border: 2px solid #d4af37;
+  color: #ffecc0;
+  font-family: "IM Fell English SC", serif;
+  padding: 1rem 1.2rem;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: 0 0 20px #0008;
+  animation: aparecerSuave 0.4s ease-out;
+
+  .toast-rango-imagen {
+    width: 50px;
+    height: 50px;
+    margin-right: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #0006;
+  }
+
+  .toast-rango-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+
+    strong {
+      font-size: 1.1rem;
+      color: #ffd98e;
+    }
+
+    span {
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+
+      .eco-mini-inline {
+        width: 16px;
+        height: 16px;
+        margin-left: 0.4rem;
+      }
+    }
+  }
+}
+
+@keyframes aparecerSuave {
+  from {
+    opacity: 0;
+    transform: translateY(-20%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 
@@ -912,6 +992,302 @@
       .btn-cancelar {
         font-size: 0.85rem;
         padding: 0.4rem 0.6rem;
+      }
+    }
+  }
+}
+@media (min-width: 481px) and (max-width: 900px) {
+  .rango-selector-epico {
+    max-width: 100vw;
+    overflow-x: hidden;
+
+  }
+
+  .rango-banner-hero {
+    height: auto;
+    background-position: center -140px;
+  }
+
+  .banner-overlay {
+    padding: 1.2rem 1.5rem;
+    max-width: 100%;
+
+    h1 {
+      font-size: 2.4rem;
+      line-height: 1.2;
+    }
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.4;
+    }
+  }
+
+  .modo-toggle {
+    button {
+      width: 50%;
+      font-size: 1.05rem;
+      padding: 0.5rem 1rem;
+    }
+  }
+
+  .tabla-rangos {
+    padding: 0.5rem;
+    align-items: center;
+
+    .tabla-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+
+      .columna-rango {
+        .imagen-rango {
+          margin-bottom: 0.5rem;
+        }
+
+        .nombre-rango {
+          font-size: 1.3rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .botones-compra {
+          .boton-compra {
+            font-size: 0.8rem !important;
+            padding: 0.5rem 1rem;
+          }
+        }
+      }
+    }
+
+    .tabla-body {
+      .fila-beneficio {
+        flex-direction: column;
+        margin-bottom: 1rem;
+        
+
+        .beneficio-label {
+          font-size: 1.05rem;
+          text-align: center;
+          padding: 0.6rem;
+        }
+
+        .beneficio-celda-group {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 0.6rem;
+          padding: 0 0.5rem;
+
+          .beneficio-celda {
+            font-size: 0.9rem;
+            text-align: center;
+
+            .valor-num {
+              font-size: 1rem;
+            }
+
+            .kit-con-icono {
+              gap: 0.3rem;
+
+              .kit-icono {
+                width: 20px;
+                height: 20px;
+              }
+            }
+          }
+        }
+      }
+
+      .fila-comida {
+        .beneficio-celda-group {
+          .beneficio-celda {
+            font-size: 0.8rem;
+          }
+        }
+      }
+    }
+  }
+
+  .etiqueta-popular {
+    top: 4rem;
+    right: -1rem;
+    width: 7.5rem;
+    font-size: 0.6rem;
+    padding: 0.4rem 0;
+  }
+
+  .modal-compra {
+    .modal-contenido {
+      padding: 1.2rem;
+      max-width: 85%;
+      font-size: 1rem;
+
+      h3 {
+        font-size: 1.6rem;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+
+      .btn-confirmar,
+      .btn-cancelar {
+        font-size: 1rem;
+        padding: 0.6rem 1rem;
+      }
+    }
+  }
+}
+@media (min-width: 901px) and (max-width: 1200px) {
+  .rango-selector-epico {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  .rango-banner-hero {
+    height: 350px;
+    background-position: center -180px;
+  }
+
+  .banner-overlay {
+    padding: 1.5rem 2rem;
+    max-width: 100%;
+
+    h1 {
+      font-size: 2.8rem;
+      line-height: 1.2;
+    }
+
+    p {
+      font-size: 1.2rem;
+      line-height: 1.5;
+    }
+  }
+
+  .modo-toggle {
+    button {
+      width: 50%;
+      font-size: 1.1rem;
+      padding: 0.6rem 1.2rem;
+    }
+  }
+
+  .tabla-rangos {
+    padding: 1rem;
+    align-items: center;
+
+    .tabla-header {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 1.2rem;
+      justify-content: center;
+
+      .columna-rango {
+        .imagen-rango {
+          margin-bottom: 0.5rem;
+          max-width: 80px;
+        }
+
+        .nombre-rango {
+          font-size: 1.4rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .botones-compra {
+          .boton-compra {
+            font-size: 0.9rem !important;
+            padding: 0.6rem 1.2rem;
+          }
+        }
+      }
+    }
+
+    .tabla-body {
+      .fila-beneficio {
+        flex-direction: column;
+        margin-bottom: 1rem;
+
+        .beneficio-label {
+          font-size: 1.1rem;
+          text-align: center;
+          padding: 0.6rem;
+        }
+
+        .beneficio-celda-group {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 0.8rem;
+          padding: 0 1rem;
+
+          .beneficio-celda {
+            font-size: 1rem;
+            text-align: center;
+
+            .valor-num {
+              font-size: 1.1rem;
+            }
+
+            .kit-con-icono {
+              gap: 0.4rem;
+
+              .kit-icono {
+                width: 22px;
+                height: 22px;
+              }
+            }
+          }
+        }
+      }
+
+      .fila-comida {
+        .beneficio-celda-group {
+          .beneficio-celda {
+            font-size: 0.9rem;
+
+            .valor-num {
+              font-size: 1rem;
+            }
+
+            .kit-con-icono {
+              gap: 0.3rem;
+
+              .kit-icono {
+                width: 20px;
+                height: 20px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .etiqueta-popular {
+    top: 3.8rem;
+    right: -1.2rem;
+    width: 8rem;
+    font-size: 0.65rem;
+    padding: 0.45rem 0;
+  }
+
+  .modal-compra {
+    .modal-contenido {
+      padding: 1.5rem;
+      max-width: 75%;
+      font-size: 1.05rem;
+
+      h3 {
+        font-size: 1.8rem;
+      }
+
+      p {
+        font-size: 1.1rem;
+      }
+
+      .btn-confirmar,
+      .btn-cancelar {
+        font-size: 1.05rem;
+        padding: 0.7rem 1.2rem;
       }
     }
   }
