@@ -82,8 +82,9 @@ const GameModes = () => {
         <div className="gm-main">
           <div className="gm-left">
             <div className="gm-video-frame">
-              <img src={active.image} alt={active.name} />
-            </div>
+  <img className="marco" src="/assets/marcomadera.png" alt="marco" />
+  <img className="contenido" src={active.image} alt={active.name} />
+</div>
           </div>
 
           <div className="gm-right">

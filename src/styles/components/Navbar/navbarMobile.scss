@@ -83,36 +83,28 @@
     z-index: 3;
   }
 
- .profile-button.full {
+.profile-button.full {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
   gap: 0.6rem;
-  padding: 0.7rem 1.2rem;
-  border-radius: 8px; // <- Ajustado aquí
-  font-size: 0.95rem;
+  background: #f6e8c1;
+  color: #3e2b1e;
   font-weight: bold;
-  color: #3b2f1e;
-  background: linear-gradient(to bottom, #fcd75a, #e4b634);
-  border: 2px solid #a17a3d;
-  box-shadow: 0 3px 0 #b1863c;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.95rem;
+  border-radius: 10px;
+  border: 2px solid #5a3b1d;
+  box-shadow: inset 0 -2px 0 #dcc38a, 0 2px 6px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
   cursor: pointer;
-  transition: all 0.15s ease;
-  box-sizing: border-box;
-  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
-  overflow: hidden;
   white-space: nowrap;
-
-  i {
-    color: #7f5c26;
-    font-size: 1rem;
-    flex-shrink: 0;
-  }
+  overflow: hidden;
 
   .user-avatar {
     width: 28px;
     height: 28px;
     border-radius: 6px;
+    border: 2px solid #ffd700;
     flex-shrink: 0;
   }
 
@@ -122,18 +114,28 @@
     gap: 0.3rem;
     font-weight: bold;
     font-size: 0.9rem;
+    color: #3e2b1a;
     white-space: normal;
     overflow: visible;
+    text-overflow: unset;
 
     span {
       display: inline;
+      white-space: normal;
       max-width: none;
+      overflow: visible;
     }
 
     strong {
       font-weight: inherit;
       color: inherit;
     }
+  }
+
+  i.fas.fa-sign-in-alt {
+    font-size: 1rem;
+    color: #7b5b2d;
+    flex-shrink: 0;
   }
 
   i.fas.fa-chevron-down,
@@ -145,96 +147,22 @@
   }
 
   &:hover {
-    background: linear-gradient(to bottom, #fcd75a, #e4b634);
-    transform: translateY(1px);
-    box-shadow: 0 1px 0 #9d742f;
+    background: #ffda6a;
+    color: #2e1d0f;
+    transform: translateY(-1px);
+    box-shadow: inset 0 -2px 0 #e9cc8c, 0 4px 10px rgba(255, 218, 106, 0.35);
   }
 
   &:active {
-    transform: translateY(2px);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    transform: translateY(1px);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.25);
   }
 
   &.active {
-    background: linear-gradient(to bottom, #ffecc0, #f5d889);
-    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15), 0 2px 0 #b1863c;
+    background: #ffe399;
+    border-color: #8a6133;
   }
 }
-
-
-
-  .profile-button.full {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: none;
-  border: none;
-  padding: 0.35rem 0.7rem;
-  border-radius: 999px;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: #3b2f1e;
-  background: linear-gradient(to bottom, #fcd75a, #e4b634);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
-  transition: background 0.2s ease;
-  max-width: none;
-  overflow: hidden;
-  white-space: nowrap;
-
-  .user-avatar {
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
-    border: 2px solid #ffd700;
-    flex-shrink: 0;
-  }
-
-  .profile-greeting {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-weight: bold;
-  font-size: 0.9rem;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: unset;
-
-  span {
-    display: inline;
-    white-space: normal;
-    max-width: none;
-    overflow: visible;
-    text-overflow: unset;
-  }
-
-  strong {
-    font-weight: inherit;
-    color: inherit;
-  }
-}
-
-
-  i.fas.fa-chevron-down {
-    font-size: 0.75rem;
-    margin-left: 4px;
-    color: #7b5b2d;
-    flex-shrink: 0;
-  }
-
-  &:hover {
-    background-color: #ffde80;
-  }
-
-
-    // Para compatibilidad con la versión anterior si no se usa `.full`
-    img {
-      width: 32px;
-      height: 32px;
-      border-radius: 4px;
-      border: 2px solid #ffd700;
-    }
-  }
 }
 
 
@@ -353,103 +281,34 @@
     }
   }
 
-  // Corrige estilos internos del dropdown
-  .mobile-dropdown {
-    .mobile-dropdown-content {
-      overflow: hidden;
-      max-height: 0;
-      opacity: 0;
-      transition: max-height 0.4s ease, opacity 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      padding: 0 0.5rem;
+  .mobile-link {
+  background: linear-gradient(to bottom, #fbe68c, #e4c465);
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  color: #3b2f1e;
+  font-weight: bold;
+  border-radius: 12px;
+  border: 2px solid #9d742f;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: 0 3px 0 #b1863c;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.15s ease;
 
-      a {
-        font-size: 0.9rem;
-        margin: 0.2rem 0;
-        padding: 0.6rem 1rem;
-        background: #3a2b1c;
-        border: 2px solid #6d532c;
-        border-radius: 10px;
-        color: #e6d3a3;
-        font-weight: bold;
-        transition: all 0.2s ease;
-
-        &:hover {
-          background: #4e3a26;
-          color: #ffdd88;
-          transform: translateX(2px);
-        }
-
-        &.active {
-          background: #5a4328;
-          border-color: #aa8643;
-          color: #ffe599;
-        }
-      }
-    }
-
-    &.open .mobile-dropdown-content {
-      max-height: 500px;
-      opacity: 1;
-      margin-top: 0.4rem;
-    }
-
-    .arrow-icon {
-      margin-left: auto;
-      font-size: 0.8rem;
-      transition: transform 0.3s ease;
-    }
-
-    .mobile-dropdown-toggle.open .arrow-icon {
-      transform: rotate(180deg);
-    }
+  &:hover {
+    background: linear-gradient(to bottom, #fcd75a, #e4b634);
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 #9d742f;
   }
 
+  &:active {
+    transform: translateY(2px);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
 
-
-    .mobile-dropdown {
-      .mobile-dropdown-content {
-        overflow: hidden;
-        max-height: 0;
-        opacity: 0;
-        transition: max-height 0.4s ease, opacity 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        padding: 0 0.5rem;
-
-        a {
-          font-size: 0.9rem;
-          margin: 0.2rem 0;
-          padding: 0.6rem 1rem;
-          background: rgba(42, 34, 26, 0.85);
-          border: 1px solid #4d3a26;
-          border-radius: 4px;
-
-          &:hover {
-            background: rgba(255, 224, 120, 0.1);
-            color: vars.$color-oro-brillo;
-            transform: translateX(2px);
-          }
-        }
-      }
-
-      &.open .mobile-dropdown-content {
-        max-height: 500px;
-        opacity: 1;
-        margin-top: 0.4rem;
-      }
-
-      .arrow-icon {
-        margin-left: auto;
-        font-size: 0.8rem;
-        transition: transform 0.3s ease;
-      }
-
-      .mobile-dropdown-toggle.open .arrow-icon {
-        transform: rotate(180deg);
-      }
-    }
 
     .logo-divider {
       width: 80%;

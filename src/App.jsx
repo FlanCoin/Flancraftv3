@@ -15,7 +15,7 @@ import RangoSelectorAnimado from "./components/RangoSelectorAnimado";
 import TribunalMain from "./pages/tribunal/TribunalMain";
 import TribunalAdmin from "./pages/tribunal/TribunalAdmin";
 import GestionStaff from './components/Admin/GestionStaff';
-import PerfilJugadorTribunal from "./pages/tribunal/PerfilJugadorTribunal";
+import PerfilJugador from "./components/PerfilJugador";
 import LeaderboardsPage from "./pages/LeaderboardsPage";
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -43,7 +43,7 @@ const App = () => {
         {/* ⚖️ Tribunal System (Staff) */}
         <Route path="/tribunal" element={<TribunalMain />} />
         <Route path="/tribunal/admin" element={<TribunalAdmin />} />
-        <Route path="/perfil/:nombre" element={<PerfilJugadorTribunal />} />
+        <Route path="/perfil/:nombre" element={<PerfilJugador />} />
     </Routes>
     </>
   );

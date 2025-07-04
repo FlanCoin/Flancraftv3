@@ -1,0 +1,275 @@
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap');
+
+.perfiljugador-wrapper {
+  background-color: #fdf7e2;
+  font-family: 'IM Fell English SC', serif;
+  color: #3c2b1b;
+  padding-bottom: 4rem;
+
+  .cabecera-imagen {
+    width: 100%;
+    height: 320px;
+    background-image: url('/assets/cabecera-minecraft.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+
+    .perfiljugador-card {
+      position: absolute;
+      bottom: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #f3e6cc;
+      border: 3px solid #7c5a3a;
+      border-radius: 16px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 800px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+
+      .perfiljugador-skin {
+        width: 120px;
+        height: auto;
+        border-radius: 8px;
+        border: 2px solid #7c5a3a;
+        background: #fff;
+      }
+
+      .perfiljugador-info {
+        flex: 1;
+
+        h1.nombre-jugador {
+          font-size: 2.2rem;
+          margin: 0;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .icono-premium {
+          width: 24px;
+          height: 24px;
+        }
+
+        .nivel {
+          font-size: 1.4rem;
+          margin-top: 0.3rem;
+        }
+
+        .xp-bar {
+          width: 100%;
+          background: #d9c49f;
+          border-radius: 8px;
+          height: 18px;
+          margin: 0.3rem 0;
+
+          .xp-fill {
+            height: 100%;
+            background: linear-gradient(to right, #ffe186, #f4c661);
+            border-radius: 8px;
+          }
+        }
+
+        .xp-text {
+          font-size: 0.95rem;
+          color: #5f4b30;
+        }
+      }
+    }
+  }
+
+  .estadisticas-wrapper-decorada {
+    margin-top: 120px;
+    border-left: 4px solid #a27c4f;
+    border-right: 4px solid #a27c4f;
+    padding: 2rem;
+    background: #fff9e8;
+    max-width: 900px;
+    margin-inline: auto;
+    border-radius: 0 0 16px 16px;
+
+    .selector-servidor {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+
+      .selector-btn {
+        background: #e8d7b9;
+        border: 2px solid #7c5a3a;
+        border-radius: 12px;
+        padding: 0.6rem 1.6rem;
+        font-weight: bold;
+        font-size: 1.1rem;
+        font-family: 'IM Fell English SC', serif;
+        color: #3c2b1b;
+        cursor: pointer;
+        box-shadow: inset 0 2px 3px #ffffff88, 0 3px 0 #b38b63, 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: all 0.15s ease-in-out;
+
+        &:hover {
+          background: #f3e6cc;
+          transform: translateY(-1px);
+          box-shadow: inset 0 2px 3px #ffffff88, 0 4px 0 #b38b63, 0 6px 10px rgba(0, 0, 0, 0.25);
+        }
+
+        &.active {
+          background: #f9edd5;
+          box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 2px 0 #b38b63;
+          transform: translateY(1px);
+        }
+
+        &:focus-visible {
+          outline: 3px solid #ffdd87;
+          outline-offset: 2px;
+        }
+      }
+    }
+
+    .estadisticas-detalle {
+      .servidor-titulo {
+        font-size: 1.8rem;
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      .stats-lista {
+        list-style: none;
+        padding: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+
+        li {
+          display: flex;
+          justify-content: space-between;
+          padding: 0.6rem 1.2rem;
+          background: #fff6db;
+          border: 1px solid #d2b686;
+          border-radius: 8px;
+
+          .label {
+            font-weight: bold;
+          }
+
+          .valor {
+            color: #5a4327;
+          }
+        }
+      }
+    }
+
+    .mensaje-vacio {
+      text-align: center;
+      font-style: italic;
+      color: #806241;
+      margin-top: 1rem;
+    }
+  }
+
+  .sanciones-wrapper {
+    margin-top: 3rem;
+    max-width: 900px;
+    margin-inline: auto;
+    background: #fffdf5;
+    border: 2px solid #c0a070;
+    border-radius: 12px;
+    padding: 1.5rem;
+
+    h3 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .sanciones-lista {
+      list-style: none;
+      padding: 0;
+
+      .sancion-item {
+        padding: 1rem;
+        border-bottom: 1px solid #dec6a0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        p {
+          margin: 0.3rem 0;
+        }
+
+        strong {
+          color: #4c3927;
+        }
+      }
+    }
+
+    .sin-sanciones {
+      text-align: center;
+      font-style: italic;
+      color: #4c3927;
+    }
+  }
+
+  .volver-btn {
+    margin-top: 2rem;
+    text-align: center;
+
+    .btn {
+      background: #e8d7b9;
+      border: 2px solid #7c5a3a;
+      border-radius: 12px;
+      padding: 0.6rem 1.6rem;
+      font-weight: bold;
+      font-size: 1.1rem;
+      font-family: 'IM Fell English SC', serif;
+      color: #3c2b1b;
+      cursor: pointer;
+      box-shadow: inset 0 2px 3px #ffffff88, 0 3px 0 #b38b63, 0 4px 6px rgba(0, 0, 0, 0.2);
+      transition: all 0.15s ease-in-out;
+
+      &:hover {
+        background: #f3e6cc;
+        transform: translateY(-1px);
+        box-shadow: inset 0 2px 3px #ffffff88, 0 4px 0 #b38b63, 0 6px 10px rgba(0, 0, 0, 0.25);
+      }
+    }
+  }
+
+  .perfiljugador-loading {
+    text-align: center;
+    padding: 4rem;
+    font-size: 1.6rem;
+    color: #5a4327;
+  }
+
+  .no-encontrado {
+    .perfiljugador-card.error {
+      margin-top: 5rem;
+      background: #fff1e6;
+      border: 2px solid #cc5b3d;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      color: #471f0a;
+
+      .perfiljugador-skin {
+        width: 100px;
+        margin-bottom: 1rem;
+      }
+
+      h2 {
+        margin-bottom: 0.5rem;
+        font-size: 1.8rem;
+      }
+
+      p {
+        margin-bottom: 1rem;
+      }
+    }
+  }
+}

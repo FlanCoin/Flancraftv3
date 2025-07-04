@@ -1,4 +1,4 @@
-import { NavLink, Link, useLocation } from "react-router-dom";
+import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import LogoutButton from "./Auth/LogoutButton";
 import LoginModal from "./Auth/LoginModal";
@@ -8,8 +8,6 @@ const NavbarMobile = ({
   setMenuOpen,
   profileOpen,
   setProfileOpen,
-  activeDropdown,
-  toggleDropdown,
   isLoggedIn,
   userData,
 }) => {
@@ -19,6 +17,8 @@ const NavbarMobile = ({
   const isHome = location.pathname === "/";
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [rangoDatos, setRangoDatos] = useState(null);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const handleTapOutside = (event) => {
@@ -190,33 +190,25 @@ useEffect(() => {
         <NavLink to="/" onClick={() => setMenuOpen(false)}><i className="fas fa-home" /> Inicio</NavLink>
         <NavLink to="/news" onClick={() => setMenuOpen(false)}><i className="fas fa-scroll" /> Noticias</NavLink>
 
-        <div className={`mobile-dropdown ${activeDropdown === 'mundos' ? 'open' : ''}`}>
-          <div className="mobile-dropdown-toggle" onClick={() => toggleDropdown('mundos')}>
-            <i className="fas fa-map-marked-alt" /> Mundos
-            <i className={`fas fa-chevron-down arrow-icon ${activeDropdown === 'mundos' ? 'open' : ''}`} />
-          </div>
-          <div className="mobile-dropdown-content">
-            <NavLink to="/mundos/survival" onClick={() => setMenuOpen(false)}><i className="fas fa-tree" /> Survival</NavLink>
-            <NavLink to="/mundos/oneblock" onClick={() => setMenuOpen(false)}><i className="fas fa-cube" /> OneBlock</NavLink>
-            <NavLink to="/mundos/pokebox" onClick={() => setMenuOpen(false)}><i className="fas fa-dragon" /> Pokebox</NavLink>
-            <NavLink to="/mundos/anarquico" onClick={() => setMenuOpen(false)}><i className="fas fa-fire-alt" /> Anárquico</NavLink>
-            <NavLink to="/mundos/creativo" onClick={() => setMenuOpen(false)}><i className="fas fa-paint-brush" /> Creativo</NavLink>
-            <NavLink to="/mundos/parkour" onClick={() => setMenuOpen(false)}><i className="fas fa-shoe-prints" /> Parkour</NavLink>
-          </div>
-        </div>
+        <div className="mobile-link" onClick={() => {
+  setMenuOpen(false);
+  if (location.pathname === "/") {
+    const target = document.getElementById("game-modes-section");
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    }
+  } else {
+    navigate("/", { state: { scrollTo: "game-modes-section" } });
+  }
+}}>
+  <i className="fas fa-map-marked-alt" /> Mundos
+</div>
 
         <NavLink to="/leaderboards" onClick={() => setMenuOpen(false)}><i className="fas fa-chart-line" /> Estadísticas</NavLink>
 
-        <div className={`mobile-dropdown ${activeDropdown === 'mercado' ? 'open' : ''}`}>
-          <div className="mobile-dropdown-toggle" onClick={() => toggleDropdown('mercado')}>
-            <i className="fas fa-store" /> Tienda
-            <i className={`fas fa-chevron-down arrow-icon ${activeDropdown === 'mercado' ? 'open' : ''}`} />
-          </div>
-          <div className="mobile-dropdown-content">
-            <NavLink to="/tienda" onClick={() => setMenuOpen(false)}><i className="fas fa-gem" /> Store Servidor</NavLink>
-            <NavLink to="/tienda-merch" onClick={() => setMenuOpen(false)}><i className="fas fa-shopping-bag" /> Merchandising</NavLink>
-          </div>
-        </div>
+       <NavLink to="/tienda" onClick={() => setMenuOpen(false)}>
+  <i className="fas fa-store" /> Mercado
+</NavLink>
 
         <NavLink to="/tribunal" onClick={() => setMenuOpen(false)}><i className="fas fa-gavel" /> Tribunal</NavLink>
 

@@ -144,7 +144,7 @@ useEffect(() => {
           <button
   className={`eko-liquid-btn ${hasUnlocked ? "btn-reveal" : ""}`}
   disabled={!allViewed}
-  onClick={() => (window.location.href = "/shop")}
+  onClick={() => (window.location.href = "/tienda")}
   style={{ "--dominant": dominantColor }}
 >
             <div className="liquid-bg" />

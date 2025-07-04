@@ -482,3 +482,71 @@
     mask-position: 200% 0%;
   }
 }
+@media (max-width: 768px) {
+  .ritual-carousel {
+    padding: 3rem 1rem;
+
+    .codex-box {
+      padding: 2rem 1rem;
+      border-radius: 16px;
+    }
+
+    .ritual-title {
+      font-size: 1.8rem;
+    }
+
+    .ritual-subtitle {
+      font-size: 1.1rem;
+
+      .ritual-badge {
+        font-size: 0.85rem;
+        padding: 0.2rem 0.5rem;
+      }
+    }
+
+    .ritual-description {
+      font-size: 1rem;
+      line-height: 1.5;
+      min-height: auto;
+    }
+
+    .carousel-inner {
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      .carousel-item {
+        width: 50px;
+        height: 50px;
+
+        &.center {
+          transform: scale(1.2);
+        }
+      }
+    }
+
+    .arrow-panel {
+      font-size: 2rem;
+
+      &.left-arrow {
+        left: 0.5rem;
+      }
+
+      &.right-arrow {
+        right: 0.5rem;
+      }
+    }
+
+    .eko-liquid-wrapper {
+      min-width: 200px;
+
+      .eko-liquid-btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+      }
+
+      .eko-liquid-text {
+        font-size: 1rem;
+        gap: 0.4rem;
+      }
+    }
+  }
+}

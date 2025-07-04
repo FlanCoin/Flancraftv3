@@ -102,7 +102,7 @@ const NewsHighlight = () => {
 
         <div className="news-cta">
           <Link to="/news" className="cta-button">
-            Ver todas las noticias <ArrowRight size={16} />
+            Ver todas las noticias
           </Link>
         </div>
       </div>

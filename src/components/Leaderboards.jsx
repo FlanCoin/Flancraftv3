@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { getLeaderboards } from "../api/getLeaderboards";
 import classNames from "classnames";
 import "../styles/pages/_leaderboards.scss";
@@ -222,19 +223,20 @@ export default function Leaderboards() {
               alt={`Avatar de ${player.nombre_minecraft || "Desconocido"}`}
               className="avatar-head"
             />
-            <span
-              className={datosUsuario.rango ? `nombre-colored rango-${datosUsuario.rango}` : ""}
-              style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem" }}
-            >
-              {player.nombre_minecraft || "Desconocido"}
-              {datosUsuario.premium && (
-                <img
-                  src="/assets/premium.png"
-                  alt="Premium"
-                  className="icono-premium"
-                />
-              )}
-            </span>
+            <Link
+  to={`/perfil/${player.nombre_minecraft}`}
+  className={datosUsuario.rango ? `nombre-colored rango-${datosUsuario.rango}` : ""}
+  style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem", textDecoration: "none" }}
+>
+  {player.nombre_minecraft || "Desconocido"}
+  {datosUsuario.premium && (
+    <img
+      src="/assets/premium.png"
+      alt="Premium"
+      className="icono-premium"
+    />
+  )}
+</Link>
           </div>
         </td>
         {STATS.map((stat) => (

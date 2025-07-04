@@ -4,14 +4,16 @@
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
-  padding: 0 0 2rem;
+
   text-align: center;
   font-family: $font-epic;
 
   .news-header {
-    margin-bottom: 2.5rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
 
     .news-title {
+      
       font-size: 4rem;
       font-family: $font-epic;
       color: #2c1b0b;
