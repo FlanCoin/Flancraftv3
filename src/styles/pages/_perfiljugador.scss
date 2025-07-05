@@ -1,39 +1,36 @@
-@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap");
 
 .perfiljugador-wrapper {
-  background-color: #fdf7e2;
-  font-family: 'IM Fell English SC', serif;
+  font-family: "IM Fell English SC", serif;
   color: #3c2b1b;
-  padding-bottom: 4rem;
 
+  // === CABECERA ===
   .cabecera-imagen {
-    width: 100%;
-    height: 320px;
-    background-image: url('/assets/cabecera-minecraft.webp');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     position: relative;
+    width: 100%;
+    height: 25rem;
+    background: url("/assets/cabecera-minecraft.webp") center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
 
     .perfiljugador-card {
-      position: absolute;
-      bottom: -80px;
-      left: 50%;
-      transform: translateX(-50%);
       background: #f3e6cc;
       border: 3px solid #7c5a3a;
       border-radius: 16px;
-      padding: 2rem;
+      padding: 1rem;
       width: 90%;
-      max-width: 800px;
+      max-width: 850px;
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
       display: flex;
       align-items: center;
       gap: 2rem;
+      position: absolute;
+      top: 1rem;
+      z-index: 3;
 
       .perfiljugador-skin {
         width: 120px;
-        height: auto;
         border-radius: 8px;
         border: 2px solid #7c5a3a;
         background: #fff;
@@ -44,7 +41,6 @@
 
         h1.nombre-jugador {
           font-size: 2.2rem;
-          margin: 0;
           display: flex;
           align-items: center;
           gap: 0.5rem;
@@ -56,16 +52,16 @@
         }
 
         .nivel {
-          font-size: 1.4rem;
+          font-size: 1.3rem;
           margin-top: 0.3rem;
         }
 
         .xp-bar {
-          width: 100%;
           background: #d9c49f;
           border-radius: 8px;
           height: 18px;
           margin: 0.3rem 0;
+          width: 100%;
 
           .xp-fill {
             height: 100%;
@@ -80,143 +76,221 @@
         }
       }
     }
-  }
 
-  .estadisticas-wrapper-decorada {
-    margin-top: 120px;
-    border-left: 4px solid #a27c4f;
-    border-right: 4px solid #a27c4f;
-    padding: 2rem;
-    background: #fff9e8;
-    max-width: 900px;
-    margin-inline: auto;
-    border-radius: 0 0 16px 16px;
+    .borde-inferior-imagen {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 50px;
+      background: url("/assets/borde.jpeg") repeat-x;
+      background-size: contain;
+      z-index: 1;
+    }
 
     .selector-servidor {
+      position: absolute;
+      bottom: 50px; // justo encima del borde
+      left: 0;
+      width: 100%;
+      z-index: 2;
       display: flex;
       justify-content: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      padding: 0 1rem;
 
       .selector-btn {
-        background: #e8d7b9;
+        background: #f3e6cc;
         border: 2px solid #7c5a3a;
         border-radius: 12px;
-        padding: 0.6rem 1.6rem;
+        padding: 0.5rem 1.5rem;
         font-weight: bold;
-        font-size: 1.1rem;
-        font-family: 'IM Fell English SC', serif;
+        font-size: 1rem;
+        font-family: inherit;
         color: #3c2b1b;
         cursor: pointer;
-        box-shadow: inset 0 2px 3px #ffffff88, 0 3px 0 #b38b63, 0 4px 6px rgba(0, 0, 0, 0.2);
+        box-shadow: inset 0 2px 3px #ffffffaa, 0 4px 6px rgba(0, 0, 0, 0.2);
         transition: all 0.15s ease-in-out;
+        transform: scale(1);
+        user-select: none;
 
         &:hover {
-          background: #f3e6cc;
-          transform: translateY(-1px);
-          box-shadow: inset 0 2px 3px #ffffff88, 0 4px 0 #b38b63, 0 6px 10px rgba(0, 0, 0, 0.25);
+          transform: scale(1.07);
+        }
+
+        &:active {
+          transform: scale(0.96);
+          box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2),
+            0 1px 1px rgba(0, 0, 0, 0.1);
         }
 
         &.active {
           background: #f9edd5;
-          box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 2px 0 #b38b63;
-          transform: translateY(1px);
+          transform: scale(1);
+          box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.25),
+            0 1px 0 #b38b63;
         }
 
         &:focus-visible {
-          outline: 3px solid #ffdd87;
+          outline: 2px solid #ffdb89;
           outline-offset: 2px;
         }
       }
     }
+  }
 
-    .estadisticas-detalle {
-      .servidor-titulo {
+  // === CONTENIDO DECORADO ===
+  .decoracion-fondo-wrapper {
+    position: relative;
+    z-index: 1;
+    padding-top: 10rem; // separa el contenido del borde sin mover las imágenes
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("/assets/papertexture.jpeg") repeat-y center/cover;
+      opacity: 1;
+      z-index: 0;
+    }
+
+    > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .estadisticas-wrapper-decorada {
+      top: 0;
+
+      .estadisticas-top-decor {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        z-index: 2;
+        pointer-events: none;
+
+        .decor-top {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: auto;
+          z-index: 2;
+        }
+
+        .decor-borde {
+          position: absolute;
+          top: 0;
+          right: 0;
+          height: auto;
+          z-index: 2;
+        }
+      }
+
+      .estadisticas-detalle {
+        background: #fffdf3;
+        border: 3px solid #b58f5a;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        max-width: 1000px;
+        margin: 0 auto;
+
+        .servidor-titulo {
+          font-size: 1.8rem;
+          text-align: center;
+          margin-bottom: 1.5rem;
+          color: #3c2b1b;
+          text-shadow: 0 1px 0 #ffffffbb;
+        }
+
+        .stats-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+          gap: 1.4rem;
+
+          .stat-card {
+            background: #fff6db;
+            border: 1px solid #dec49b;
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+
+            .label {
+              font-weight: bold;
+              font-size: 1.1rem;
+              margin-bottom: 0.4rem;
+            }
+
+            .valor {
+              font-size: 1.3rem;
+              color: #5a4327;
+              font-family: Georgia, serif;
+            }
+          }
+        }
+
+        .mensaje-vacio {
+          text-align: center;
+          color: #806241;
+          font-style: italic;
+          margin-top: 1rem;
+        }
+      }
+    }
+
+    .sanciones-wrapper {
+      margin: 5rem auto 0;
+      background: #fffdf5;
+      border: 2px solid #c0a070;
+      border-radius: 12px;
+      padding: 1.5rem;
+      max-width: 900px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+
+      h3 {
         font-size: 1.8rem;
         text-align: center;
         margin-bottom: 1rem;
       }
 
-      .stats-lista {
+      .sanciones-lista {
         list-style: none;
         padding: 0;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.8rem;
 
-        li {
-          display: flex;
-          justify-content: space-between;
-          padding: 0.6rem 1.2rem;
-          background: #fff6db;
-          border: 1px solid #d2b686;
-          border-radius: 8px;
+        .sancion-item {
+          padding: 1rem;
+          border-bottom: 1px solid #dec6a0;
 
-          .label {
-            font-weight: bold;
+          &:last-child {
+            border-bottom: none;
           }
 
-          .valor {
-            color: #5a4327;
+          p {
+            margin: 0.4rem 0;
+          }
+
+          strong {
+            color: #4c3927;
           }
         }
       }
-    }
 
-    .mensaje-vacio {
-      text-align: center;
-      font-style: italic;
-      color: #806241;
-      margin-top: 1rem;
-    }
-  }
-
-  .sanciones-wrapper {
-    margin-top: 3rem;
-    max-width: 900px;
-    margin-inline: auto;
-    background: #fffdf5;
-    border: 2px solid #c0a070;
-    border-radius: 12px;
-    padding: 1.5rem;
-
-    h3 {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-
-    .sanciones-lista {
-      list-style: none;
-      padding: 0;
-
-      .sancion-item {
-        padding: 1rem;
-        border-bottom: 1px solid #dec6a0;
-
-        &:last-child {
-          border-bottom: none;
-        }
-
-        p {
-          margin: 0.3rem 0;
-        }
-
-        strong {
-          color: #4c3927;
-        }
+      .sin-sanciones {
+        text-align: center;
+        font-style: italic;
+        color: #4c3927;
       }
-    }
-
-    .sin-sanciones {
-      text-align: center;
-      font-style: italic;
-      color: #4c3927;
     }
   }
 
   .volver-btn {
-    margin-top: 2rem;
+    margin-top: 2.5rem;
     text-align: center;
 
     .btn {
@@ -226,16 +300,14 @@
       padding: 0.6rem 1.6rem;
       font-weight: bold;
       font-size: 1.1rem;
-      font-family: 'IM Fell English SC', serif;
       color: #3c2b1b;
       cursor: pointer;
-      box-shadow: inset 0 2px 3px #ffffff88, 0 3px 0 #b38b63, 0 4px 6px rgba(0, 0, 0, 0.2);
-      transition: all 0.15s ease-in-out;
+      transition: all 0.2s;
+      font-family: "IM Fell English SC", serif;
 
       &:hover {
         background: #f3e6cc;
         transform: translateY(-1px);
-        box-shadow: inset 0 2px 3px #ffffff88, 0 4px 0 #b38b63, 0 6px 10px rgba(0, 0, 0, 0.25);
       }
     }
   }
@@ -249,13 +321,14 @@
 
   .no-encontrado {
     .perfiljugador-card.error {
-      margin-top: 5rem;
       background: #fff1e6;
       border: 2px solid #cc5b3d;
       border-radius: 12px;
       padding: 2rem;
       text-align: center;
       color: #471f0a;
+      margin: 5rem auto 2rem;
+      max-width: 700px;
 
       .perfiljugador-skin {
         width: 100px;
@@ -263,8 +336,8 @@
       }
 
       h2 {
-        margin-bottom: 0.5rem;
         font-size: 1.8rem;
+        margin-bottom: 0.5rem;
       }
 
       p {

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion as Motion } from 'framer-motion';
-import client from '../sanityClient';
 import '../styles/components/_allnews.scss';
+
+const API_URL = "https://flancraftweb-backend.onrender.com";
 
 const AllNews = () => {
   const [newsData, setNewsData] = useState([]);
@@ -10,7 +11,6 @@ const AllNews = () => {
   const [loading, setLoading] = useState(true);
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
-  // Animación escalonada
   const listItemVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: (i) => ({
@@ -24,22 +24,20 @@ const AllNews = () => {
   };
 
   useEffect(() => {
-    const fetchNews = async () => {
+    const fetchNoticias = async () => {
       try {
-        const data = await client.fetch(`*[_type == "news"] | order(date desc) {
-          _id,
-          title,
-          date,
-          "imageUrl": image.asset->url,
-          content
-        }`);
-        setNewsData(data);
-        preloadImages(data.map((n) => n.imageUrl));
+        const res = await fetch(`${API_URL}/api/noticias`);
+        const data = await res.json();
+        const publicadas = data
+          .filter(n => n.publicada)
+          .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+        setNewsData(publicadas);
+        preloadImages(publicadas.map((n) => n.portada));
       } catch (error) {
         console.error('Error al obtener noticias:', error);
       }
     };
-    fetchNews();
+    fetchNoticias();
   }, []);
 
   const preloadImages = (urls) => {
@@ -64,15 +62,11 @@ const AllNews = () => {
     return `hace ${diff} día${diff !== 1 ? 's' : ''}`;
   };
 
-  const truncate = (text, limit = 200) => {
-    if (!text) return '';
-    return text.length <= limit ? text : text.slice(0, text.lastIndexOf(' ', limit)) + '...';
-  };
-
-  const extractPlainText = (blocks) => {
-    if (!Array.isArray(blocks)) return '';
-    const block = blocks.find((b) => b._type === 'block' && Array.isArray(b.children));
-    return block ? block.children.map((c) => c.text).join('') : '';
+  const truncate = (html, limit = 200) => {
+    const tmp = document.createElement("div");
+    tmp.innerHTML = html;
+    const text = tmp.textContent || tmp.innerText || "";
+    return text.length <= limit ? text : text.slice(0, text.lastIndexOf(" ", limit)) + "...";
   };
 
   const featured = newsData.slice(0, 1);
@@ -104,13 +98,13 @@ const AllNews = () => {
           transition={{ duration: 0.6, delay: 0.3 }}
         >
           {featured.map((item) => (
-            <Link key={item._id} to={`/news/${item._id}`} className="featured-news-card">
+            <Link key={item.id} to={`/news/${item.slug}`} className="featured-news-card">
               <div className="img-wrapper">
-                <img src={item.imageUrl} alt={item.title} loading="lazy" />
+                <img src={item.portada || "/assets/placeholder.png"} alt={item.titulo} loading="lazy" />
               </div>
               <div className="info">
-                <h3>{item.title}</h3>
-                <span>{formatDaysAgo(item.date)}</span>
+                <h3>{item.titulo}</h3>
+                <span>{formatDaysAgo(item.fecha)}</span>
               </div>
             </Link>
           ))}
@@ -131,34 +125,34 @@ const AllNews = () => {
 
         <div className="news-list">
           {!imagesLoaded || loading ? (
-  Array.from({ length: 6 }).map((_, i) => (
-    <div key={i} className="news-list-item loading-skeleton">
-      <div className="hover-wrapper">
-        <div className="skeleton-image" />
-        <div className="text">
-          <div className="skeleton-title" />
-          <div className="skeleton-paragraph" />
-          <div className="skeleton-date" />
-        </div>
-      </div>
-    </div>
-  ))
-) : (
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="news-list-item loading-skeleton">
+                <div className="hover-wrapper">
+                  <div className="skeleton-image" />
+                  <div className="text">
+                    <div className="skeleton-title" />
+                    <div className="skeleton-paragraph" />
+                    <div className="skeleton-date" />
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
             rest.map((item, index) => (
               <Motion.div
-                key={item._id}
+                key={item.id}
                 custom={index}
                 variants={listItemVariants}
                 initial="hidden"
                 animate="visible"
               >
-                <Link to={`/news/${item._id}`} className="news-list-item">
+                <Link to={`/news/${item.slug}`} className="news-list-item">
                   <div className="hover-wrapper">
-                    <img src={item.imageUrl} alt={item.title} loading="lazy" />
+                    <img src={item.portada || "/assets/placeholder.png"} alt={item.titulo} loading="lazy" />
                     <div className="text">
-                      <h4>{item.title}</h4>
-                      <p>{truncate(extractPlainText(item.content))}</p>
-                      <div className="date">{formatDaysAgo(item.date)}</div>
+                      <h4>{item.titulo}</h4>
+                      <p>{truncate(item.contenido)}</p>
+                      <div className="date">{formatDaysAgo(item.fecha)}</div>
                     </div>
                   </div>
                 </Link>

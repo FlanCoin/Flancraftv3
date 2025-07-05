@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import LoginModal from "./components/Auth/LoginModal";
 import { Toaster } from "react-hot-toast";
+
 // Páginas públicas
 import Home from "./pages/Home";
 import AllNews from "./components/AllNews";
@@ -11,10 +12,12 @@ import NewsDetail from "./components/NewsDetail";
 import DashboardPage from "./components/DashboardPage";
 import Tienda from './components/Tienda';
 import RangoSelectorAnimado from "./components/RangoSelectorAnimado";
+
 // Tribunal System
 import TribunalMain from "./pages/tribunal/TribunalMain";
 import TribunalAdmin from "./pages/tribunal/TribunalAdmin";
 import GestionStaff from './components/Admin/GestionStaff';
+import NoticiasAdmin from './components/Admin/NoticiasAdmin';
 import PerfilJugador from "./components/PerfilJugador";
 import LeaderboardsPage from "./pages/LeaderboardsPage";
 
@@ -26,7 +29,7 @@ const App = () => {
   return (
     <>
       <Navbar onLoginClick={() => setShowLogin(true)} />
-        <Toaster position="top-center" reverseOrder={false} />
+      <Toaster position="top-center" reverseOrder={false} />
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
 
       <Routes>
@@ -38,13 +41,16 @@ const App = () => {
         <Route path="/rangos" element={<RangoSelectorAnimado />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/leaderboards" element={<LeaderboardsPage />} />
-        <Route path="/admin" element={<GestionStaff />} />
+        <Route path="/perfil/:nombre" element={<PerfilJugador />} />
 
-        {/* ⚖️ Tribunal System (Staff) */}
+        {/* 🛡️ Admin Paneles */}
+        <Route path="/admin" element={<GestionStaff />} />
+        <Route path="/admin/noticias" element={<NoticiasAdmin />} />
+
+        {/* ⚖️ Tribunal System */}
         <Route path="/tribunal" element={<TribunalMain />} />
         <Route path="/tribunal/admin" element={<TribunalAdmin />} />
-        <Route path="/perfil/:nombre" element={<PerfilJugador />} />
-    </Routes>
+      </Routes>
     </>
   );
 };

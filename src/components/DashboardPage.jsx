@@ -167,13 +167,17 @@ export default function DashboardPage() {
             </div>
 
             {user.rol_admin && (
-              <div className="info-botones">
-                <button onClick={() => navigate("/tribunal/admin")}>Tribunal</button>
-                {user.rol_admin.toLowerCase() === "owner" && (
-                  <button onClick={() => navigate("/admin")}>Gestión Staff</button>
-                )}
-              </div>
-            )}
+  <div className="info-botones">
+    <button onClick={() => navigate("/tribunal/admin")}>Tribunal</button>
+
+    {user.rol_admin.toLowerCase() === "owner" && (
+      <>
+        <button onClick={() => navigate("/admin")}>Gestión Staff</button>
+        <button onClick={() => navigate("/admin/noticias")}>Panel de Noticias</button>
+      </>
+    )}
+  </div>
+)}
           </div>
             <div className="separador-magico"></div>
           <div className="dashboard-secciones">

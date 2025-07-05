@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@blocknote/core": "^0.6.2",
+    "@blocknote/react": "^0.6.2",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@portabletext/react": "^3.2.1",
     "@sanity/client": "^6.28.4",
@@ -27,13 +29,14 @@
     "lucide-react": "^0.487.0",
     "ngrok": "^5.0.0-beta.2",
     "phosphor-react": "^1.4.1",
-    "react": "^19.0.0",
+    "react": "^18.3.1",
     "react-chartjs-2": "^5.3.0",
     "react-circular-progressbar": "^2.2.0",
-    "react-dom": "^19.0.0",
+    "react-dom": "^18.3.1",
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-pageflip": "^2.0.3",
+    "react-quill": "^2.0.0",
     "react-router-dom": "^7.6.0",
     "sass": "^1.86.3",
     "tree": "^0.1.3"
