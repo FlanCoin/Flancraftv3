@@ -5,10 +5,17 @@ import {
   FaDiscord, FaClipboard, FaShareAlt
 } from 'react-icons/fa';
 import { motion as Motion } from 'framer-motion';
+import { generateHTML } from '@tiptap/html';
+import StarterKit from '@tiptap/starter-kit';
+import Link from '@tiptap/extension-link';
+import Image from '@tiptap/extension-image';
+import TextAlign from '@tiptap/extension-text-align';
+import TextStyle from '@tiptap/extension-text-style';
+import Color from '@tiptap/extension-color';
 import '../styles/components/_newsdetail.scss';
 
 const NewsDetail = () => {
-  const { slug } = useParams(); // slug es el ID o slug de la noticia
+  const { slug } = useParams();
   const navigate = useNavigate();
   const [news, setNews] = useState(null);
   const [latestNews, setLatestNews] = useState([]);
@@ -24,9 +31,18 @@ const NewsDetail = () => {
         if (!res.ok) throw new Error("No se pudo cargar la noticia");
 
         const data = await res.json();
-        setTimeout(() => {
-          setNews(data);
-        }, 300);
+        const html = typeof data.contenido === 'object'
+          ? generateHTML(data.contenido, [
+              StarterKit,
+              Link,
+              Image,
+              TextAlign.configure({ types: ["heading", "paragraph"] }),
+              Color,
+              TextStyle
+            ])
+          : data.contenido;
+
+        setNews({ ...data, html });
       } catch (error) {
         console.error("Error al cargar la noticia:", error);
         navigate("/news");
@@ -78,11 +94,11 @@ const NewsDetail = () => {
             <h1 className="title">{news.titulo}</h1>
             <p className="date">{new Date(news.fecha).toLocaleDateString()}</p>
 
-            {news.imagen && (
-              <img className="featured-img" src={news.imagen} alt={news.titulo} />
+            {news.portada && (
+              <img className="featured-img" src={news.portada} alt={news.titulo} />
             )}
 
-            <article className="content" dangerouslySetInnerHTML={{ __html: news.contenido }} />
+            <article className="content" dangerouslySetInnerHTML={{ __html: news.html }} />
 
             <button className="back-btn" onClick={() => navigate('/news')}>← Volver</button>
 
@@ -93,14 +109,14 @@ const NewsDetail = () => {
             <h3>Últimas noticias</h3>
             <ul className="sidebar-news-list">
               {latestNews.slice(0, visibleNews).map((item) => {
-                const isActive = item.id === slug || item.slug === slug;
+                const isActive = item.slug === slug;
                 return (
                   <li
                     key={item.id}
                     className={isActive ? 'active' : ''}
-                    onClick={() => navigate(`/news/${item.id}`)}
+                    onClick={() => navigate(`/news/${item.slug}`)}
                   >
-                    <img src={item.imagen} alt={item.titulo} />
+                    <img src={item.portada} alt={item.titulo} />
                     <div>
                       <h4>{item.titulo}</h4>
                       <p>{new Date(item.fecha).toLocaleDateString()}</p>

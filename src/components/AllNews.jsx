@@ -33,11 +33,10 @@ const AllNews = () => {
           .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
           .map(n => ({
             ...n,
-            // ✅ Slug autogenerado si falta
             slug: n.slug || generarSlug(n.titulo),
           }));
         setNewsData(publicadas);
-        preloadImages(publicadas.map((n) => n.portada || "/assets/placeholder.png"));
+        preloadImages(publicadas.map(n => n.portada || "/assets/placeholder.png"));
       } catch (error) {
         console.error('Error al obtener noticias:', error);
       }
@@ -76,10 +75,20 @@ const AllNews = () => {
     return `hace ${diff} día${diff !== 1 ? 's' : ''}`;
   };
 
-  const truncate = (html, limit = 200) => {
-    const tmp = document.createElement("div");
-    tmp.innerHTML = html;
-    const text = tmp.textContent || tmp.innerText || "";
+  const extractPlainText = (json) => {
+    try {
+      if (typeof json === "string") json = JSON.parse(json);
+      if (!json || !json.content) return "";
+      return json.content
+        .map(block => block.content?.map(c => c.text).join(" ") || "")
+        .join(" ")
+        .trim();
+    } catch {
+      return "";
+    }
+  };
+
+  const truncate = (text, limit = 200) => {
     return text.length <= limit ? text : text.slice(0, text.lastIndexOf(" ", limit)) + "...";
   };
 
@@ -169,7 +178,7 @@ const AllNews = () => {
                     <img src={item.portada || "/assets/placeholder.png"} alt={item.titulo} loading="lazy" />
                     <div className="text">
                       <h4>{item.titulo}</h4>
-                      <p>{truncate(item.contenido)}</p>
+                      <p>{truncate(extractPlainText(item.contenido))}</p>
                       <div className="date">{formatDaysAgo(item.fecha)}</div>
                     </div>
                   </div>

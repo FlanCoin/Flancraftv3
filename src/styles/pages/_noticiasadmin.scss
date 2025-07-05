@@ -1,130 +1,243 @@
+// styles/pages/_noticiasadmin.scss
+
 @import url("https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap");
 
 .noticias-admin {
   font-family: "IM Fell English SC", serif;
-  max-width: 900px;
-  margin: 2rem auto;
   padding: 2rem;
-  background: #fffbe6;
-  border: 3px solid #d9b166;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  background: #fdf7ee;
+  color: #3a2d1e;
 
   h2 {
     font-size: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6e431f;
     margin-bottom: 1.5rem;
-    color: #8e5d1a;
-    text-align: center;
   }
 
   form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    background: #fff5e5;
+    border: 2px solid #d9b88f;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
 
-    input[type="text"] {
-      padding: 0.6rem;
+    input[type="text"],
+    input[type="datetime-local"],
+    textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #c9a16b;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-family: inherit;
       font-size: 1rem;
-      border: 2px solid #caa452;
-      border-radius: 6px;
-      background: #fffdf4;
+      background-color: #fffaf3;
+      transition: border 0.2s ease;
+
       &:focus {
         outline: none;
-        border-color: #d4a73b;
+        border-color: #b87b4a;
+        background-color: #fffef8;
       }
     }
 
-    .ql-container {
-      background: #fefaf0;
-      border: 2px solid #cfa33d;
-      border-radius: 6px;
-    }
-
-    .ql-toolbar {
-      border-radius: 6px 6px 0 0;
-    }
-
-    button {
-      padding: 0.6rem 1rem;
-      background: #e1b254;
-      border: none;
-      border-radius: 6px;
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
       font-weight: bold;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.2s;
-      &:hover {
-        background: #d4a336;
+    }
+
+    .editor-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+
+      button,
+      label {
+        background: #eed6b0;
+        border: 1px solid #c09364;
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        font-family: inherit;
+        color: #3a2d1e;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: #f5e3c6;
+        }
+
+        &.is-active {
+          background-color: #d4a46c;
+          color: white;
+        }
+      }
+
+      .color-picker {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        input[type="color"] {
+          border: none;
+          padding: 0;
+          width: 2rem;
+          height: 2rem;
+          background: none;
+          cursor: pointer;
+        }
       }
     }
 
-    textarea {
-      font-family: monospace;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+    .tiptap-editor-wrapper {
+      border: 2px solid #e3c29a;
+      border-radius: 8px;
+      background: #fffdf9;
       padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .editor-contenido {
+      min-height: 200px;
+      outline: none;
+
+      p {
+        margin: 0.5rem 0;
+      }
+    }
+
+    .html-paste-box {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1.5rem;
+
+      textarea {
+        height: 100px;
+        resize: vertical;
+        font-family: monospace;
+        background: #fefcf8;
+        border: 1px dashed #bb9163;
+      }
+
+      button {
+        align-self: flex-start;
+        margin-top: 0.5rem;
+        background: #d7b68f;
+        border: none;
+        padding: 0.6rem 1rem;
+        font-weight: bold;
+        color: #3a2d1e;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: background 0.2s ease;
+
+        &:hover {
+          background: #e7c59d;
+        }
+      }
+    }
+
+    .boton-publicar {
+      background: #8c5c30;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.2rem;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: #a8703f;
+      }
     }
   }
 
-  .lista-noticias {
-    margin-top: 2rem;
+  hr {
+    border: none;
+    border-top: 2px dashed #c0a379;
+    margin: 2rem 0;
+  }
 
+  .lista-noticias {
     h3 {
       font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       margin-bottom: 1rem;
-      border-bottom: 2px dashed #deb059;
-      padding-bottom: 0.5rem;
+      color: #6c4325;
     }
 
     .noticia-item {
-      background: #fffdf4;
-      border: 1px solid #e3c188;
-      border-radius: 8px;
+      background: #fdf6ec;
+      border: 2px solid #e2c59e;
+      border-radius: 12px;
       padding: 1rem;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
 
-      h4 {
-        margin: 0 0 0.5rem;
-        color: #734c1d;
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       }
 
-      .contenido-preview {
-        max-height: 300px;
-        overflow-y: auto;
-        background: #fdfaf3;
-        padding: 0.5rem;
-        border-radius: 6px;
+      h4 {
+        margin: 0;
+        font-size: 1.3rem;
+        color: #4e3218;
+      }
+
+      p {
+        margin: 0.5rem 0 1rem;
+        color: #5c4531;
+        font-size: 0.95rem;
+      }
+
+      img {
+        border-radius: 8px;
         margin-bottom: 1rem;
-
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          td, th {
-            padding: 0.4rem;
-            border: 1px solid #ccc;
-          }
-        }
-
-        iframe {
-          width: 100%;
-          border-radius: 10px;
-        }
+        border: 1px solid #d7b184;
       }
 
       .acciones {
         display: flex;
-        gap: 0.5rem;
+        gap: 1rem;
 
         button {
-          background: #cfa33d;
-          padding: 0.4rem 0.8rem;
+          background: #6a4525;
+          color: #fff;
           border: none;
-          border-radius: 5px;
-          cursor: pointer;
+          padding: 0.5rem 1rem;
+          border-radius: 6px;
           font-weight: bold;
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          transition: background 0.2s ease;
 
           &:hover {
-            background: #b98c2b;
+            background: #875c36;
+          }
+
+          &:nth-child(2) {
+            background: #a53333;
+
+            &:hover {
+              background: #c94545;
+            }
           }
         }
       }

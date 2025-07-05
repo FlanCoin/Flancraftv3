@@ -11,6 +11,7 @@ const NewsHighlight = () => {
       try {
         const res = await fetch('https://flancraftweb-backend.onrender.com/api/noticias');
         const data = await res.json();
+        // Ordenar por fecha descendente
         const sorted = data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
         setNewsData(sorted);
       } catch (error) {
@@ -22,6 +23,7 @@ const NewsHighlight = () => {
   }, []);
 
   const formatDaysAgo = (dateStr) => {
+    if (!dateStr) return '';
     const today = new Date();
     const newsDate = new Date(dateStr);
     const diff = Math.floor((today - newsDate) / (1000 * 60 * 60 * 24));
@@ -33,7 +35,8 @@ const NewsHighlight = () => {
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = htmlContent;
       const text = tempDiv.textContent || tempDiv.innerText || '';
-      return text.slice(0, length) + '...';
+      if (text.length <= length) return text;
+      return text.slice(0, text.lastIndexOf(' ', length)) + '...';
     } catch {
       return '...';
     }
@@ -60,15 +63,18 @@ const NewsHighlight = () => {
         {latest && (
           <div className="highlight-featured">
             <div className="highlight-image">
-              <img src={latest.imagen} alt={latest.titulo} />
+              <img
+                src={latest.portada || latest.imagen || "/assets/placeholder.png"}
+                alt={latest.titulo}
+              />
             </div>
             <div className="highlight-content">
               <h3>
-                <Link to={`/news/${latest.id}`}>{latest.titulo}</Link>
+                <Link to={`/news/${latest.slug || latest.id}`}>{latest.titulo}</Link>
               </h3>
               <span className="date">{formatDaysAgo(latest.fecha)}</span>
               <p>{getExcerpt(latest.contenido)}</p>
-              <Link to={`/news/${latest.id}`} className="readmore-link">
+              <Link to={`/news/${latest.slug || latest.id}`} className="readmore-link">
                 Leer más <ArrowRight size={16} className="icon-inline" />
               </Link>
             </div>
@@ -77,9 +83,16 @@ const NewsHighlight = () => {
 
         <div className="highlight-previous">
           {previous.map((news) => (
-            <Link to={`/news/${news.id}`} key={news.id} className="highlight-card-link">
+            <Link
+              to={`/news/${news.slug || news.id}`}
+              key={news.id}
+              className="highlight-card-link"
+            >
               <div className="highlight-card">
-                <img src={news.imagen} alt={news.titulo} />
+                <img
+                  src={news.portada || news.imagen || "/assets/placeholder.png"}
+                  alt={news.titulo}
+                />
                 <div className="card-content">
                   <h4>{news.titulo}</h4>
                   <span className="date">{formatDaysAgo(news.fecha)}</span>

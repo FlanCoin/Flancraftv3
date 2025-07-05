@@ -106,6 +106,8 @@ const goToDashboard = (uuid, username, rol_admin, extras = {}) => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Error al iniciar sesión");
 
+      localStorage.setItem("token", data.token);
+      
       const usuarioRes = await fetch(
         `https://flancraftweb-backend.onrender.com/api/usuarios/${data.uuid}`
       );
