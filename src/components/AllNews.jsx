@@ -30,15 +30,29 @@ const AllNews = () => {
         const data = await res.json();
         const publicadas = data
           .filter(n => n.publicada)
-          .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+          .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+          .map(n => ({
+            ...n,
+            // ✅ Slug autogenerado si falta
+            slug: n.slug || generarSlug(n.titulo),
+          }));
         setNewsData(publicadas);
-        preloadImages(publicadas.map((n) => n.portada));
+        preloadImages(publicadas.map((n) => n.portada || "/assets/placeholder.png"));
       } catch (error) {
         console.error('Error al obtener noticias:', error);
       }
     };
     fetchNoticias();
   }, []);
+
+  const generarSlug = (titulo) => {
+    return titulo
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9 ]/g, "")
+      .replace(/\s+/g, "-");
+  };
 
   const preloadImages = (urls) => {
     let loaded = 0;
@@ -98,7 +112,11 @@ const AllNews = () => {
           transition={{ duration: 0.6, delay: 0.3 }}
         >
           {featured.map((item) => (
-            <Link key={item.id} to={`/news/${item.slug}`} className="featured-news-card">
+            <Link
+              key={item.id}
+              to={`/news/${item.slug}`}
+              className="featured-news-card"
+            >
               <div className="img-wrapper">
                 <img src={item.portada || "/assets/placeholder.png"} alt={item.titulo} loading="lazy" />
               </div>

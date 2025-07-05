@@ -74,19 +74,20 @@ export default function LoginModal({ onClose }) {
     }, 600);
   };
 
-  const goToDashboard = (uuid, username, rol_admin, extras = {}) => {
-    const userData = {
-      uuid,
-      username,
-      loggedIn: true,
-      rol_admin,
-      ...extras,
-    };
-    localStorage.setItem("flan_user", JSON.stringify(userData));
-    setUser(userData);
-    navigate("/dashboard");
-    cerrarModal();
+const goToDashboard = (uuid, username, rol_admin, extras = {}) => {
+  const userData = {
+    uuid,
+    username,
+    loggedIn: true,
+    rol_admin,
+    token: extras.token,
+    ...extras,
   };
+  localStorage.setItem("flan_user", JSON.stringify(userData));
+  setUser(userData);
+  navigate("/dashboard");
+  cerrarModal();
+};
 
   const validarPasswordsIguales = () => form.password === form.confirm;
 
@@ -111,6 +112,7 @@ export default function LoginModal({ onClose }) {
       const usuarioData = await usuarioRes.json();
 
       goToDashboard(data.uuid, data.uid, data.rol_admin, {
+        token: data.token,
         rango_usuario: usuarioData.rango_usuario,
         userLevel: usuarioData.nivel,
         userXP: usuarioData.experiencia,

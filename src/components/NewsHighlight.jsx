@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import client from '../sanityClient';
 import { ArrowRight } from 'lucide-react';
 import '../styles/components/_newshighlight.scss';
 
@@ -10,14 +9,10 @@ const NewsHighlight = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const data = await client.fetch(`*[_type == "news"] | order(date desc) {
-          _id,
-          title,
-          date,
-          "imageUrl": image.asset->url,
-          content
-        }`);
-        setNewsData(data);
+        const res = await fetch('https://flancraftweb-backend.onrender.com/api/noticias');
+        const data = await res.json();
+        const sorted = data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+        setNewsData(sorted);
       } catch (error) {
         console.error('Error al obtener noticias:', error);
       }
@@ -33,18 +28,12 @@ const NewsHighlight = () => {
     return `hace ${diff} día${diff !== 1 ? 's' : ''}`;
   };
 
-  const getExcerpt = (content, length = 180) => {
+  const getExcerpt = (htmlContent, length = 180) => {
     try {
-      if (!Array.isArray(content)) return '...';
-      const blocks = content.filter(
-        (block) => block._type === 'block' && Array.isArray(block.children)
-      );
-      const fullText = blocks
-        .map((block) =>
-          block.children.map((c) => (typeof c.text === 'string' ? c.text : '')).join('')
-        )
-        .join(' ');
-      return fullText.slice(0, length) + '...';
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = htmlContent;
+      const text = tempDiv.textContent || tempDiv.innerText || '';
+      return text.slice(0, length) + '...';
     } catch {
       return '...';
     }
@@ -71,15 +60,15 @@ const NewsHighlight = () => {
         {latest && (
           <div className="highlight-featured">
             <div className="highlight-image">
-              <img src={latest.imageUrl} alt={latest.title} />
+              <img src={latest.imagen} alt={latest.titulo} />
             </div>
             <div className="highlight-content">
               <h3>
-                <Link to={`/news/${latest._id}`}>{latest.title}</Link>
+                <Link to={`/news/${latest.id}`}>{latest.titulo}</Link>
               </h3>
-              <span className="date">{formatDaysAgo(latest.date)}</span>
-              <p>{getExcerpt(latest.content)}</p>
-              <Link to={`/news/${latest._id}`} className="readmore-link">
+              <span className="date">{formatDaysAgo(latest.fecha)}</span>
+              <p>{getExcerpt(latest.contenido)}</p>
+              <Link to={`/news/${latest.id}`} className="readmore-link">
                 Leer más <ArrowRight size={16} className="icon-inline" />
               </Link>
             </div>
@@ -88,12 +77,12 @@ const NewsHighlight = () => {
 
         <div className="highlight-previous">
           {previous.map((news) => (
-            <Link to={`/news/${news._id}`} key={news._id} className="highlight-card-link">
+            <Link to={`/news/${news.id}`} key={news.id} className="highlight-card-link">
               <div className="highlight-card">
-                <img src={news.imageUrl} alt={news.title} />
+                <img src={news.imagen} alt={news.titulo} />
                 <div className="card-content">
-                  <h4>{news.title}</h4>
-                  <span className="date">{formatDaysAgo(news.date)}</span>
+                  <h4>{news.titulo}</h4>
+                  <span className="date">{formatDaysAgo(news.fecha)}</span>
                 </div>
               </div>
             </Link>

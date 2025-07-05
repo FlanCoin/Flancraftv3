@@ -1,163 +1,184 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { UserContext } from "../../context/UserContext";
+import axios from "axios";
 import "../../styles/pages/_noticiasadmin.scss";
 
-const API_URL = "https://flancraftweb-backend.onrender.com";
+const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
-export default function NoticiasAdmin() {
-  const { user } = useContext(UserContext);
-  const [noticias, setNoticias] = useState([]);
-  const [modoCrear, setModoCrear] = useState(false);
+const modules = {
+  toolbar: [
+    [{ header: [1, 2, 3, false] }],
+    ["bold", "italic", "underline", "link"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["clean"],
+  ],
+};
+
+const formats = [
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "link",
+  "list",
+  "bullet",
+];
+
+const NoticiasAdmin = () => {
   const [form, setForm] = useState({
     titulo: "",
-    subtitulo: "",
     slug: "",
-    portada: "",
     contenido: "",
-    publicada: false,
   });
-  const [toast, setToast] = useState(null);
-
-  useEffect(() => {
-    if (user?.loggedIn && user.rol_admin === "owner") {
-      fetchNoticias();
-    }
-  }, [user]);
+  const [noticias, setNoticias] = useState([]);
+  const [mostrarEditorHTML, setMostrarEditorHTML] = useState(false);
 
   const fetchNoticias = async () => {
-    const res = await fetch(`${API_URL}/api/noticias`);
-    const data = await res.json();
-    setNoticias(data);
-  };
-
-  const showToast = (mensaje, tipo = "success") => {
-    setToast({ mensaje, tipo });
-    setTimeout(() => setToast(null), 3000);
-  };
-
-  const handleSubmit = async () => {
-    if (!form.titulo || !form.slug || !form.contenido || form.contenido.trim() === "") {
-      return showToast("Faltan campos obligatorios", "error");
+    try {
+      const res = await axios.get(`${API_URL}/api/noticias`);
+      setNoticias(res.data);
+    } catch (error) {
+      console.error("Error al cargar noticias", error);
     }
-
-    const res = await fetch(`${API_URL}/api/noticias`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`,
-      },
-      body: JSON.stringify(form),
-    });
-
-    if (!res.ok) return showToast("Error al crear noticia", "error");
-    showToast("Noticia creada");
-    setModoCrear(false);
-    setForm({
-      titulo: "",
-      subtitulo: "",
-      slug: "",
-      portada: "",
-      contenido: "",
-      publicada: false,
-    });
-    fetchNoticias();
   };
 
-  if (!user?.loggedIn || user.rol_admin !== "owner") {
-    return (
-      <div className="admin-wrapper" style={{ textAlign: "center", padding: "4rem" }}>
-        <img src="/assets/gandalf_minecraft.png" alt="No tienes poder aquí" style={{ maxWidth: "320px", marginBottom: "1rem" }} />
-        <h2 style={{ fontFamily: "'IM Fell English SC', serif", fontSize: "2rem" }}>¡No tienes poder aquí!</h2>
-        <p>Acceso denegado al panel de noticias</p>
-      </div>
-    );
-  }
+  useEffect(() => {
+    fetchNoticias();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!form.titulo || !form.slug || !form.contenido) return;
+
+    try {
+      await axios.post(`${API_URL}/api/noticias`, form);
+      setForm({ titulo: "", slug: "", contenido: "" });
+      fetchNoticias();
+    } catch (error) {
+      console.error("Error al enviar noticia", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!confirm("¿Eliminar esta noticia?")) return;
+    try {
+      await axios.delete(`${API_URL}/api/noticias/${id}`);
+      fetchNoticias();
+    } catch (error) {
+      console.error("Error al eliminar", error);
+    }
+  };
+
+  const handleEdit = (noticia) => {
+    setForm({
+      titulo: noticia.titulo,
+      slug: noticia.slug,
+      contenido: noticia.contenido,
+      id: noticia.id,
+    });
+    window.scrollTo(0, 0);
+  };
+
+  const handleUpdate = async () => {
+    try {
+      await axios.put(`${API_URL}/api/noticias/${form.id}`, {
+        titulo: form.titulo,
+        slug: form.slug,
+        contenido: form.contenido,
+      });
+      setForm({ titulo: "", slug: "", contenido: "", id: null });
+      fetchNoticias();
+    } catch (error) {
+      console.error("Error al actualizar noticia", error);
+    }
+  };
 
   return (
-    <div className="noticiasadmin-wrapper">
-      <h1 className="titulo-seccion">Gestión de Noticias</h1>
+    <div className="noticias-admin">
+      <h2>📰 Gestión de Noticias</h2>
 
-      {!modoCrear && (
-        <>
-          <button className="btn-epico" onClick={() => setModoCrear(true)}>
-            📝 Crear nueva noticia
-          </button>
+      <form onSubmit={form.id ? handleUpdate : handleSubmit}>
+        <input
+          type="text"
+          placeholder="Título"
+          value={form.titulo}
+          onChange={(e) => {
+            const titulo = e.target.value;
+            const slugGenerado = titulo
+              .toLowerCase()
+              .trim()
+              .replace(/[^\w\s-]/g, "")
+              .replace(/\s+/g, "-");
+            setForm((prev) => ({ ...prev, titulo, slug: slugGenerado }));
+          }}
+        />
 
-          <div className="lista-noticias">
-            {noticias.map((n) => (
-              <div className="noticia-item" key={n.id}>
-                <img src={n.portada || "/assets/placeholder.png"} alt="portada" />
-                <div>
-                  <h2>{n.titulo}</h2>
-                  <p className="fecha">{new Date(n.fecha).toLocaleDateString()}</p>
-                  <p className="publicada">{n.publicada ? "🟢 Publicada" : "🔴 Borrador"}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
+        <input
+          type="text"
+          placeholder="Slug"
+          value={form.slug}
+          onChange={(e) => setForm({ ...form, slug: e.target.value })}
+        />
 
-      {modoCrear && (
-        <div className="formulario-noticia fade-in">
-          <h2>Crear nueva noticia</h2>
+        <ReactQuill
+          theme="snow"
+          modules={modules}
+          formats={formats}
+          value={form.contenido}
+          onChange={(value) => setForm({ ...form, contenido: value })}
+          placeholder="Contenido enriquecido de la noticia..."
+        />
 
-          <input
-            type="text"
-            placeholder="Título"
-            value={form.titulo}
-            onChange={(e) => setForm({ ...form, titulo: e.target.value })}
+        <button
+          type="button"
+          onClick={() => setMostrarEditorHTML(!mostrarEditorHTML)}
+          style={{ marginTop: "0.5rem" }}
+        >
+          {mostrarEditorHTML ? "Ocultar HTML" : "Editar HTML manualmente"}
+        </button>
+
+        {mostrarEditorHTML && (
+          <textarea
+            value={form.contenido}
+            onChange={(e) => setForm({ ...form, contenido: e.target.value })}
+            style={{
+              width: "100%",
+              minHeight: "200px",
+              marginTop: "1rem",
+              fontFamily: "monospace",
+              background: "#f9f9f9",
+              border: "1px solid #ccc",
+              padding: "1rem",
+            }}
           />
+        )}
 
-          <input
-            type="text"
-            placeholder="Subtítulo"
-            value={form.subtitulo}
-            onChange={(e) => setForm({ ...form, subtitulo: e.target.value })}
-          />
+        <button type="submit" style={{ marginTop: "1rem" }}>
+          {form.id ? "Actualizar noticia" : "Publicar noticia"}
+        </button>
+      </form>
 
-          <input
-            type="text"
-            placeholder="Slug (sin espacios)"
-            value={form.slug}
-            onChange={(e) => setForm({ ...form, slug: e.target.value })}
-          />
+      <hr />
 
-          <input
-            type="text"
-            placeholder="URL de la imagen de portada"
-            value={form.portada}
-            onChange={(e) => setForm({ ...form, portada: e.target.value })}
-          />
-
-          <label>Contenido enriquecido</label>
-          <div className="editor-contenido">
-            <ReactQuill
-              theme="snow"
-              value={form.contenido}
-              onChange={(value) => setForm({ ...form, contenido: value })}
+      <div className="lista-noticias">
+        <h3>Noticias publicadas</h3>
+        {noticias.map((noticia) => (
+          <div className="noticia-item" key={noticia.id}>
+            <h4>{noticia.titulo}</h4>
+            <div
+              className="contenido-preview"
+              dangerouslySetInnerHTML={{ __html: noticia.contenido }}
             />
+            <div className="acciones">
+              <button onClick={() => handleEdit(noticia)}>Editar</button>
+              <button onClick={() => handleDelete(noticia.id)}>Eliminar</button>
+            </div>
           </div>
-
-          <label>
-            <input
-              type="checkbox"
-              checked={form.publicada}
-              onChange={(e) => setForm({ ...form, publicada: e.target.checked })}
-            />
-            Publicar directamente
-          </label>
-
-          <div className="acciones-formulario">
-            <button className="btn-secundario" onClick={() => setModoCrear(false)}>Cancelar</button>
-            <button className="btn-epico" onClick={handleSubmit}>Guardar noticia</button>
-          </div>
-        </div>
-      )}
-
-      {toast && <div className={`toast ${toast.tipo}`}>{toast.mensaje}</div>}
+        ))}
+      </div>
     </div>
   );
-}
+};
+
+export default NoticiasAdmin;
