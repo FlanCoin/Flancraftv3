@@ -117,6 +117,7 @@
     background-blend-mode: soft-light;
     padding: 4rem 2rem;
     position: relative;
+    min-height: 100vh;
 
       .news-scroll-top-decor {
     position: absolute;
@@ -418,6 +419,38 @@
 }
 
 } 
+.crear-noticia-abs {
+  position: absolute;
+  top: 1.5rem;
+  left: 2rem;
+  z-index: 10;
+
+  .crear-noticia-boton {
+    background: #fdf1d6;
+    color: #6b4c1c;
+    padding: 0.4rem 1rem;
+    border: 2px solid #a57d43;
+    border-radius: 8px;
+    font-family: "IM Fell English SC", serif;
+    font-size: 0.95rem;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: background 0.3s ease, transform 0.2s ease;
+
+    &:hover {
+      background: #ffe8b5;
+      transform: scale(1.05);
+    }
+  }
+}
+
+.news-header-bg {
+  position: relative; // Esto es necesario para que .crear-noticia-abs funcione
+  padding-top: 3rem; // para no solapar el título si hace falta
+}
+
+
 
 /* ======================= */
 /* KEYFRAMES               */

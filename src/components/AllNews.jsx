@@ -23,6 +23,10 @@ const AllNews = () => {
     }),
   };
 
+  // NUEVO: Detectar si es owner
+  const user = JSON.parse(localStorage.getItem("flan_user"));
+  const isOwner = user?.rol_admin === "owner";
+
   useEffect(() => {
     const fetchNoticias = async () => {
       try {
@@ -104,15 +108,24 @@ const AllNews = () => {
 
   return (
     <section className="all-news-section">
-      <div className="news-header-bg">
-        <Motion.h2
-          className="main-title"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          Noticias
-        </Motion.h2>
+<div className="news-header-bg">
+
+  {isOwner && (
+    <div className="crear-noticia-abs">
+      <Link to="/admin/noticias" className="crear-noticia-boton">
+        + Crear nueva noticia
+      </Link>
+    </div>
+  )}
+
+  <Motion.h2
+    className="main-title"
+    initial={{ opacity: 0, y: -20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6, delay: 0.1 }}
+  >
+    Noticias
+  </Motion.h2>
 
         <Motion.div
           className="featured-news-grid"

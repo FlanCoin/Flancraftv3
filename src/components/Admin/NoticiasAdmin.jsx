@@ -17,8 +17,10 @@ const NoticiasAdmin = () => {
     titulo: "",
     slug: "",
     portada: "",
+    servidor: "global",
     fecha: new Date().toISOString().slice(0, 16),
     usarFechaManual: false,
+    noEnviarADiscord: false,
     id: null,
   });
 
@@ -48,28 +50,25 @@ const NoticiasAdmin = () => {
     fetchNoticias();
   }, []);
 
-  // Carga el contenido cuando editor esté listo
   useEffect(() => {
-  if (!editor || !contenidoPendiente) return;
+    if (!editor || !contenidoPendiente) return;
 
-  try {
-    const json = typeof contenidoPendiente === "string"
-      ? JSON.parse(contenidoPendiente)
-      : contenidoPendiente;
+    try {
+      const json = typeof contenidoPendiente === "string"
+        ? JSON.parse(contenidoPendiente)
+        : contenidoPendiente;
 
-    if (json?.type === "doc") {
-      editor.commands.setContent(json);
-      console.log("Contenido cargado correctamente:", json);
-    } else {
-      console.warn("Contenido no válido:", json);
+      if (json?.type === "doc") {
+        editor.commands.setContent(json);
+      } else {
+        console.warn("Contenido no válido:", json);
+      }
+    } catch (err) {
+      console.error("Error al aplicar contenido:", err);
+    } finally {
+      setContenidoPendiente(null);
     }
-  } catch (err) {
-    console.error("Error al aplicar contenido:", err);
-  } finally {
-    setContenidoPendiente(null);
-  }
-}, [editor, contenidoPendiente]);
-
+  }, [editor, contenidoPendiente]);
 
   const fetchNoticias = async () => {
     try {
@@ -99,6 +98,7 @@ const NoticiasAdmin = () => {
       titulo: noticia.titulo,
       slug: noticia.slug,
       portada: noticia.portada || "",
+      servidor: noticia.servidor || "global",
       fecha: noticia.fecha?.slice(0, 16) || new Date().toISOString().slice(0, 16),
       usarFechaManual: true,
       id: noticia.id,
@@ -121,9 +121,11 @@ const NoticiasAdmin = () => {
       titulo: form.titulo,
       slug: form.slug,
       portada: form.portada,
+      servidor: form.servidor,
       contenido,
       publicada: true,
       fecha: form.usarFechaManual ? form.fecha : new Date().toISOString(),
+      noEnviarDiscord: form.noEnviarADiscord,
     };
 
     try {
@@ -138,8 +140,10 @@ const NoticiasAdmin = () => {
         titulo: "",
         slug: "",
         portada: "",
+        servidor: "global",
         fecha: new Date().toISOString().slice(0, 16),
         usarFechaManual: false,
+        noEnviarADiscord: false,
         id: null,
       });
       fetchNoticias();
@@ -192,71 +196,35 @@ const NoticiasAdmin = () => {
   };
 
   const renderToolbar = () => {
-  if (!editor) return null;
+    if (!editor) return null;
 
-  return (
-    <div className="editor-toolbar">
-      <button
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        className={editor.isActive("bold") ? "is-active" : ""}
-      >
-        B
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={editor.isActive("italic") ? "is-active" : ""}
-      >
-        I
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={editor.isActive("heading", { level: 2 }) ? "is-active" : ""}
-      >
-        H2
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={editor.isActive("bulletList") ? "is-active" : ""}
-      >
-        • Lista
-      </button>
-      <button
-        onClick={() => {
+    return (
+      <div className="editor-toolbar">
+        <button onClick={() => editor.chain().focus().toggleBold().run()} className={editor.isActive("bold") ? "is-active" : ""}>B</button>
+        <button onClick={() => editor.chain().focus().toggleItalic().run()} className={editor.isActive("italic") ? "is-active" : ""}>I</button>
+        <button onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={editor.isActive("heading", { level: 2 }) ? "is-active" : ""}>H2</button>
+        <button onClick={() => editor.chain().focus().toggleBulletList().run()} className={editor.isActive("bulletList") ? "is-active" : ""}>• Lista</button>
+        <button onClick={() => {
           const url = prompt("Introduce la URL:");
           if (url) {
             editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
           }
-        }}
-      >
-        <FaLink /> Enlace
-      </button>
-      <button
-        onClick={() => {
+        }}><FaLink /> Enlace</button>
+        <button onClick={() => {
           const url = prompt("URL de imagen:");
           if (url) editor.chain().focus().setImage({ src: url }).run();
-        }}
-      >
-        Imagen
-      </button>
-      <label className="color-picker">
-        <FaPalette />
-        <input
-          type="color"
-          onChange={(e) =>
-            editor.chain().focus().setColor(e.target.value).run()
-          }
-          title="Color de texto"
-        />
-      </label>
-    </div>
-  );
-};
+        }}>Imagen</button>
+        <label className="color-picker">
+          <FaPalette />
+          <input type="color" onChange={(e) => editor.chain().focus().setColor(e.target.value).run()} title="Color de texto" />
+        </label>
+      </div>
+    );
+  };
 
   return (
     <div className="noticias-admin">
-      <h2>
-        <FaNewspaper /> Panel de Noticias
-      </h2>
+      <h2><FaNewspaper /> Crea una nueva noticia</h2>
 
       <form onSubmit={handleSubmit}>
         <input
@@ -277,6 +245,19 @@ const NoticiasAdmin = () => {
           value={form.portada}
           onChange={(e) => setForm({ ...form, portada: e.target.value })}
         />
+
+        <label>
+          Servidor destino:
+          <select
+            value={form.servidor}
+            onChange={(e) => setForm({ ...form, servidor: e.target.value })}
+          >
+            <option value="global">🌐 Global</option>
+            <option value="survival">🌲 Survival</option>
+            <option value="oneblock">🧱 OneBlock</option>
+            <option value="pokebox">🎮 Pokebox</option>
+          </select>
+        </label>
 
         <label className="checkbox-fecha">
           <input
@@ -320,49 +301,46 @@ const NoticiasAdmin = () => {
             <FaCode /> Pegar HTML
           </button>
         </div>
-
+<label className="checkbox-discord">
+  <input
+    type="checkbox"
+    checked={form.noEnviarADiscord}
+    onChange={(e) =>
+      setForm({ ...form, noEnviarADiscord: e.target.checked })
+    }
+  />
+  No enviar esta noticia a Discord
+</label>
         <button type="submit" className="boton-publicar" disabled={isSubmitting}>
-          {isSubmitting ? (
-            "Publicando..."
-          ) : form.id ? (
-            <>
-              <FaEdit /> Actualizar noticia
-            </>
-          ) : (
-            <>
-              <FaPlus /> Publicar noticia
-            </>
-          )}
+          {isSubmitting ? "Publicando..." : form.id ? <><FaEdit /> Actualizar noticia</> : <><FaPlus /> Publicar noticia</>}
         </button>
       </form>
 
       <hr />
 
       <div className="lista-noticias">
-        <h3>
-          <FaNewspaper /> Noticias guardadas
-        </h3>
+        <h3><FaNewspaper /> Noticias guardadas</h3>
         {noticias.map((noticia) => (
           <div className="noticia-item" key={noticia.id}>
-            <h4>{noticia.titulo}</h4>
-            <p>
-              <strong>Fecha:</strong>{" "}
-              {new Date(noticia.fecha).toLocaleString()}
-            </p>
             {noticia.portada && (
               <img
                 src={noticia.portada}
                 alt="Portada"
-                style={{ width: "100%", maxHeight: 200, objectFit: "cover" }}
+                className="miniatura"
               />
             )}
+            <div className="contenido">
+              <h4>{noticia.titulo}</h4>
+              <span className="fecha">
+                {new Date(noticia.fecha).toLocaleDateString("es-ES", {
+                  day: "numeric", month: "short", year: "numeric",
+                  hour: "2-digit", minute: "2-digit"
+                })}
+              </span>
+            </div>
             <div className="acciones">
-              <button onClick={() => handleEdit(noticia)}>
-                <FaEdit /> Editar
-              </button>
-              <button onClick={() => handleDelete(noticia.id)}>
-                <FaTrash /> Eliminar
-              </button>
+              <button onClick={() => handleEdit(noticia)} title="Editar"><FaEdit /></button>
+              <button onClick={() => handleDelete(noticia.id)} title="Eliminar"><FaTrash /></button>
             </div>
           </div>
         ))}

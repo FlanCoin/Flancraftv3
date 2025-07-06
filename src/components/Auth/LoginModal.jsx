@@ -113,14 +113,14 @@ const goToDashboard = (uuid, username, rol_admin, extras = {}) => {
       );
       const usuarioData = await usuarioRes.json();
 
-      goToDashboard(data.uuid, data.uid, data.rol_admin, {
-        token: data.token,
-        rango_usuario: usuarioData.rango_usuario,
-        userLevel: usuarioData.nivel,
-        userXP: usuarioData.experiencia,
-        userXPMax: usuarioData.experiencia_max,
-        ecos: usuarioData.ecos,
-      });
+      goToDashboard(data.uuid, data.uid, usuarioData.rol_admin, {
+  token: data.token,
+  rango_usuario: usuarioData.rango_usuario,
+  userLevel: usuarioData.nivel,
+  userXP: usuarioData.experiencia,
+  userXPMax: usuarioData.experiencia_max,
+  ecos: usuarioData.ecos,
+});
     } catch (err) {
   console.error("Error en login:", err);
   setError(err.message);
