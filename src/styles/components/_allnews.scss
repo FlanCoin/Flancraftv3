@@ -160,6 +160,7 @@
       flex-direction: column;
       max-width: 1200px;
       margin: 0 auto;
+      cursor: pointer;
 
       .news-list-item {
         display: flex;
@@ -451,6 +452,12 @@
 }
 
 
+.news-list-item .text .subtitulo {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0.25rem 0;
+  color: #5c4530;
+}
 
 /* ======================= */
 /* KEYFRAMES               */

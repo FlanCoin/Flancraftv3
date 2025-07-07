@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '../../lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import {
   Tree, Fire, PaintBrush, Cube, CrownSimple, Sword,
@@ -8,11 +8,6 @@ import {
 
 import useIsMobile from '../../hooks/useIsMobile';
 import '../../styles/pages/_tribunalmain.scss';
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_KEY
-);
 
 export default function Sanciones() {
   const [sanciones, setSanciones] = useState([]);

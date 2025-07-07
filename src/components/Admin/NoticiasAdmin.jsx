@@ -11,6 +11,7 @@ import {
   FaPlus, FaEdit, FaTrash, FaNewspaper, FaPalette, FaCode, FaClock, FaLink
 } from "react-icons/fa";
 import "../../styles/pages/_noticiasadmin.scss";
+import Iframe from "../../extensions/Iframe";
 
 const NoticiasAdmin = () => {
   const [form, setForm] = useState({
@@ -19,7 +20,7 @@ const NoticiasAdmin = () => {
     portada: "",
     servidor: "global",
     fecha: new Date().toISOString().slice(0, 16),
-    usarFechaManual: false,
+    usarFechaManual: true,
     noEnviarADiscord: false,
     id: null,
   });
@@ -37,6 +38,7 @@ const NoticiasAdmin = () => {
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Color,
       TextStyle,
+      Iframe,
     ],
     content: "",
     editorProps: {
@@ -51,24 +53,65 @@ const NoticiasAdmin = () => {
   }, []);
 
   useEffect(() => {
-    if (!editor || !contenidoPendiente) return;
+  if (!editor || !contenidoPendiente) return;
 
-    try {
-      const json = typeof contenidoPendiente === "string"
-        ? JSON.parse(contenidoPendiente)
-        : contenidoPendiente;
+  try {
+    if (typeof contenidoPendiente === "string") {
+      const esHTML = contenidoPendiente.includes("<") && contenidoPendiente.includes(">");
+      
+      if (esHTML) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(contenidoPendiente, "text/html");
 
-      if (json?.type === "doc") {
-        editor.commands.setContent(json);
+        // Convertir enlaces a iframes
+        const links = doc.querySelectorAll("a[href]");
+        links.forEach(link => {
+          const href = link.getAttribute("href");
+
+          let embedUrl = "";
+          if (href.includes("youtube.com") || href.includes("youtu.be")) {
+            const videoId = href.includes("youtu.be")
+              ? href.split("/").pop()
+              : new URL(href).searchParams.get("v");
+            embedUrl = `https://www.youtube.com/embed/${videoId}`;
+          } else if (href.includes("tiktok.com")) {
+            embedUrl = href.replace("/video/", "/embed/video/");
+          } else if (href.includes("instagram.com")) {
+            const id = href.split("/p/")[1]?.split("/")[0];
+            embedUrl = `https://www.instagram.com/p/${id}/embed`;
+          }
+
+          if (embedUrl) {
+            const iframe = document.createElement("iframe");
+            iframe.src = embedUrl;
+            iframe.width = "100%";
+            iframe.height = "400";
+            iframe.setAttribute("frameborder", "0");
+            iframe.setAttribute("allowfullscreen", "true");
+            link.parentNode?.replaceChild(iframe, link);
+          }
+        });
+
+        const nuevoHTML = doc.body.innerHTML.trim();
+        if (nuevoHTML) {
+          editor.commands.setContent(nuevoHTML, false, { preserveWhitespace: true });
+        }
       } else {
-        console.warn("Contenido no válido:", json);
+        const json = JSON.parse(contenidoPendiente);
+        if (json?.type === "doc") {
+          editor.commands.setContent(json);
+        }
       }
-    } catch (err) {
-      console.error("Error al aplicar contenido:", err);
-    } finally {
-      setContenidoPendiente(null);
+    } else {
+      editor.commands.setContent(contenidoPendiente);
     }
-  }, [editor, contenidoPendiente]);
+  } catch (err) {
+    console.error("Error al aplicar contenido:", err);
+  } finally {
+    setContenidoPendiente(null);
+  }
+}, [editor, contenidoPendiente]);
+
 
   const fetchNoticias = async () => {
     try {
@@ -197,6 +240,7 @@ const NoticiasAdmin = () => {
 
   const renderToolbar = () => {
     if (!editor) return null;
+    
 
     return (
       <div className="editor-toolbar">
@@ -282,6 +326,41 @@ const NoticiasAdmin = () => {
         )}
 
         {renderToolbar()}
+        <button
+  onClick={() => {
+    const url = prompt("Introduce una URL de YouTube, TikTok o Instagram:");
+    if (!url) return;
+
+    let embedUrl = "";
+
+    if (url.includes("youtube.com") || url.includes("youtu.be")) {
+      const videoId = url.includes("youtu.be")
+        ? url.split("/").pop()
+        : new URL(url).searchParams.get("v");
+      embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    } else if (url.includes("tiktok.com")) {
+      embedUrl = url.replace("/video/", "/embed/video/");
+    } else if (url.includes("instagram.com")) {
+      const id = url.split("/p/")[1]?.split("/")[0];
+      embedUrl = `https://www.instagram.com/p/${id}/embed`;
+    } else {
+      embedUrl = url; // fallback genérico
+    }
+
+    editor.chain().focus().insertContent({
+      type: 'iframe',
+      attrs: {
+        src: embedUrl,
+        width: "100%",
+        height: "400",
+        frameborder: "0",
+        allowfullscreen: "true",
+      },
+    }).run();
+  }}
+>
+  🎥 Video
+</button>
 
         {editor ? (
           <div className="tiptap-editor-wrapper">

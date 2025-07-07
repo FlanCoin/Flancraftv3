@@ -13,6 +13,7 @@ import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
 import Color from '@tiptap/extension-color';
 import '../styles/components/_newsdetail.scss';
+import Iframe from '../extensions/Iframe';
 
 const NewsDetail = () => {
   const { slug } = useParams();
@@ -38,7 +39,8 @@ const NewsDetail = () => {
               Image,
               TextAlign.configure({ types: ["heading", "paragraph"] }),
               Color,
-              TextStyle
+              TextStyle,
+              Iframe,
             ])
           : data.contenido;
 
@@ -92,7 +94,10 @@ const NewsDetail = () => {
             </header>
 
             <h1 className="title">{news.titulo}</h1>
-            <p className="date">{new Date(news.fecha).toLocaleDateString()}</p>
+<div className="meta-line">
+  <span className="autor">Blockhorn Studios</span>
+  <span className="date"> | {new Date(news.fecha).toLocaleDateString()}</span>
+</div>
 
             {news.portada && (
               <img className="featured-img" src={news.portada} alt={news.titulo} />

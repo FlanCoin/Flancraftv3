@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { createClient } from "@supabase/supabase-js";
+import { supabase } from '../lib/supabaseClient';
 import "../styles/pages/_perfiljugador.scss";
 import borde2 from "/assets/borde2.png";
 import topborder from "/assets/topborder.png";
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_KEY
-);
 
 export default function PerfilJugador() {
   const { nombre } = useParams();

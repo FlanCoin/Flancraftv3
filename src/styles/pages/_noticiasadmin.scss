@@ -149,7 +149,18 @@
         }
       }
     }
-
+.tiptap-editor iframe {
+  display: block;
+  width: 100%;
+  height: 400px;
+  max-width: 100%;
+  border: none;
+  margin: 2rem auto;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+  background: #000;
+  transition: opacity 0.3s ease;
+}
     .boton-publicar {
       background: #268bd2;
       color: white;
@@ -170,6 +181,18 @@
         margin-right: 0.4rem;
       }
     }
+    .tiptap-editor iframe {
+  display: block;
+  width: 100%;
+  height: 400px;
+  max-width: 100%;
+  border: none;
+  margin: 2rem auto;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+  background: #000;
+  transition: opacity 0.3s ease;
+}
   }
 
   .lista-noticias {

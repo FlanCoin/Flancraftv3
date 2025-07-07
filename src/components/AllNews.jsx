@@ -11,6 +11,9 @@ const AllNews = () => {
   const [loading, setLoading] = useState(true);
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
+  const user = JSON.parse(localStorage.getItem("flan_user"));
+  const isOwner = user?.rol_admin === "owner";
+
   const listItemVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: (i) => ({
@@ -23,22 +26,19 @@ const AllNews = () => {
     }),
   };
 
-  // NUEVO: Detectar si es owner
-  const user = JSON.parse(localStorage.getItem("flan_user"));
-  const isOwner = user?.rol_admin === "owner";
-
   useEffect(() => {
     const fetchNoticias = async () => {
       try {
         const res = await fetch(`${API_URL}/api/noticias`);
         const data = await res.json();
         const publicadas = data
-          .filter(n => n.publicada)
+          .filter(n => Boolean(n.publicada))
           .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
           .map(n => ({
             ...n,
             slug: n.slug || generarSlug(n.titulo),
           }));
+
         setNewsData(publicadas);
         preloadImages(publicadas.map(n => n.portada || "/assets/placeholder.png"));
       } catch (error) {
@@ -59,10 +59,16 @@ const AllNews = () => {
 
   const preloadImages = (urls) => {
     let loaded = 0;
+    if (urls.length === 0) {
+      setImagesLoaded(true);
+      setLoading(false);
+      return;
+    }
+
     urls.forEach((url) => {
       const img = new Image();
       img.src = url;
-      img.onload = () => {
+      img.onload = img.onerror = () => {
         loaded++;
         if (loaded === urls.length) {
           setImagesLoaded(true);
@@ -79,25 +85,85 @@ const AllNews = () => {
     return `hace ${diff} día${diff !== 1 ? 's' : ''}`;
   };
 
-  const extractPlainText = (json) => {
-    try {
-      if (typeof json === "string") json = JSON.parse(json);
-      if (!json || !json.content) return "";
-      return json.content
-        .map(block => block.content?.map(c => c.text).join(" ") || "")
-        .join(" ")
-        .trim();
-    } catch {
-      return "";
-    }
-  };
-
   const truncate = (text, limit = 200) => {
     return text.length <= limit ? text : text.slice(0, text.lastIndexOf(" ", limit)) + "...";
   };
 
-  const featured = newsData.slice(0, 1);
-  const rest = newsData.slice(1, 1 + visibleCount);
+  const extractSubtitleAndDescription = (contenido) => {
+  try {
+    // Si es HTML antiguo
+    if (typeof contenido === "string") {
+      const div = document.createElement("div");
+      div.innerHTML = contenido;
+      const text = div.textContent || div.innerText || "";
+      const lines = text.split("\n").filter(Boolean);
+      return {
+        subtitulo: lines[0]?.trim() || "",
+        descripcion: truncate(lines.slice(1).join(" "), 160),
+      };
+    }
+
+    // Si es JSON de Tiptap
+    if (typeof contenido === "object" && contenido !== null && Array.isArray(contenido?.content)) {
+      let subtitulo = "";
+      let descripcion = "";
+
+      for (let block of contenido.content) {
+        if (!block.content) continue;
+
+        const textoPlano = block.content
+          .filter(c => c.type === "text")
+          .map(c => c.text)
+          .join(" ")
+          .replace(/\s+/g, " ")
+          .trim();
+
+        if (!textoPlano) continue;
+
+        if (!subtitulo && block.type === "heading") {
+          subtitulo = textoPlano;
+          continue;
+        }
+
+        if (!subtitulo && block.type === "paragraph") {
+          subtitulo = textoPlano;
+          continue;
+        }
+
+        descripcion += textoPlano + " ";
+
+        if (descripcion.length > 160) break;
+      }
+
+      if (!descripcion && subtitulo) {
+        descripcion = subtitulo;
+        subtitulo = "";
+      }
+
+      return {
+        subtitulo,
+        descripcion: truncate(descripcion.trim(), 160),
+      };
+    }
+
+    // Fallback para estructuras malformadas
+    return {
+      subtitulo: "",
+      descripcion: "",
+    };
+  } catch (err) {
+    console.warn("Error al extraer resumen:", err);
+    return {
+      subtitulo: "",
+      descripcion: "",
+    };
+  }
+};
+
+
+
+  const featured = newsData.length > 0 ? [newsData[0]] : [];
+  const rest = newsData.slice(1, visibleCount + 1);
 
   const showMore = () => {
     setVisibleCount((prev) => prev + 6);
@@ -108,24 +174,24 @@ const AllNews = () => {
 
   return (
     <section className="all-news-section">
-<div className="news-header-bg">
+      <div className="news-header-bg">
 
-  {isOwner && (
-    <div className="crear-noticia-abs">
-      <Link to="/admin/noticias" className="crear-noticia-boton">
-        + Crear nueva noticia
-      </Link>
-    </div>
-  )}
+        {isOwner && (
+          <div className="crear-noticia-abs">
+            <Link to="/admin/noticias" className="crear-noticia-boton">
+              + Crear nueva noticia
+            </Link>
+          </div>
+        )}
 
-  <Motion.h2
-    className="main-title"
-    initial={{ opacity: 0, y: -20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, delay: 0.1 }}
-  >
-    Noticias
-  </Motion.h2>
+        <Motion.h2
+          className="main-title"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          Noticias
+        </Motion.h2>
 
         <Motion.div
           className="featured-news-grid"
@@ -178,26 +244,40 @@ const AllNews = () => {
               </div>
             ))
           ) : (
-            rest.map((item, index) => (
-              <Motion.div
-                key={item.id}
-                custom={index}
-                variants={listItemVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                <Link to={`/news/${item.slug}`} className="news-list-item">
-                  <div className="hover-wrapper">
-                    <img src={item.portada || "/assets/placeholder.png"} alt={item.titulo} loading="lazy" />
-                    <div className="text">
-                      <h4>{item.titulo}</h4>
-                      <p>{truncate(extractPlainText(item.contenido))}</p>
-                      <div className="date">{formatDaysAgo(item.fecha)}</div>
+            rest.map((item, index) => {
+              const { subtitulo, descripcion } = extractSubtitleAndDescription(item.contenido);
+
+              const handleClick = (e) => {
+                e.preventDefault();
+                const card = e.currentTarget;
+                card.classList.add("anim-leave");
+                setTimeout(() => {
+                  window.location.href = `/news/${item.slug}`;
+                }, 500);
+              };
+
+              return (
+                <Motion.div
+                  key={item.id}
+                  custom={index}
+                  variants={listItemVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  <div onClick={handleClick} className="news-list-item clickable">
+                    <div className="hover-wrapper">
+                      <img src={item.portada || "/assets/placeholder.png"} alt={item.titulo} loading="lazy" />
+                      <div className="text">
+                        <h4>{item.titulo}</h4>
+{subtitulo && <h5 className="subtitulo">{subtitulo}</h5>}
+<p>{descripcion}</p>
+                        <div className="date">{formatDaysAgo(item.fecha)}</div>
+                      </div>
                     </div>
                   </div>
-                </Link>
-              </Motion.div>
-            ))
+                </Motion.div>
+              );
+            })
           )}
         </div>
 

@@ -294,6 +294,23 @@
     }
   }
 }
+.meta-line {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-size: 0.95rem;
+  color: #888;
+
+
+  .autor {
+    font-weight: bold;
+    color: #3cc02b; // o el color de marca que prefieras
+  }
+
+  .date {
+    opacity: 0.85;
+  }
+}
 
 
   @media (max-width: 768px) {
