@@ -11,6 +11,7 @@
     margin: 0 auto;
     position: relative;
 
+
 &::after {
   content: "";
   position: absolute;
@@ -296,19 +297,59 @@
 }
 .meta-line {
   display: flex;
-  gap: 16px;
+  justify-content: space-between;
   align-items: center;
+  gap: 1rem;
+  margin: 1rem 0;
   font-size: 0.95rem;
-  color: #888;
 
+  .autor-fecha {
+    display: flex;
+    gap: 12px;
+    align-items: center;
 
-  .autor {
-    font-weight: bold;
-    color: #3cc02b; // o el color de marca que prefieras
+    .autor {
+      font-weight: bold;
+      color: #3cc02b;
+    }
+
+    .date {
+      color: #846c4d;
+    }
   }
 
-  .date {
-    opacity: 0.85;
+  .btn-editar-noticia {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #dec091;
+    border: 1px solid #b78e53;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    color: #4a320e;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    svg {
+      font-size: 1rem;
+    }
+
+    &:hover {
+      background: #cfae7b;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .meta-line {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+
+    .btn-editar-noticia {
+      align-self: flex-end;
+    }
   }
 }
 
@@ -530,6 +571,7 @@
     width: 100%;
   }
 }
+
 
 @keyframes shimmer {
   0% { background-position: -200% 0; }

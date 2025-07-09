@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   FaTelegramPlane, FaFacebook, FaTwitter, FaReddit,
-  FaDiscord, FaClipboard, FaShareAlt
+  FaDiscord, FaClipboard, FaShareAlt, FaEdit
 } from 'react-icons/fa';
 import { motion as Motion } from 'framer-motion';
 import { generateHTML } from '@tiptap/html';
@@ -23,6 +23,7 @@ const NewsDetail = () => {
   const [visibleNews, setVisibleNews] = useState(4);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [rol, setRol] = useState(null);
   const pageUrl = window.location.href;
 
   useEffect(() => {
@@ -60,6 +61,14 @@ const NewsDetail = () => {
       .catch(err => console.error("Error al cargar últimas noticias:", err));
   }, []);
 
+  useEffect(() => {
+    const stored = localStorage.getItem("flan_user");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      setRol(parsed?.rol_admin || null);
+    }
+  }, []);
+
   const handleCopy = () => {
     navigator.clipboard.writeText(pageUrl);
     setCopied(true);
@@ -73,7 +82,13 @@ const NewsDetail = () => {
       {news ? (
         <div className="news-layout">
           <div className="news-container">
-            <header className="news-header">
+            
+
+            <h1 className="title">{news.titulo}</h1>
+
+            <div className="meta-line">
+  <div className="autor-fecha">
+    <header className="news-header">
               <div className="share">
                 <FaShareAlt onClick={() => setShowShareMenu(!showShareMenu)} />
                 {showShareMenu && (
@@ -92,11 +107,20 @@ const NewsDetail = () => {
                 )}
               </div>
             </header>
+    <span className="autor">Blockhorn Studios</span>
+    <span className="date">| {new Date(news.fecha).toLocaleDateString()}</span>
+  
+  </div>
 
-            <h1 className="title">{news.titulo}</h1>
-<div className="meta-line">
-  <span className="autor">Blockhorn Studios</span>
-  <span className="date"> | {new Date(news.fecha).toLocaleDateString()}</span>
+  {rol === "owner" && (
+    <button
+      className="btn-editar-noticia"
+      onClick={() => navigate(`/admin/noticias/editar/${news.id}`)}
+      title="Editar esta noticia"
+    >
+      <FaEdit /> Editar
+    </button>
+  )}
 </div>
 
             {news.portada && (

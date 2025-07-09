@@ -10,14 +10,15 @@ import Home from "./pages/Home";
 import AllNews from "./components/AllNews";
 import NewsDetail from "./components/NewsDetail";
 import DashboardPage from "./components/DashboardPage";
-import Tienda from './components/Tienda';
+import Tienda from "./components/Tienda";
 import RangoSelectorAnimado from "./components/RangoSelectorAnimado";
 
 // Tribunal System
 import TribunalMain from "./pages/tribunal/TribunalMain";
 import TribunalAdmin from "./pages/tribunal/TribunalAdmin";
-import GestionStaff from './components/Admin/GestionStaff';
-import NoticiasAdmin from './components/Admin/NoticiasAdmin';
+import GestionStaff from "./components/Admin/GestionStaff";
+import NoticiasAdmin from "./components/Admin/NoticiasAdmin";
+import EditarNoticia from "./components/Admin/EditarNoticia";
 import PerfilJugador from "./components/PerfilJugador";
 import LeaderboardsPage from "./pages/LeaderboardsPage";
 
@@ -46,6 +47,7 @@ const App = () => {
         {/* 🛡️ Admin Paneles */}
         <Route path="/admin" element={<GestionStaff />} />
         <Route path="/admin/noticias" element={<NoticiasAdmin />} />
+        <Route path="/admin/noticias/editar/:id" element={<EditarNoticia />} />
 
         {/* ⚖️ Tribunal System */}
         <Route path="/tribunal" element={<TribunalMain />} />

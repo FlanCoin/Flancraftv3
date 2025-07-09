@@ -115,11 +115,10 @@ const NoticiasAdmin = () => {
 
   const fetchNoticias = async () => {
     try {
-      const res = await axios.get("/api/noticias/todas");
-      const ahora = new Date();
+      const res = await axios.get("/api/noticias");
       const ordenadas = res.data
-        .filter((n) => n.publicada && new Date(n.fecha) <= ahora)
-        .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+  .filter((n) => n.publicada)
+  .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
       setNoticias(ordenadas);
     } catch (error) {
       console.error("Error al cargar noticias", error);

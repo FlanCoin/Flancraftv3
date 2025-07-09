@@ -11,14 +11,19 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),        // ✅ Ahora puedes usar "@/..."
-      '@lib': path.resolve(__dirname, './src/lib'), // ✅ Mantienes "@lib/..."
+      '@': path.resolve(__dirname, './src'),
+      '@lib': path.resolve(__dirname, './src/lib'),
     },
   },
   server: {
     host: true,
-    allowedHosts: [
-      'localhost',
-    ],
+    allowedHosts: ['localhost'],
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5173',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
 });

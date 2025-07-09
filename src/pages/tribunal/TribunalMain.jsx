@@ -3,7 +3,7 @@ import { supabase } from '../../lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import {
   Tree, Fire, PaintBrush, Cube, CrownSimple, Sword,
-  PersonSimpleRun, Globe, WarningCircle, CheckCircle, HourglassMedium
+  PersonSimpleRun, Globe, WarningCircle
 } from 'phosphor-react';
 
 import useIsMobile from '../../hooks/useIsMobile';
@@ -13,23 +13,24 @@ export default function Sanciones() {
   const [sanciones, setSanciones] = useState([]);
   const [filtroJugador, setFiltroJugador] = useState('');
   const [jugadoresBaneados, setJugadoresBaneados] = useState([]);
+  const [paginaActual, setPaginaActual] = useState(1);
+  const sancionesPorPagina = 10;
   const navigate = useNavigate();
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    async function fetchData() {
-      const { data } = await supabase
-        .from('jails')
-        .select('*')
-        .order('timestamp', { ascending: false });
+    const fetchSanciones = async () => {
+      const { data } = await supabase.from("jails").select("*").order("timestamp", { ascending: false });
       setSanciones(data || []);
 
-      const baneados = data
-        ?.filter(s => s.estado === 'baneado')
-        .map(s => s.name.toLowerCase());
-      setJugadoresBaneados([...new Set(baneados)]);
-    }
-    fetchData();
+      const permabans = (data || []).filter(s =>
+        s.duration?.toLowerCase().includes("permaban")
+      ).map(s => s.name.toLowerCase());
+
+      setJugadoresBaneados([...new Set(permabans)]);
+    };
+
+    fetchSanciones();
   }, []);
 
   const contarStrikes = (jugador, tipo) =>
@@ -64,7 +65,6 @@ export default function Sanciones() {
     return iconos[server?.toLowerCase()] || <Globe {...base} />;
   };
 
-
   const formatearDuracion = (raw) => {
     if (!raw) return 'Desconocida';
     const match = raw.toLowerCase().match(/(\d+)([smhd])/);
@@ -84,6 +84,15 @@ export default function Sanciones() {
     return new Date(parseInt(timestamp) + ms).toLocaleString('es-ES');
   };
 
+  // === Paginación ===
+  const sancionesFiltradas = sanciones.filter((s) =>
+    s.name.toLowerCase().includes(filtroJugador.toLowerCase())
+  );
+  const totalPaginas = Math.ceil(sancionesFiltradas.length / sancionesPorPagina);
+  const inicio = (paginaActual - 1) * sancionesPorPagina;
+  const fin = inicio + sancionesPorPagina;
+  const sancionesPaginadas = sancionesFiltradas.slice(inicio, fin);
+
   return (
     <section className="tribunal-epic">
       <div className="epic-header">
@@ -96,7 +105,10 @@ export default function Sanciones() {
           type="text"
           placeholder="Buscar jugador..."
           value={filtroJugador}
-          onChange={(e) => setFiltroJugador(e.target.value)}
+          onChange={(e) => {
+            setFiltroJugador(e.target.value);
+            setPaginaActual(1);
+          }}
           className="filtro-input"
         />
 
@@ -124,53 +136,55 @@ export default function Sanciones() {
         </div>
       </div>
 
-      {/* 📱 Tarjetas Mobile / Tablet */}
+      {/* 📱 Mobile cards */}
       {isMobile && (
         <div className="sanciones-cards">
-          {sanciones
-            .filter((s) => s.name.toLowerCase().includes(filtroJugador.toLowerCase()))
-            .map((s, index) => {
-              const strikes = contarStrikes(s.name, s.type);
-              const fechaFin = obtenerFechaFin(s.timestamp, s.duration);
+          {sancionesPaginadas.map((s, index) => {
+            const strikes = contarStrikes(s.name, s.type);
+            const fechaFin = obtenerFechaFin(s.timestamp, s.duration);
 
-              return (
-                <div className="sancion-card" key={index}>
-                  <div className="header">
-                    <img src={`https://mc-heads.net/avatar/${s.name}/40`} alt={s.name} />
-                    <div className="player-info">
-                      <strong onClick={() => navigate(`/perfil/${s.name}`)}>{s.name}</strong>
-                      {jugadoresBaneados.includes(s.name.toLowerCase()) && (
-                        <span className="permaban-badge">PERMABAN</span>
-                      )}
-                      {s.banType && (
-                        <span className="baneado-badge">{s.banType.toUpperCase()}</span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="info">
-                    <div><strong>Moderador:</strong> {s.moderator}</div>
-                    <div><strong>Motivo:</strong> {s.type}</div>
-                    <div><strong>Duración:</strong> {formatearDuracion(s.duration)}</div>
-                    {fechaFin && (
-                      <div><strong>Finaliza:</strong> {fechaFin}</div>
+            return (
+              <div className="sancion-card" key={index}>
+                <div className="header">
+                  <img src={`https://mc-heads.net/avatar/${s.name}/40`} alt={s.name} />
+                  <div className="player-info">
+                    <strong onClick={() => navigate(`/perfil/${s.name}`)}>{s.name}</strong>
+                    {jugadoresBaneados.includes(s.name.toLowerCase()) && (
+                      <span className="permaban-badge">PERMABAN</span>
                     )}
-                    <div><strong>Fecha:</strong> {new Date(parseInt(s.timestamp)).toLocaleString('es-ES')}</div>
-                    <div className={`server ${s.server?.toLowerCase() || 'desconocido'}`}>
-                      {obtenerIconoServidor(s.server)} {obtenerNombreServidor(s.server)}
-                    </div>
-
-                    <div className={`strikes ${strikes >= 3 ? 'permaban' : ''}`}>
-                      <WarningCircle size={14} weight="duotone" /> Strikes: {strikes}
-                    </div>
+                    {s.banType && (
+                      <span className="baneado-badge">{s.banType.toUpperCase()}</span>
+                    )}
                   </div>
                 </div>
-              );
-            })}
+
+                <div className="info">
+                  <div><strong>Moderador:</strong> {s.moderator}</div>
+                  <div><strong>Motivo:</strong> {s.type}</div>
+                  <div>
+                    <strong>Duración:</strong>{' '}
+                    <span className={`duracion ${s.duration?.toLowerCase().includes('permaban') ? 'permaban' : ''}`}>
+                      {formatearDuracion(s.duration)}
+                    </span>
+                  </div>
+                  {fechaFin && (
+                    <div><strong>Finaliza:</strong> {fechaFin}</div>
+                  )}
+                  <div><strong>Fecha:</strong> {new Date(parseInt(s.timestamp)).toLocaleString('es-ES')}</div>
+                  <div className={`server ${s.server?.toLowerCase() || 'desconocido'}`}>
+                    {obtenerIconoServidor(s.server)} {obtenerNombreServidor(s.server)}
+                  </div>
+                  <div className={`strikes ${strikes >= 3 ? 'permaban' : ''}`}>
+                    <WarningCircle size={14} weight="duotone" /> Strikes: {strikes}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 
-      {/* 🖥️ Tabla Desktop */}
+      {/* 🖥️ Desktop table */}
       {!isMobile && (
         <div className="tabla-scroll-wrapper">
           <table className="sanciones-table tabla-epica">
@@ -182,53 +196,67 @@ export default function Sanciones() {
                 <th>Duración</th>
                 <th>Fecha</th>
                 <th>Servidor</th>
-
               </tr>
             </thead>
             <tbody>
-              {sanciones
-                .filter((s) => s.name.toLowerCase().includes(filtroJugador.toLowerCase()))
-                .map((s, index) => {
-                  const strikes = contarStrikes(s.name, s.type);
-                  const fechaFin = obtenerFechaFin(s.timestamp, s.duration);
-                  return (
-                    <tr key={index}>
-                      <td>
-                        <div className="jugador-info">
-                          <img src={`https://mc-heads.net/avatar/${s.name}/32`} className="avatar-head" alt={s.name} />
-                          <span onClick={() => navigate(`/perfil/${s.name}`)} style={{ cursor: 'pointer' }}>
-                            {s.name}
-                          </span>
-                          {jugadoresBaneados.includes(s.name.toLowerCase()) && (
-                            <span className="permaban-badge">PERMABAN</span>
-                          )}
-                        </div>
-                      </td>
-                      <td><strong>{s.moderator}</strong></td>
-                      <td>
-                        <span className="tipo">{s.type}</span>
-                        <span className={`strikes ${strikes >= 3 ? 'permaban' : ''}`}>
-                          <WarningCircle size={14} weight="duotone" /> Strikes: {strikes}
-                          {strikes >= 3 && <strong> (Permaban)</strong>}
-                        </span>
-                      </td>
-                      <td>
-                        <div>{formatearDuracion(s.duration)}</div>
-                        {fechaFin && <div className="duracion-extra">Finaliza: {fechaFin}</div>}
-                      </td>
-                      <td>{new Date(parseInt(s.timestamp)).toLocaleString('es-ES')}</td>
-                      <td>
-                        <span className={`server-badge ${s.server?.toLowerCase() || 'desconocido'}`}>
-                          {obtenerIconoServidor(s.server)}
-                          {obtenerNombreServidor(s.server)}
-                        </span>
-                      </td>
+              {sancionesPaginadas.map((s, index) => {
+                const strikes = contarStrikes(s.name, s.type);
+                const fechaFin = obtenerFechaFin(s.timestamp, s.duration);
 
-                    </tr>
-                  );
-                })}
+                return (
+                  <tr key={index}>
+                    <td>
+                      <div className="jugador-info">
+                        <img src={`https://mc-heads.net/avatar/${s.name}/32`} className="avatar-head" alt={s.name} />
+                        <span onClick={() => navigate(`/perfil/${s.name}`)} style={{ cursor: 'pointer' }}>
+                          {s.name}
+                        </span>
+                        {jugadoresBaneados.includes(s.name.toLowerCase()) && (
+                          <span className="permaban-badge">PERMABAN</span>
+                        )}
+                      </div>
+                    </td>
+                    <td><strong>{s.moderator}</strong></td>
+                    <td>
+                      <span className="tipo">{s.type}</span>
+                      <span className={`strikes ${strikes >= 3 ? 'permaban' : ''}`}>
+                        <WarningCircle size={14} weight="duotone" /> Strikes: {strikes}
+                        {strikes >= 3 && <strong> (Permaban)</strong>}
+                      </span>
+                    </td>
+                    <td>
+                      <div className={`duracion ${s.duration?.toLowerCase().includes('permaban') ? 'permaban' : ''}`}>
+                        {formatearDuracion(s.duration)}
+                      </div>
+                      {fechaFin && <div className="duracion-extra">Finaliza: {fechaFin}</div>}
+                    </td>
+                    <td>{new Date(parseInt(s.timestamp)).toLocaleString('es-ES')}</td>
+                    <td>
+                      <span className={`server-badge ${s.server?.toLowerCase() || 'desconocido'}`}>
+                        {obtenerIconoServidor(s.server)}
+                        {obtenerNombreServidor(s.server)}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* 📄 Paginación */}
+      {totalPaginas > 1 && (
+        <div className="paginacion">
+          <button onClick={() => setPaginaActual(1)} disabled={paginaActual === 1}>«</button>
+          <button onClick={() => setPaginaActual(p => Math.max(1, p - 1))} disabled={paginaActual === 1}>‹</button>
+          {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((num) => (
+            <button key={num} className={paginaActual === num ? 'activo' : ''} onClick={() => setPaginaActual(num)}>
+              {num}
+            </button>
+          ))}
+          <button onClick={() => setPaginaActual(p => Math.min(totalPaginas, p + 1))} disabled={paginaActual === totalPaginas}>›</button>
+          <button onClick={() => setPaginaActual(totalPaginas)} disabled={paginaActual === totalPaginas}>»</button>
         </div>
       )}
     </section>

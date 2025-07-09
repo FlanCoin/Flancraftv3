@@ -1,0 +1,197 @@
+// src/styles/pages/_editarnoticia.scss
+
+.editar-noticia {
+    margin-top: -5%;
+  min-height: 100vh;
+  padding: 10rem;
+  background: url('/assets/papertexture.jpeg') center/cover repeat;
+  font-family: 'IM Fell English SC', serif;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #5d4037;
+    text-align: center;
+  }
+
+  label {
+    font-weight: bold;
+    display: block;
+    margin-top: 1rem;
+    color: #3e2723;
+  }
+
+  input[type="text"],
+  input[type="datetime-local"],
+  textarea {
+    width: 100%;
+    padding: 0.6rem;
+    margin-top: 0.4rem;
+    font-size: 1rem;
+    border: 2px solid #c0a97a;
+    background: #fff8e1;
+    border-radius: 6px;
+    font-family: 'IM Fell English SC', serif;
+  }
+
+  .editor-wrapper {
+    border: 2px solid #c0a97a;
+    border-radius: 6px;
+    background: #fffdf6;
+    padding: 4rem;
+
+
+  }
+
+  .editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+
+    button,
+    label {
+      background: #795548;
+      color: #fff;
+      border: none;
+      padding: 0.4rem 0.7rem;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+
+      &.is-active {
+        background: #a1887f;
+      }
+
+      &:hover {
+        background: #a1887f;
+      }
+    }
+
+    .color-picker {
+      input[type="color"] {
+        margin-left: 0.5rem;
+        vertical-align: middle;
+        border: none;
+        background: none;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .guardar-btn {
+    margin-top: 2rem;
+    background: #388e3c;
+    color: white;
+    padding: 0.7rem 1.4rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+    &:hover {
+      background: #2e7d32;
+    }
+  }
+
+  .html-paste-box {
+    margin-top: 1.5rem;
+
+    textarea {
+      min-height: 120px;
+    }
+
+    button {
+      margin-top: 0.5rem;
+      background: #6d4c41;
+      color: #fff;
+    }
+  }
+
+  .checkbox-discord {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+
+    input {
+      margin-right: 0.5rem;
+    }
+
+    label {
+      font-weight: normal;
+    }
+  }
+
+  .tiptap-editor-wrapper {
+    border: 2px solid #d7ccc8;
+    background: #fffefc;
+    padding: 1rem;
+    min-height: 300px;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+
+    .tiptap-editor {
+      font-family: inherit;
+      font-size: 1rem;
+      min-height: 250px;
+
+      h1, h2, h3 {
+        color: #4e342e;
+      }
+
+      p {
+        line-height: 1.6;
+        color: #3e2723;
+      }
+
+      ul {
+        margin-left: 1.5rem;
+        list-style-type: disc;
+      }
+
+      iframe {
+        margin-top: 1rem;
+        width: 100%;
+        border: none;
+      }
+    }
+  }
+
+  .cargando {
+    font-size: 1.5rem;
+    color: #6d4c41;
+    text-align: center;
+    padding-top: 4rem;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .editar-noticia {
+    padding: 1.5rem;
+
+    h2 {
+      font-size: 1.6rem;
+    }
+
+    .editor-toolbar {
+      flex-direction: column;
+      gap: 0.3rem;
+
+      button {
+        width: 100%;
+      }
+    }
+
+    .guardar-btn {
+      width: 100%;
+    }
+  }
+}

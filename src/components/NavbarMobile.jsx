@@ -205,7 +205,7 @@ useEffect(() => {
 </div>
 
         <NavLink to="/leaderboards" onClick={() => setMenuOpen(false)}><i className="fas fa-chart-line" /> Estadísticas</NavLink>
-
+        <NavLink to="/rangos"><i className="fas fa-medal" /> Rangos</NavLink>
        <NavLink to="/tienda" onClick={() => setMenuOpen(false)}>
   <i className="fas fa-store" /> Mercado
 </NavLink>

@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+// ...imports iguales
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from '../lib/supabaseClient';
 import "../styles/pages/_perfiljugador.scss";
-import borde2 from "/assets/borde2.png";
 import topborder from "/assets/topborder.png";
-
 
 export default function PerfilJugador() {
   const { nombre } = useParams();
@@ -19,38 +18,66 @@ export default function PerfilJugador() {
   useEffect(() => {
     const fetchData = async () => {
       setCargando(true);
+      let jugador = null;
 
+      // 1. Buscar en estadísticas
       const { data: statsData } = await supabase
         .from("estadisticas_agrupadas")
         .select("*")
         .eq("nombre_minecraft", nombre);
 
-      if (!statsData || statsData.length === 0) {
-        setUsuario(null);
-        setCargando(false);
-        return;
+      if (statsData && statsData.length > 0) {
+        jugador = {
+          nombre_minecraft: statsData[0].nombre_minecraft,
+          uuid: statsData[0].uuid,
+        };
+        setEstadisticas(statsData);
+        setServidorActivo(statsData[0].servidor);
+      } else {
+        // 2. Buscar en jails si no hay estadísticas
+        const { data: jailData } = await supabase
+          .from("jails")
+          .select("uuid, name")
+          .eq("name", nombre)
+          .order("timestamp", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (!jailData) {
+          setUsuario(null);
+          setCargando(false);
+          return;
+        }
+
+        jugador = {
+          nombre_minecraft: jailData.name,
+          uuid: jailData.uuid !== "desconocido" ? jailData.uuid : null,
+        };
       }
 
-      const jugador = {
-        nombre_minecraft: statsData[0].nombre_minecraft,
-        uuid: statsData[0].uuid,
-      };
+      // 3. Buscar en usuarios si hay UUID válido
+      let userMeta = {};
+      if (jugador.uuid && jugador.uuid.length > 5) {
+        const { data } = await supabase
+          .from("usuarios")
+          .select("nivel, xp_actual, rango_usuario, es_premium")
+          .eq("uuid", jugador.uuid)
+          .maybeSingle();
+        if (data) userMeta = data;
+      }
 
-      const { data: userMeta } = await supabase
-        .from("usuarios")
-        .select("nivel, xp_actual, rango_usuario, es_premium")
-        .eq("uuid", jugador.uuid)
-        .maybeSingle();
+      // 4. Buscar sanciones del jugador
+      let sancionesData = [];
+      try {
+        const res = await fetch(`https://flancraftweb-backend.onrender.com/api/sanciones/jugador/${jugador.nombre_minecraft}`);
+        sancionesData = await res.json();
+      } catch (error) {
+        console.error("Error al obtener sanciones:", error);
+        sancionesData = [];
+      }
 
-      const { data: sancionesData } = await supabase
-        .from("jails")
-        .select("*")
-        .eq("uuid", jugador.uuid);
-
-      setUsuario({ ...jugador, ...(userMeta || {}) });
-      setEstadisticas(statsData);
-      setSanciones(sancionesData || []);
-      setServidorActivo(statsData[0]?.servidor || null);
+      setUsuario({ ...jugador, ...userMeta });
+      setSanciones(Array.isArray(sancionesData) ? sancionesData : []);
       setCargando(false);
     };
 
@@ -73,39 +100,26 @@ export default function PerfilJugador() {
     tiempo_jugado: "Tiempo jugado",
   };
 
-  if (cargando) {
-    return <div className="perfiljugador-loading">Cargando perfil...</div>;
-  }
+  if (cargando) return <div className="perfiljugador-loading">Cargando perfil...</div>;
 
   if (!usuario) {
     return (
       <div className="perfiljugador-wrapper no-encontrado">
         <div className="perfiljugador-card error">
-          <img
-            src="/assets/default-head.png"
-            alt="No encontrado"
-            className="perfiljugador-skin"
-          />
+          <img src="/assets/default-head.png" alt="No encontrado" className="perfiljugador-skin" />
           <h2>Jugador no encontrado</h2>
           <p>No hay estadísticas registradas para "{nombre}".</p>
-          <button className="btn" onClick={() => navigate(-1)}>
-            ← Volver atrás
-          </button>
+          <button className="btn" onClick={() => navigate(-1)}>← Volver atrás</button>
         </div>
       </div>
     );
   }
 
-  const servidoresDisponibles = [
-    ...new Set(estadisticas.map((e) => e.servidor)),
-  ];
-  const statsActuales = estadisticas.find(
-    (e) => e.servidor === servidorActivo
-  );
+  const servidoresDisponibles = [...new Set(estadisticas.map((e) => e.servidor))];
+  const statsActuales = estadisticas.find((e) => e.servidor === servidorActivo);
 
   return (
     <div className="perfiljugador-wrapper">
-      {/* CABECERA LANDSCAPE */}
       <div className="cabecera-imagen">
         <div className="perfiljugador-card">
           <img
@@ -114,62 +128,48 @@ export default function PerfilJugador() {
             className="perfiljugador-skin"
           />
           <div className="perfiljugador-info">
-            <h1
-              className={`nombre-jugador ${
-                usuario.rango_usuario
-                  ? `rango-${usuario.rango_usuario.toLowerCase()}`
-                  : ""
-              }`}
-            >
+            <h1 className={`nombre-jugador ${usuario.rango_usuario ? `rango-${usuario.rango_usuario.toLowerCase()}` : ""}`}>
               {usuario.nombre_minecraft}
               {usuario.es_premium && (
-                <img
-                  src="/assets/premium.png"
-                  alt="Premium"
-                  className="icono-premium"
-                />
+                <img src="/assets/premium.png" alt="Premium" className="icono-premium" />
               )}
             </h1>
             <p className="nivel">Nivel {usuario.nivel || 1}</p>
             <div className="xp-bar">
               <div
                 className="xp-fill"
-                style={{
-                  width: `${Math.min((usuario.xp_actual || 0) / 100, 1) * 100}%`,
-                }}
+                style={{ width: `${Math.min((usuario.xp_actual || 0) / 100, 1) * 100}%` }}
               ></div>
             </div>
             <p className="xp-text">{usuario.xp_actual || 0} XP</p>
           </div>
         </div>
 
-        {/* SELECTOR ENCIMA DEL BORDE */}
-        <div className="selector-servidor">
-          {servidoresDisponibles.map((s) => (
-            <button
-              key={s}
-              className={`selector-btn ${servidorActivo === s ? "active" : ""}`}
-              onClick={() => setServidorActivo(s)}
-            >
-              {s}
-            </button>
-          ))}
-        </div>
+        {servidoresDisponibles.length > 0 && (
+          <div className="selector-servidor">
+            {servidoresDisponibles.map((s) => (
+              <button
+                key={s}
+                className={`selector-btn ${servidorActivo === s ? "active" : ""}`}
+                onClick={() => setServidorActivo(s)}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
 
         <div className="borde-inferior-imagen"></div>
       </div>
 
-      {/* DECORACIÓN Y CONTENIDO */}
-<div className="decoracion-fondo-wrapper">
-  {/* DECORACIÓN FLOTANTE */}
+      <div className="decoracion-fondo-wrapper">
   <div className="estadisticas-top-decor">
     <img src={topborder} alt="Decoración superior" className="decor-top" />
-    <img src={borde2} alt="Decoración borde" className="decor-borde" />
+    <div className="decor-borde-right" />
   </div>
 
-  <div className="estadisticas-wrapper-decorada">
-
-          {statsActuales ? (
+        <div className="estadisticas-wrapper-decorada">
+          {estadisticas.length > 0 && statsActuales ? (
             <div className="estadisticas-detalle">
               <h3 className="servidor-titulo">{statsActuales.servidor}</h3>
               <div className="stats-grid">
@@ -186,38 +186,46 @@ export default function PerfilJugador() {
               </div>
             </div>
           ) : (
+            <div className="estadisticas-detalle vacio">
             <p className="mensaje-vacio">
-              Sin estadísticas en este servidor.
+              Este jugador no tiene estadísticas registradas.
             </p>
+            </div>
           )}
+          
         </div>
+        
 
-        {/* SANCIONES */}
         <div className="sanciones-wrapper">
-          <h3>Sanciones</h3>
-          {sanciones.length === 0 ? (
-            <p className="sin-sanciones">
-              Este jugador es un ejemplo a seguir. No tiene ninguna sanción.
-            </p>
-          ) : (
-            <ul className="sanciones-lista">
-              {sanciones.map((s, i) => (
-                <li key={i} className="sancion-item">
-                  <p>
-                    <strong>Razón:</strong> {s.razon || "No especificada"}
-                  </p>
-                  <p>
-                    <strong>Fecha:</strong>{" "}
-                    {new Date(s.fecha).toLocaleDateString()}
-                  </p>
-                  <p>
-                    <strong>Staff:</strong> {s.staff || "Desconocido"}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+  <h3>Sanciones</h3>
+
+  {sanciones.length === 0 ? (
+    <div className="sancion-vacia">
+      <p className="sin-sanciones">
+        Este jugador es un ejemplo a seguir. No tiene ninguna sanción registrada.
+      </p>
+    </div>
+  ) : (
+    <ul className="sanciones-lista">
+      {sanciones.map((s, i) => (
+        <li
+          key={i}
+          className={`sancion-item ${String(s.duration).toLowerCase().includes("perma") ? "permaban" : ""}`}
+        >
+          <div className="sancion-cuerpo">
+            <p><strong>Tipo:</strong> {s.type || "Sanción"}</p>
+            <p><strong>Motivo:</strong> {s.observacion || "No especificado"}</p>
+            <p><strong>Duración:</strong> {s.duration || "Desconocida"}</p>
+            <p><strong>Staff:</strong> {s.moderator || "Desconocido"}</p>
+            <p><strong>Servidor:</strong> {s.server || "N/A"}</p>
+            <p><strong>Fecha:</strong> {s.timestamp ? new Date(Number(s.timestamp)).toLocaleString("es-ES") : "Sin fecha"}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
+
 
         <div className="volver-btn">
           <button className="btn" onClick={() => navigate(-1)}>
