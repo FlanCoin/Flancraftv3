@@ -1,0 +1,78 @@
+.tienda {
+  text-align: center;
+  padding: 2rem;
+
+  .input-jugador {
+    padding: 0.6rem;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .productos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+  }
+
+  .producto {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    border-radius: 12px;
+    width: 240px;
+
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    h3 {
+      margin: 0.5rem 0;
+    }
+
+    button {
+      background-color: #ff8800;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
+}
+.form-nombre-jugador {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+
+  .input-jugador {
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 240px;
+  }
+
+  .boton-confirmar {
+    background-color: #44aaff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.6rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #1d90f2;
+    }
+  }
+}
+
+.nombre-confirmado {
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}

@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
@@ -20,6 +19,7 @@ import GestionStaff from './components/Admin/GestionStaff';
 import NoticiasAdmin from './components/Admin/NoticiasAdmin';
 import PerfilJugador from "./components/PerfilJugador";
 import LeaderboardsPage from "./pages/LeaderboardsPage";
+import EditarNoticia from "./components/EditarNoticia"; // ✅ nueva importación
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
@@ -46,6 +46,7 @@ const App = () => {
         {/* 🛡️ Admin Paneles */}
         <Route path="/admin" element={<GestionStaff />} />
         <Route path="/admin/noticias" element={<NoticiasAdmin />} />
+        <Route path="/admin/noticias/editar/:id" element={<EditarNoticia />} />
 
         {/* ⚖️ Tribunal System */}
         <Route path="/tribunal" element={<TribunalMain />} />

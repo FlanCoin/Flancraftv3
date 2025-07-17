@@ -8,10 +8,10 @@ import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
 import Color from '@tiptap/extension-color';
 import Iframe from '../extensions/Iframe';
-import toast from "react-hot-toast";
+import toast from 'react-hot-toast';
 import '../styles/pages/_editarnoticia.scss';
 
-const API_URL = "https://flancraftweb-backend.onrender.com";
+const API_URL = 'https://flancraftweb-backend.onrender.com';
 
 const EditarNoticia = () => {
   const { id } = useParams();
@@ -26,19 +26,25 @@ const EditarNoticia = () => {
       StarterKit,
       Link,
       Image,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
       TextStyle,
       Color,
       Iframe,
     ],
     content: '',
+    editorProps: {
+      attributes: {
+        class: 'tiptap-editor',
+      },
+    },
   });
 
   useEffect(() => {
     const cargarNoticia = async () => {
       try {
-        const token = JSON.parse(localStorage.getItem("flan_user"))?.token;
-        if (!token) throw new Error("Token no encontrado");
+        if (!id) throw new Error('ID no válido');
+        const token = JSON.parse(localStorage.getItem('flan_user'))?.token;
+        if (!token) throw new Error('Token no encontrado');
 
         const res = await fetch(`${API_URL}/api/noticias/id/${id}`, {
           headers: {
@@ -46,7 +52,8 @@ const EditarNoticia = () => {
           },
         });
 
-        if (!res.ok) throw new Error("No autorizado o no encontrada");
+        if (!res.ok) throw new Error('No autorizado o no encontrada');
+
         const data = await res.json();
         setTitulo(data.titulo);
         setPortada(data.portada || '');
@@ -56,37 +63,38 @@ const EditarNoticia = () => {
         }
         setLoading(false);
       } catch (err) {
-        console.error("Error al cargar noticia:", err);
-        toast.error("No se pudo cargar la noticia.");
+        console.error('Error al cargar noticia:', err);
+        toast.error('No se pudo cargar la noticia');
         navigate('/admin/noticias');
       }
     };
+
     cargarNoticia();
   }, [id, editor, navigate]);
 
   const guardarCambios = async () => {
     try {
-      const token = JSON.parse(localStorage.getItem("flan_user"))?.token;
-      if (!token) throw new Error("Token no encontrado");
+      const token = JSON.parse(localStorage.getItem('flan_user'))?.token;
+      if (!token) throw new Error('Token no encontrado');
 
       const contenido = editor.getJSON();
       const body = { titulo, portada, fecha, contenido };
 
       const res = await fetch(`${API_URL}/api/noticias/${id}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(body),
       });
 
-      if (!res.ok) throw new Error("Error al guardar cambios");
-      toast.success("✅ Noticia actualizada con éxito");
+      if (!res.ok) throw new Error('Error al guardar cambios');
+      toast.success('✅ Noticia actualizada con éxito');
       navigate('/news/' + id);
     } catch (err) {
-      console.error("Error al guardar:", err);
-      toast.error("❌ Error al guardar cambios");
+      console.error('Error al guardar:', err);
+      toast.error('❌ Error al guardar cambios');
     }
   };
 
@@ -122,7 +130,9 @@ const EditarNoticia = () => {
         <EditorContent editor={editor} />
       </div>
 
-      <button className="guardar-btn" onClick={guardarCambios}>Guardar Cambios</button>
+      <button className="guardar-btn" onClick={guardarCambios}>
+        Guardar Cambios
+      </button>
     </div>
   );
 };
