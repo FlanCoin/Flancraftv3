@@ -1,78 +1,294 @@
-.tienda {
-  text-align: center;
+.tienda-tebex {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
   padding: 2rem;
+  background: url('/fondo-parquet.png') repeat;
+  min-height: 100vh;
 
-  .input-jugador {
-    padding: 0.6rem;
-    font-size: 1rem;
-    margin-bottom: 2rem;
+  @media (max-width: 900px) {
+    flex-direction: column;
   }
 
-  .productos {
+  .tienda-contenido {
+    flex: 1 1 80%;
     display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: center;
-  }
+    flex-direction: column;
 
-  .producto {
-    border: 1px solid #ccc;
-    padding: 1rem;
-    border-radius: 12px;
-    width: 240px;
-
-    img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
+    h1 {
+      font-size: 2.5rem;
+      color: #fdf3dc;
+      margin-bottom: 1.5rem;
     }
 
-    h3 {
-      margin: 0.5rem 0;
-    }
-
-    button {
-      background-color: #ff8800;
+    .volver {
+      background: none;
       border: none;
-      padding: 0.6rem 1rem;
-      border-radius: 6px;
-      color: white;
-      font-weight: bold;
+      color: #fdd78b;
+      font-size: 1rem;
+      margin-bottom: 1rem;
       cursor: pointer;
     }
-  }
-}
-.form-nombre-jugador {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
 
-  .input-jugador {
-    padding: 0.6rem 1rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    width: 240px;
-  }
+    .categorias-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
 
-  .boton-confirmar {
-    background-color: #44aaff;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 0.6rem 1rem;
-    font-weight: bold;
-    cursor: pointer;
+      .categoria-card {
+        background: #f5e9d0;
+        border: 3px solid #d5b26a;
+        border-radius: 10px;
+        text-align: center;
+        padding: 1rem;
+        transition: transform 0.2s ease;
+        cursor: pointer;
 
-    &:hover {
-      background-color: #1d90f2;
+        &:hover {
+          transform: scale(1.03);
+        }
+
+        img {
+          width: 100%;
+          height: auto;
+          border-radius: 8px;
+        }
+
+        h2 {
+          font-size: 1.3rem;
+          margin: 0.5rem 0;
+        }
+
+        button {
+          background-color: #81c784;
+          border: none;
+          padding: 0.5rem 1rem;
+          color: white;
+          font-weight: bold;
+          border-radius: 6px;
+          margin-top: 0.5rem;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .productos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+
+      .producto-card {
+        background: #fef9ee;
+        border: 2px solid #e4c281;
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+
+        img {
+          width: 100%;
+          height: auto;
+          border-radius: 6px;
+        }
+
+        h3 {
+          margin: 0.5rem 0;
+          font-size: 1.1rem;
+        }
+
+        .producto-descripcion {
+          font-size: 0.9rem;
+          color: #555;
+          margin: 0.5rem 0;
+        }
+
+        p {
+          font-weight: bold;
+          font-size: 1rem;
+        }
+
+        button {
+          margin-top: 0.6rem;
+          padding: 0.5rem 1rem;
+          border-radius: 5px;
+          font-weight: bold;
+          border: none;
+          cursor: pointer;
+
+          &.btn-agregar {
+            background-color: #4caf50;
+            color: white;
+
+            &:hover {
+              background-color: #3f9441;
+            }
+          }
+
+          &.btn-quitar {
+            background-color: #e53935;
+            color: white;
+
+            &:hover {
+              background-color: #c62828;
+            }
+          }
+        }
+      }
+    }
+
+    .error {
+      color: #ff6b6b;
+      font-weight: bold;
+      background: #fff1f1;
+      padding: 1rem;
+      border-radius: 8px;
     }
   }
-}
 
-.nombre-confirmado {
-  font-size: 0.95rem;
-  margin-bottom: 1.5rem;
+  .carrito-wrapper {
+    flex: 1 1 20%;
+    min-width: 140px;
+    background: #fff7e2;
+    border: 3px solid #d5b26a;
+    border-radius: 12px;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-height: 100%;
+
+    .carrito-usuario {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+
+      .jugador-confirmado {
+        font-weight: bold;
+        color: #3e3e3e;
+      }
+
+      button {
+        background-color: #af6c25;
+        color: white;
+        padding: 0.4rem 0.8rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+    }
+
+    .carrito-listado {
+      flex-grow: 1;
+      overflow-y: auto;
+
+      h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: #5d4422;
+      }
+
+      .vacio {
+        font-style: italic;
+        color: #999;
+      }
+
+      .item-carrito {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.4rem 0;
+        border-bottom: 1px solid #ddd;
+
+        span {
+          font-size: 0.95rem;
+        }
+
+        button {
+          background: none;
+          border: none;
+          color: #d32f2f;
+          font-size: 1.2rem;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .carrito-total {
+      margin-top: 1rem;
+
+      p {
+        font-size: 1rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      .checkout {
+        width: 100%;
+        background-color: #388e3c;
+        color: white;
+        padding: 0.6rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #2e7d32;
+        }
+      }
+    }
+  }
+
+  .modal-login {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .modal-contenido {
+      background: #fff8e1;
+      border: 3px solid #d5b26a;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+
+      h2 {
+        margin-bottom: 1rem;
+        color: #5d4422;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.6rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+      }
+
+      button {
+        margin: 0.3rem;
+        padding: 0.5rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+
+        &:first-of-type {
+          background-color: #4caf50;
+          color: white;
+        }
+
+        &.cerrar {
+          background-color: #c62828;
+          color: white;
+        }
+      }
+    }
+  }
 }

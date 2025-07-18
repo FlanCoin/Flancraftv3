@@ -9,7 +9,7 @@ import Home from "./pages/Home";
 import AllNews from "./components/AllNews";
 import NewsDetail from "./components/NewsDetail";
 import DashboardPage from "./components/DashboardPage";
-import Tienda from './components/Tienda';
+import Tienda from './components/Tienda/Tienda';
 import RangoSelectorAnimado from "./components/RangoSelectorAnimado";
 
 // Tribunal System
