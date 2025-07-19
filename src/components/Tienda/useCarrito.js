@@ -1,51 +1,23 @@
+// src/components/Tienda/useCarrito.js
 import { useState, useEffect } from "react";
 
-export function useCarrito(nombreConfirmado) {
-  const [carrito, setCarrito] = useState(
-    JSON.parse(localStorage.getItem("carrito")) || []
-  );
-  const [productoPendiente, setProductoPendiente] = useState(null);
-  const [mostrarLogin, setMostrarLogin] = useState(false);
+export function useCarrito(nombreJugador) {
+  const [carrito, setCarrito] = useState(() => {
+    const guardado = localStorage.getItem(`carrito-${nombreJugador}`);
+    return guardado ? JSON.parse(guardado) : [];
+  });
 
   useEffect(() => {
-    localStorage.setItem("carrito", JSON.stringify(carrito));
-  }, [carrito]);
+    localStorage.setItem(`carrito-${nombreJugador}`, JSON.stringify(carrito));
+  }, [carrito, nombreJugador]);
 
   const toggleProducto = (producto) => {
-    if (!nombreConfirmado) {
-      setProductoPendiente(producto);
-      setMostrarLogin(true);
-      return;
-    }
-    const existe = carrito.some((p) => p.id === producto.id);
-    if (existe) {
-      setCarrito(carrito.filter((p) => p.id !== producto.id));
-    } else {
-      setCarrito([...carrito, producto]);
-    }
+    setCarrito((prev) => {
+      const existe = prev.find((p) => p.id === producto.id);
+      if (existe) return prev.filter((p) => p.id !== producto.id);
+      return [...prev, producto];
+    });
   };
 
-  const confirmarPendiente = () => {
-    if (productoPendiente) {
-      const yaEsta = carrito.some((p) => p.id === productoPendiente.id);
-      if (!yaEsta) setCarrito([...carrito, productoPendiente]);
-      setProductoPendiente(null);
-    }
-    setMostrarLogin(false);
-  };
-
-  const calcularTotal = () =>
-    carrito.reduce((acc, item) => acc + parseFloat(item.price), 0).toFixed(2);
-
-  return {
-    carrito,
-    setCarrito,
-    productoPendiente,
-    setProductoPendiente,
-    mostrarLogin,
-    setMostrarLogin,
-    toggleProducto,
-    confirmarPendiente,
-    calcularTotal,
-  };
+  return { carrito, toggleProducto };
 }

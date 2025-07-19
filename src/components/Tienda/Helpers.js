@@ -1,3 +1,4 @@
+// Imagenes personalizadas por grupo
 const imagenesPersonalizadas = {
   RANGOS: "/tienda/categorias/rangos.png",
   SURVIVAL: "/tienda/categorias/survival.png",
@@ -7,6 +8,7 @@ const imagenesPersonalizadas = {
   "¡ANTES DE COMPRAR!": "/tienda/categorias/antes.png",
 };
 
+// Agrupaciones manuales de subcategorías por grupo
 const agrupaciones = {
   RANGOS: ["Rangos Permanentes", "Rangos Mensuales"],
   SURVIVAL: [
@@ -25,13 +27,15 @@ const agrupaciones = {
   "PREMIUM FLAN": ["PREMIUM FLAN"],
 };
 
-// Lista de categorías que se deben ignorar aunque lleguen desde la API
-const categoriasIgnoradas = ["ECOS"];
+// Categorías que deben ignorarse
+const categoriasIgnoradas = ["ECOS", "Minions"];
 
+
+// Agrupa las categorías originales según las reglas definidas
 export function agruparCategorias(categoriasOriginales) {
   console.log("🟢 Nombres REALES de categorías que devuelve la API:");
   if (!Array.isArray(categoriasOriginales)) {
-    console.warn("⚠️ categoriasOriginales no es un array válido", categoriasOriginales);
+    console.warn("⚠️ categoriasOriginales no es un array válido:", categoriasOriginales);
     return [];
   }
 
@@ -47,6 +51,7 @@ export function agruparCategorias(categoriasOriginales) {
     const incluidas = categoriasOriginales.filter(
       (c) => c && nombres.includes(c.name) && !categoriasIgnoradas.includes(c.name)
     );
+
     if (incluidas.length > 0) {
       agrupadas.push({
         id: `agrupado-${grupo.toLowerCase().replace(/\s/g, "-")}`,
@@ -57,7 +62,7 @@ export function agruparCategorias(categoriasOriginales) {
     }
   }
 
-  // Agrega cualquier categoría que no esté en agrupaciones y no esté ignorada
+  // Agrega categorías que no están agrupadas ni ignoradas
   categoriasOriginales.forEach((cat) => {
     if (
       cat &&
@@ -74,4 +79,12 @@ export function agruparCategorias(categoriasOriginales) {
   });
 
   return agrupadas;
+}
+
+// Cálculo total del carrito
+export function calcularTotal(carrito) {
+  return carrito.reduce((total, item) => {
+    const cantidad = item.cantidad ?? 1;
+    return total + item.price * cantidad;
+  }, 0).toFixed(2);
 }

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { agruparCategorias } from "./Helpers";
+import "../../styles/pages/_tiendatebex.scss";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL || "https://flancraftweb-backend.onrender.com";
 

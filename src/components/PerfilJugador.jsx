@@ -89,7 +89,7 @@ export default function PerfilJugador() {
           <h2>Jugador no encontrado</h2>
           <p>No hay estadísticas registradas para "{nombre}".</p>
           <button className="btn" onClick={() => navigate(-1)}>
-            ← Volver atrás
+            Volver atrás
           </button>
         </div>
       </div>

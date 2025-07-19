@@ -1,204 +1,317 @@
-.tienda-tebex {
+// _tiendatebex.scss
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; // 🔒 Bloquea scroll global
+  height: 100vh;
+}
+@import "../base/variables"; // si usas variables globales
+
+.tienda-layout {
   display: flex;
-  justify-content: center;
-  padding: 2rem;
-  background: #f7f3e9;
+  height: calc(100vh - 64px); // Ajusta si tu navbar es más alto
+  background: url("/fondo/tienda-bg.jpg") center/cover no-repeat;
+  font-family: "IM Fell English SC", serif;
+  color: #f8f5e2;
+  position: relative;
+  overflow: hidden;
+}
 
-  .tienda-contenido {
-    max-width: 1300px;
-    width: 100%;
-    position: relative;
+.tienda-contenido {
+  flex: 1;
+  padding: 1.5rem 2rem;
+  background: rgba(0, 0, 0, 0.65);
+  box-shadow: inset 0 0 30px #00000055;
+  overflow-y: auto;
+}
+
+.tienda-tebex h2,
+.tienda-tebex h3 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #ffcc66;
+}
+
+.grid-categorias {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.categoria-card {
+  background: url("/marcos/marco-madera.png") center/contain no-repeat;
+  background-size: 100% 100%;
+  padding: 1.2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  position: relative;
+
+  img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 0.8rem;
   }
 
-  h2 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    font-family: "IM Fell English SC", serif;
+  h3 {
+    color: #fff2c2;
+    font-size: 1.2rem;
+    text-shadow: 0 0 5px #000;
   }
 
-  .grid-categorias {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
-
-    .categoria-card {
-      background: white;
-      border-radius: 1rem;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-      &:hover {
-        transform: scale(1.03);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-      }
-
-      img {
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
-      }
-
-      h3 {
-        margin: 1rem 0;
-        font-size: 1.2rem;
-        font-weight: 600;
-        font-family: "IM Fell English SC", serif;
-      }
-    }
-  }
-
-  .volver {
-    background: none;
-    border: none;
-    color: #444;
-    font-size: 1rem;
-    margin-bottom: 1rem;
-    cursor: pointer;
-
-    &:hover {
-      text-decoration: underline;
-    }
+  &:hover {
+    transform: scale(1.05);
   }
 }
 
-/* Vista de productos */
-.vista-productos {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 2rem;
-  align-items: flex-start;
+// Carrito lateral
+.carrito-lateral {
+  height: 100%;
+  width: 320px;
+  background: rgba(24, 20, 14, 0.85);
+  border-left: 4px solid #c79b50;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 
-  .productos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1.5rem;
+  .carrito-header {
+    flex-shrink: 0;
 
-    .producto-card {
-      background: white;
-      border-radius: 1rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
+    .user-info {
       display: flex;
       flex-direction: column;
-      transition: transform 0.2s ease;
+      align-items: center;
+      margin-bottom: 1rem;
 
-      &:hover {
-        transform: translateY(-5px);
+      .skin {
+        width: 64px;
+        height: 64px;
+        border-radius: 8px;
+        background-size: cover;
+        border: 2px solid #ffda88;
+        margin-bottom: 0.5rem;
       }
 
-      img {
-        width: 100%;
-        height: 160px;
-        object-fit: cover;
+      .username {
+        font-size: 1rem;
+        color: #ffeea6;
+        margin-bottom: 0.5rem;
       }
 
-      .info {
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+      .btn-login {
+        background: #a8752c;
+        padding: 0.5rem 1rem;
+        border: none;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s;
 
-        h4 {
-          font-size: 1.1rem;
-          font-weight: 600;
+        &:hover {
+          background: #c68c36;
         }
+      }
 
-        p {
-          margin: 0;
-          font-size: 0.9rem;
-          color: #666;
-        }
+      .selector-moneda {
+        margin-top: 0.5rem;
 
-        .precio {
-          font-size: 1.1rem;
-          color: #222;
-          font-weight: bold;
-        }
-
-        button {
-          margin-top: auto;
-          background: #8b5e3c;
-          color: white;
-          border: none;
-          padding: 0.6rem;
-          border-radius: 0.5rem;
-          cursor: pointer;
-          transition: background 0.2s ease;
-
-          &:hover {
-            background: #a76f44;
-          }
+        select {
+          background: #3c2f1e;
+          color: #f0e6c4;
+          border: 1px solid #a8752c;
+          padding: 0.3rem 0.6rem;
+          border-radius: 4px;
         }
       }
     }
   }
 
-  .carrito-lateral {
-    position: sticky;
-    top: 2rem;
-    background: #fffefc;
-    border: 2px solid #e3d7c0;
-    padding: 1rem;
-    border-radius: 1rem;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+  .carrito-body {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 
     h3 {
-      font-family: "IM Fell English SC", serif;
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
+      color: #ffdd88;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .vacio {
+      color: #ccc;
+      font-style: italic;
     }
 
     .item {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 0.5rem;
 
       .nombre {
-        font-weight: 500;
+        flex: 1;
       }
 
       .precio {
-        font-weight: bold;
-        color: #444;
+        color: #b5e356;
+        margin-right: 0.5rem;
+      }
+
+      button {
+        background: transparent;
+        border: none;
+        color: #ff8080;
+        font-size: 1.1rem;
+        cursor: pointer;
       }
     }
 
     .total {
-      border-top: 1px solid #ccc;
-      padding-top: 1rem;
-      font-weight: bold;
       margin-top: 1rem;
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #fff4be;
     }
 
     .boton-comprar {
       margin-top: 1rem;
-      background: #2c7d3e;
+      background: #5cb85c;
       color: white;
+      font-weight: bold;
+      padding: 0.6rem;
       border: none;
-      width: 100%;
-      padding: 0.7rem;
-      font-size: 1rem;
-      border-radius: 0.5rem;
+      border-radius: 6px;
       cursor: pointer;
+      transition: background 0.2s ease;
 
       &:hover {
-        background: #379f4f;
+        background: #6fd36f;
+      }
+
+      &:disabled {
+        background: #444;
+        cursor: not-allowed;
       }
     }
   }
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .vista-productos {
-    grid-template-columns: 1fr;
+
+// Vista de subcategorías
+.subcategoria-grid-visual {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+
+  .subcategoria-visual-card {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.8rem;
+    text-align: center;
+    border: 2px solid #c79b50;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: transform 0.2s;
+
+    img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      margin-bottom: 0.5rem;
+    }
+
+    span {
+      display: block;
+      color: #ffdc9c;
+      font-size: 0.95rem;
+    }
+
+    &:hover {
+      transform: scale(1.05);
+      border-color: #ffda88;
+    }
+  }
+}
+
+// Vista de productos
+.productos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.producto-card {
+  background: rgba(22, 18, 14, 0.85);
+  border: 2px solid #c79b50;
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  color: #f0e6d2;
+  transition: transform 0.2s;
+
+  img {
+    max-width: 100%;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 0.5rem;
   }
 
-  .carrito-lateral {
-    position: relative;
-    margin-top: 2rem;
+  h3 {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+  }
+
+  .producto-descripcion {
+    font-size: 0.9rem;
+    color: #e3dac9;
+    margin: 0.5rem 0;
+    max-height: 80px;
+    overflow: auto;
+  }
+
+  .producto-precio {
+    color: #b5e356;
+    font-weight: bold;
+    margin: 0.5rem 0;
+  }
+
+  .btn-agregar,
+  .btn-quitar {
+    background: #a8752c;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: #c88f39;
+    }
+  }
+
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
+// Botón volver
+.volver {
+  background: none;
+  border: none;
+  color: #ffdd88;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+
+  &:hover {
+    text-decoration: underline;
   }
 }
