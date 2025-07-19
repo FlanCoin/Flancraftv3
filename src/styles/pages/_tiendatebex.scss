@@ -1,11 +1,4 @@
 // _tiendatebex.scss
-html,
-body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden; // 🔒 Bloquea scroll global
-  height: 100vh;
-}
 @import "../base/variables"; // si usas variables globales
 
 .tienda-layout {
