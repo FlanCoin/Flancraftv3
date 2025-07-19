@@ -8,6 +8,15 @@ const CarritoLateral = ({
   onLoginClick,
   calcularTotal,
 }) => {
+  const handlePago = () => {
+    if (!nombreConfirmado || carrito.length === 0) return;
+    if (window.Tebex?.checkout?.openPopup) {
+      window.Tebex.checkout.openPopup();
+    } else {
+      alert("El sistema de pago aún no está disponible. Intenta de nuevo en unos segundos.");
+    }
+  };
+
   return (
     <div className="carrito-wrapper">
       <div className="carrito-usuario">
@@ -40,7 +49,13 @@ const CarritoLateral = ({
         <p>
           Total: <strong>{calcularTotal()} €</strong>
         </p>
-        <button className="checkout">Ir al pago</button>
+        <button
+          className="checkout"
+          onClick={handlePago}
+          disabled={!nombreConfirmado || carrito.length === 0}
+        >
+          Ir al pago
+        </button>
       </div>
     </div>
   );

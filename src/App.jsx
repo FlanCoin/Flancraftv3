@@ -9,17 +9,21 @@ import Home from "./pages/Home";
 import AllNews from "./components/AllNews";
 import NewsDetail from "./components/NewsDetail";
 import DashboardPage from "./components/DashboardPage";
-import Tienda from './components/Tienda/Tienda';
 import RangoSelectorAnimado from "./components/RangoSelectorAnimado";
+import PerfilJugador from "./components/PerfilJugador";
+import LeaderboardsPage from "./pages/LeaderboardsPage";
 
 // Tribunal System
 import TribunalMain from "./pages/tribunal/TribunalMain";
 import TribunalAdmin from "./pages/tribunal/TribunalAdmin";
-import GestionStaff from './components/Admin/GestionStaff';
-import NoticiasAdmin from './components/Admin/NoticiasAdmin';
-import PerfilJugador from "./components/PerfilJugador";
-import LeaderboardsPage from "./pages/LeaderboardsPage";
-import EditarNoticia from "./components/EditarNoticia"; // ✅ nueva importación
+
+// Admin
+import GestionStaff from "./components/Admin/GestionStaff";
+import NoticiasAdmin from "./components/Admin/NoticiasAdmin";
+import EditarNoticia from "./components/EditarNoticia";
+
+// 🛍️ Tienda con rutas internas
+import TiendaWrapper from "./components/Tienda/TiendaWrapper"; // << NUEVO
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
@@ -37,7 +41,7 @@ const App = () => {
         <Route path="/" element={<Home onLoginClick={() => setShowLogin(true)} />} />
         <Route path="/news" element={<AllNews />} />
         <Route path="/news/:slug" element={<NewsDetail />} />
-        <Route path="/tienda" element={<Tienda />} />
+        <Route path="/tienda/*" element={<TiendaWrapper />} /> {/* ✅ Maneja subrutas */}
         <Route path="/rangos" element={<RangoSelectorAnimado />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/leaderboards" element={<LeaderboardsPage />} />
